@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "nome": "Predominância Cerebral (Ned Herrmann)",
+    "categoria": "Neurociência",
+    "personagem": "Ínu",
+    "frase_gatilho": "O conhecimento da mente é a chave para a liberdade."
+  },
+  {
+    "id": 2,
+    "nome": "Sistemas Representacionais (VAK)",
+    "categoria": "PNL",
+    "personagem": "Vínu",
+    "frase_gatilho": "Você percebe o mundo de um jeito único. Vamos descobrir como?"
+  },
+  {
+    "id": 3,
+    "nome": "Escala de Resiliência (Connor-Davidson)",
+    "categoria": "Psicometria",
+    "personagem": "Ínu",
+    "frase_gatilho": "Sua força interior é maior do que você imagina."
+  },
+  {
+    "id": 4,
+    "nome": "Âncoras de Carreira (Edgar Schein)",
+    "categoria": "Coach Empresarial",
+    "personagem": "Liw",
+    "frase_gatilho": "O que realmente motiva sua jornada profissional?"
+  }
+]
