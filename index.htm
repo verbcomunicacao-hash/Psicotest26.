@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psicotest26 | Liw AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        .float-animation { animation: float 3s ease-in-out infinite; }
-        .hidden-view { display: none; }
-        .speech-bubble {
-            position: relative;
-            background: #1e293b;
-            color: white;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+<!DOCTYPE html><html lang="pt-br"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Psicotest26 | Bem-vindo</title><script src="https://cdn.tailwindcss.com"></script><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }</style></head><body class="flex items-center justify-center min-h-screen p-4"><div id="welcome-card" class="bg-white w-full max-w-md p-8 rounded-[40px] shadow-2xl text-center transition-all duration-500"><img src="image-019eb2ee-a73a-73e3-b960-86a1e5cedab5.png" alt="Liw o mascote" class="w-32 h-32 mx-auto mb-6 object-contain"><h1 class="text-2xl font-bold text-gray-800 mb-4">Oie, você tava sumida né, bem-vinda de volta!</h1><button onclick="showMenu()" class="w-full bg-[#6366f1] hover:bg-[#4f46e5] text-white font-semibold py-4 rounded-2xl transition-all transform hover:scale-105">Começar Agora</button></div><div id="test-menu" class="hidden w-full max-w-md p-8 rounded-[40px] bg-white shadow-2xl text-center"><h2 class="text-xl font-bold text-gray-800 mb-6">Escolha um teste</h2><div class="p-6 border-2 border-indigo-100 rounded-3xl hover:border-[#6366f1] cursor-pointer transition-all hover:bg-indigo-50"><h3 class="font-semibold text-gray-700">Predominância Cerebral</h3><p class="text-sm text-gray-500">Descubra seu perfil cognitivo</p></div></div><script>function showMenu() { document.getElementById('welcome-card').classList.add('hidden'); document.getElementById('test-menu').classList.remove('hidden'); }</script></body></html>
         }
         .speech-bubble::after {
             content: '';
