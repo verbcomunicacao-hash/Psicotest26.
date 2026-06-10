@@ -1,31 +1,86 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psicotest26 - Bem-vindo</title>
+    <title>Psicotest26 | Liw AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; text-align: center; padding: 50px; color: #2c3e50; }
-        .card { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); max-width: 450px; margin: auto; border: 1px solid #e1e8ed; }
-        h1 { color: #1a2a3a; font-size: 28px; margin-bottom: 10px; }
-        .character { font-size: 64px; margin: 20px 0; display: block; }
-        .quote { font-style: italic; color: #7f8c8d; margin: 20px 0; line-height: 1.6; }
-        .btn { background: #27ae60; color: white; padding: 18px 35px; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.2s; }
-        .btn:hover { transform: scale(1.05); background: #219150; }
-        .footer { margin-top: 40px; color: #95a5a6; font-size: 13px; letter-spacing: 1px; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        .hidden-view { display: none; }
+        .speech-bubble {
+            position: relative;
+            background: #1e293b;
+            color: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #1e293b;
+        }
     </style>
 </head>
-<body>
-    <div class="card">
-        <span class="character">🐜</span>
-        <h1>Olá, eu sou o Ínu!</h1>
-        <p>Bem-vindo ao <strong>Psicotest26</strong>. Eu e o Vínu vamos te acompanhar nessa jornada de autoconhecimento.</p>
-        <p class="quote">"O conhecimento da mente humana é a chave para a verdadeira liberdade. Vamos mapear o invisível?"</p>
-        <br>
-        <a href="#" class="btn">Começar Avaliação</a>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div id="home-view" class="bg-white w-full max-w-md rounded-[32px] shadow-2xl p-8 text-center flex flex-col items-center">
+        <div class="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full text-xs font-bold mb-6 tracking-widest uppercase">
+            Com o Liw integrado
+        </div>
+        <div class="speech-bubble">
+            <p id="speech-text" class="text-sm font-medium italic">Oie, você tava sumida né, bem-vinda de volta!</p>
+        </div>
+        <div class="float-animation mb-8">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Wil" alt="Liw" class="w-32 h-32 bg-indigo-50 rounded-full p-4 border-4 border-white shadow-lg">
+        </div>
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-6 tracking-tight">Psicotest26</h1>
+        <button onclick="showTests()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-2xl transition-all shadow-lg shadow-indigo-200 active:scale-95">
+            Começar Agora
+        </button>
     </div>
-    <div class="footer">
-        GESTÃO INTELIGENTE | POWERED BY LIW IA
+    <div id="tests-view" class="hidden-view w-full max-w-md">
+        <div class="bg-white rounded-[32px] shadow-xl p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Escolha seu teste</h2>
+            <p class="text-gray-500 text-sm mb-8">O Liw selecionou as melhores avaliações para você.</p>
+            <div class="grid gap-4">
+                <div class="group bg-gray-50 p-6 rounded-2xl border-2 border-transparent hover:border-indigo-600 hover:bg-white transition-all cursor-pointer flex justify-between items-center">
+                    <div>
+                        <div class="font-bold text-gray-800">Predominância Cerebral</div>
+                        <div class="text-xs text-gray-400">Neurociência</div>
+                    </div>
+                    <span class="text-green-500 font-bold text-[10px] bg-green-50 px-2 py-1 rounded">INCLUÍDO</span>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="mt-8 text-gray-400 font-semibold text-sm hover:text-gray-600 w-full">Voltar ao início</button>
+        </div>
     </div>
+    <script>
+        const phrases = [
+            'Oie, você tava sumida né, bem-vinda de volta!',
+            'Como é seu relacionamento com a sua mãe? Liga pra ela hoje!',
+            'Você gostaria de ser atendida por uma pessoa igual a você?',
+            'Todo dia faça alguma coisa que te melhore como pessoa, o que vamos fazer hoje?',
+            'Eu sei que você estudou muito pra estar aqui, vamos fazer valer a pena!',
+            'Sua inteligência deve acompanhar sua beleza exterior também.'
+        ];
+        function showTests() {
+            document.getElementById('home-view').classList.add('hidden-view');
+            document.getElementById('tests-view').classList.remove('hidden-view');
+        }
+        setInterval(() => {
+            const text = document.getElementById('speech-text');
+            text.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+        }, 6000);
+    </script>
 </body>
 </html>
