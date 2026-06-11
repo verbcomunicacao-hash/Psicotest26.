@@ -1,1 +1,32 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Liw Mind | Mapeamento Cerebral</title><script src="https://cdn.tailwindcss.com"></script><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><style>.card { border-radius: 48px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); }</style></head><body class="bg-[#f8fafc] text-slate-800 font-sans"><div class="max-w-4xl mx-auto p-6"><header class="flex items-center gap-4 mb-12"><img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-10T19-55-17-965Z_A_high_quality_3D_character_design_of_a_friendly_a.png" alt="Liw" class="w-20 h-20 rounded-full"><h1 class="text-4xl font-bold">Liw Mind</h1></header><section class="card bg-white p-8 mb-8"> <h2 class="text-2xl font-bold mb-4">O Modelo de Ned Herrmann</h2><p class="mb-4">O modelo dos 4 quadrantes divide o cérebro em: <b>Analítico (A)</b>, <b>Organizador (B)</b>, <b>Relacional (C)</b> e <b>Experimental (D)</b>.</p></section><section class="card bg-white p-8 mb-8"><h2 class="text-2xl font-bold mb-6">Teste de Predominância</h2><div id="quiz-container" class="space-y-6"><div class="p-4 border-b"> <p class="font-semibold">1. Como você prefere resolver problemas?</p><select class="w-full p-2 border rounded-xl"><option>Análise lógica e dados</option><option>Processos e planos</option><option>Discussão em grupo</option><option>Intuição e criatividade</option></select></div><button onclick="calculate()" class="bg-[#6366f1] text-white px-8 py-4 rounded-full font-bold hover:bg-indigo-700 transition">Gerar Resultado</button></div></section><section id="result-section" class="card bg-white p-8 hidden"><h2 class="text-2xl font-bold mb-6">Seu Mapeamento Comportamental</h2><canvas id="brainChart" class="max-w-sm mx-auto"></canvas><p class="mt-8 text-sm text-slate-500 italic">Este teste não substitui o laudo psicológico oficial. É essencial a validação do profissional de saúde.</p></section><footer class="mt-12 text-center text-xs text-slate-400"><p>Bibliografia: Herrmann, N. (1996). The Whole Brain Business Book.</p></footer></div><script>function calculate(){document.getElementById('result-section').classList.remove('hidden');new Chart(document.getElementById('brainChart'), {type: 'pie', data: {labels: ['Analítico', 'Organizador', 'Relacional', 'Experimental'], datasets: [{data: [25, 25, 25, 25], backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444']}]}});}</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liw Mind | Portal de Autoconhecimento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        body { background: radial-gradient(circle at top right, #1e293b, #0f172a); }
+    </style>
+</head>
+<body class="min-h-screen text-white font-sans flex flex-col items-center justify-center p-6">
+    <div class="max-w-3xl text-center space-y-8">
+        <!-- Avatar do Liw Animado -->
+        <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-10T19-55-17-965Z_A_high_quality_3D_character_design_of_a_friendly_a.png" 
+             class="w-48 h-48 mx-auto animate-float drop-shadow-2xl" alt="Liw">
+        
+        <h1 class="text-6xl font-black tracking-tighter">LIW MIND</h1>
+        <p class="text-xl text-slate-400 max-w-xl mx-auto">Oi eu sou o Liw, que bom te ver por aqui, vamos crescer juntos!</p>
+        
+        <!-- Botão de Ação que leva para a página de testes -->
+        <div class="flex gap-4 justify-center">
+            <a href="testes.html" class="bg-indigo-600 hover:bg-indigo-500 px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl">
+                Iniciar Mapeamento
+            </a>
+        </div>
+    </div>
+</body>
+</html>
