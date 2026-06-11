@@ -1,101 +1,22 @@
 [
-  {
-    "id": "disc",
-    "titulo": "TESTE DISC – Perfil Comportamental",
-    "introducao": "Identifique seu estilo dominante entre Dominância, Influência, Estabilidade e Conformidade.",
-    "tipo": "selecao_unica",
-    "grupos": 40,
-    "categorias": ["Dominância", "Influência", "Estabilidade", "Conformidade"],
-    "bibliografia": "Marston, W. M. (1928). Emotions of Normal People.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial e nem a necessidade de acompanhamento por um profissional da saúde mental."
-  },
-  {
-    "id": "ancoras",
-    "titulo": "ÂNCORAS DE CARREIRA – Edgar Schein",
-    "introducao": "Descubra seus valores fundamentais e o que realmente te motiva na carreira.",
-    "tipo": "escala_1_6",
-    "perguntas": 40,
-    "categorias": ["TF", "GG", "AI", "SE", "CE", "SD", "DP", "EV"],
-    "bibliografia": "Schein, E. H. (1990). Career Anchors.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "motivograma",
-    "titulo": "MOTIVÓGRAMA – Fontes de Motivação",
-    "introducao": "Entenda o que impulsiona sua produtividade e satisfação no trabalho.",
-    "tipo": "distribuicao_pontos",
-    "pares": 30,
-    "categorias": ["Fisiológicas", "Segurança", "Social", "Autoestima", "Autorealização"],
-    "bibliografia": "Maslow, A. H. (1943). A Theory of Human Motivation.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "negociacao",
-    "titulo": "ESTILO DE NEGOCIAÇÃO",
-    "introducao": "Descubra como seu perfil DISC influencia sua forma de fechar acordos.",
-    "tipo": "derivado_disc",
-    "categorias": ["Direto", "Persuasivo", "Paciente", "Analítico"],
-    "bibliografia": "Baseado na metodologia DISC aplicada a vendas.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "4d_lideranca",
-    "titulo": "4D NASA – Estilo de Liderança",
-    "introducao": "Avalie se sua liderança é orientada por Pessoas (E) ou por Lógica (L).",
-    "tipo": "escolha_binaria",
-    "perguntas": 4,
-    "categorias": ["Relacional", "Lógico"],
-    "bibliografia": "Pellerin, C. (2009). How NASA Builds Teams.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "4d_processamento",
-    "titulo": "4D NASA – Processamento de Informação",
-    "introducao": "Descubra se você foca em Detalhes (S) ou em Possibilidades (N).",
-    "tipo": "escolha_binaria",
-    "perguntas": 4,
-    "categorias": ["Sensorial", "Intuitivo"],
-    "bibliografia": "Pellerin, C. (2009). How NASA Builds Teams.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "4d_cultura",
-    "titulo": "4D NASA – Cultura de Equipe",
-    "introducao": "Mensure o nível de apreço e respeito dentro do seu time.",
-    "tipo": "likert_1_5",
-    "perguntas": 8,
-    "categorias": ["Apreço", "Acordos", "Inclusão"],
-    "bibliografia": "Pellerin, C. (2009). How NASA Builds Teams.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "4d_mindset",
-    "titulo": "4D NASA – Mindset de Resiliência",
-    "introducao": "Identifique se seus pensamentos automáticos são limitantes (Vermelho) ou expansivos (Verde).",
-    "tipo": "binario_cores",
-    "perguntas": 4,
-    "categorias": ["Limitante", "Expansivo"],
-    "bibliografia": "Pellerin, C. (2009). How NASA Builds Teams.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "4d_inteligencia",
-    "titulo": "4D NASA – Inteligência Emocional",
-    "introducao": "Avalie como você gerencia raiva, medo e tristeza no ambiente profissional.",
-    "tipo": "likert_1_5",
-    "perguntas": 10,
-    "categorias": ["Autogestão", "Empatia", "Gratidão"],
-    "bibliografia": "Pellerin, C. (2009). How NASA Builds Teams.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  },
-  {
-    "id": "gestao_pessoas",
-    "titulo": "GESTÃO DE PESSOAS – Habilidades Diretas",
-    "introducao": "Mensure sua competência em delegar, dar feedback e desenvolver talentos.",
-    "tipo": "likert_1_5",
-    "perguntas": 15,
-    "categorias": ["Delegação", "Feedback", "Desenvolvimento"],
-    "bibliografia": "Metodologia de Gestão de Equipes de Alta Performance.",
-    "aviso_legal": "Este teste não substitui o diagnóstico oficial."
-  }
+  { "id": "disc", "titulo": "TESTE DISC – Perfil Comportamental", "tipo": "selecao_unica", "grupos": 40 },
+  { "id": "ancoras", "titulo": "ÂNCORAS DE CARREIRA – Edgar Schein", "tipo": "escala_1_6", "perguntas": 40 },
+  { "id": "motivograma", "titulo": "MOTIVÓGRAMA – Fontes de Motivação", "tipo": "distribuicao_pontos", "pares": 30 },
+  { "id": "negociacao", "titulo": "ESTILO DE NEGOCIAÇÃO", "tipo": "derivado_disc" },
+  { "id": "4d_lideranca", "titulo": "4D NASA – Estilo de Liderança", "tipo": "escolha_binaria", "perguntas": 4 },
+  { "id": "4d_processamento", "titulo": "4D NASA – Processamento de Informação", "tipo": "escolha_binaria", "perguntas": 4 },
+  { "id": "4d_cultura", "titulo": "4D NASA – Cultura de Equipe", "tipo": "likert_1_5", "perguntas": 8 },
+  { "id": "4d_mindset", "titulo": "4D NASA – Mindset de Resiliência", "tipo": "binario_cores", "perguntas": 4 },
+  { "id": "4d_inteligencia", "titulo": "4D NASA – Inteligência Emocional", "tipo": "likert_1_5", "perguntas": 10 },
+  { "id": "gestao_pessoas", "titulo": "GESTÃO DE PESSOAS – Habilidades Diretas", "tipo": "likert_1_5", "perguntas": 15 },
+  { "id": "vak", "titulo": "SISTEMA REPRESENTACIONAL (VAK)", "tipo": "selecao_unica", "perguntas": 30 },
+  { "id": "sabotadores", "titulo": "SABOTADORES DA MENTE", "tipo": "escala_1_5", "perguntas": 25 },
+  { "id": "resiliencia", "titulo": "QUOCIENTE DE RESILIÊNCIA", "tipo": "escala_1_5", "perguntas": 20 },
+  { "id": "liderança_situacional", "titulo": "LIDERANÇA SITUACIONAL", "tipo": "escolha_binaria", "perguntas": 12 },
+  { "id": "comunicacao_assertiva", "titulo": "ESTILO DE COMUNICAÇÃO", "tipo": "likert_1_5", "perguntas": 15 },
+  { "id": "burnout_check", "titulo": "MAPEAMENTO DE BURNOUT", "tipo": "escala_1_5", "perguntas": 10 },
+  { "id": "foco_produtividade", "titulo": "ÍNDICE DE FOCO E PRODUTIVIDADE", "tipo": "escala_1_5", "perguntas": 15 },
+  { "id": "valores_pessoais", "titulo": "HIERARQUIA DE VALORES", "tipo": "ordenacao", "itens": 10 },
+  { "id": "inteligencia_social", "titulo": "QUOCIENTE SOCIAL (QS)", "tipo": "likert_1_5", "perguntas": 12 },
+  { "id": "gestao_tempo", "titulo": "MATRIZ DE GESTÃO DO TEMPO", "tipo": "distribuicao_pontos", "perguntas": 10 }
 ]
