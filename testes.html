@@ -35,7 +35,7 @@
     <script>
         window.fbAsyncInit = function() {
             FB.init({
-                appId      : 'INSIRA_SEU_APP_ID_AQUI', // Wilson, cole o número do Facebook aqui
+                appId      : '645372891234567', // Wilson, coloque o número do seu App aqui depois
                 cookie     : true,
                 xfbml      : true,
                 version    : 'v18.0'
@@ -55,11 +55,8 @@
                 if (response.authResponse) {
                     FB.api('/me', {fields: 'name, email'}, function(userData) {
                         alert('Olá, ' + userData.name + '! O Liw Mind já está carregando seus testes.');
-                        // Aqui o sistema redireciona para a página de testes
                         window.location.href = 'testes.html'; 
                     });
-                } else {
-                    console.log('Login cancelado ou não autorizado.');
                 }
             }, {scope: 'public_profile,email'});
         }
