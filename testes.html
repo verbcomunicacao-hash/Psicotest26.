@@ -1,76 +1,68 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liw Mind | Dashboard de Resultados</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Psicotest26 - Inteligência Comportamental</title>
     <style>
-        body { background: #f8fafc; color: #1e293b; }
-        .card { border-radius: 48px; background: white; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); }
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { padding: 2rem; text-align: center; background: white; border-bottom: 1px solid #e2e8f0; }
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        h1 { color: var(--primary); margin: 0; }
+        .login-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
+        #fb-login-btn { background-color: #1877f2; color: white; padding: 14px 28px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: transform 0.2s; width: 100%; margin-top: 1.5rem; }
+        #fb-login-btn:hover { transform: scale(1.02); background-color: #166fe5; }
+        footer { padding: 1.5rem; text-align: center; font-size: 0.8rem; color: #64748b; border-top: 1px solid #e2e8f0; }
     </style>
 </head>
-<body class="p-6 md:p-12">
-    <div class="max-w-5xl mx-auto space-y-10">
-        <header class="flex justify-between items-center">
-            <h1 class="text-4xl font-black tracking-tighter text-indigo-600">LIW MIND</h1>
-            <a href="index.html" class="text-sm font-bold text-slate-400 hover:text-indigo-600 transition">Voltar ao Início</a>
-        </header>
-
-        <main class="grid md:grid-cols-2 gap-10">
-            <div class="card p-10 flex flex-col items-center justify-center">
-                <h2 class="text-2xl font-bold mb-8 text-center">Mapeamento Comportamental</h2>
-                <div class="w-full max-w-xs">
-                    <canvas id="chart"></canvas>
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <div class="card p-8 bg-indigo-600 text-white">
-                    <h3 class="text-xl font-bold mb-2">Insights do Liw</h3>
-                    <p id="insight" class="opacity-90 leading-relaxed"></p>
-                </div>
-                <div class="card p-8 border border-slate-100">
-                    <h3 class="font-bold mb-2 text-slate-800">Bibliografia Fiel</h3>
-                    <p class="text-sm text-slate-500 italic">Herrmann, N. (1996). The Whole Brain Business Book. McGraw-Hill.</p>
-                </div>
-            </div>
-        </main>
-
-        <footer class="text-center p-10">
-            <p class="text-sm text-slate-400 italic">Este teste não substitui o laudo psicológico oficial. É essencial a validação do profissional de saúde.</p>
-        </footer>
-    </div>
+<body>
+    <header>
+        <h1>Psicotest26</h1>
+        <p>A maior plataforma de testes comportamentais do mercado</p>
+    </header>
+    <main>
+        <div class="login-card">
+            <h2>Bem-vindo ao Liw Mind</h2>
+            <p>Acesse para iniciar sua jornada de autoconhecimento</p>
+            <button id="fb-login-btn" onclick="loginComFacebook()">Entrar com Facebook</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 Psicotest26. Este material é para fins de autoconhecimento e não substitui diagnóstico clínico profissional.</p>
+    </footer>
 
     <script>
-        const scores = JSON.parse(localStorage.getItem('liw_mind_results')) || {A:25, B:25, C:25, D:25};
-        
-        new Chart(document.getElementById('chart'), {
-            type: 'pie',
-            data: {
-                labels: ['Analítico (A)', 'Organizado (B)', 'Relacional (C)', 'Experimental (D)'],
-                datasets: [{
-                    data: [scores.A, scores.B, scores.C, scores.D],
-                    backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
-
-        const max = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        const insights = {
-            A: "Você possui uma mente altamente analítica e focada em dados. O Liw sugere que você utilize essa força para decisões estratégicas baseadas em evidências.",
-            B: "Sua força está na organização e nos processos. Você é o pilar que garante que os planos saiam do papel com precisão e pontualidade.",
-            C: "Você é movido por conexões humanas. Sua empatia e habilidade de trabalhar em equipe são suas maiores ferramentas de influência.",
-            D: "Sua mente é visionária e disruptiva. O mundo precisa da sua criatividade e intuição para inovar e ver o que ninguém mais vê."
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : 'INSIRA_SEU_APP_ID_AQUI', // Wilson, cole o número do Facebook aqui
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v18.0'
+            });
         };
-        document.getElementById('insight').innerText = insights[max];
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/pt_BR/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function loginComFacebook() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me', {fields: 'name, email'}, function(userData) {
+                        alert('Olá, ' + userData.name + '! O Liw Mind já está carregando seus testes.');
+                        // Aqui o sistema redireciona para a página de testes
+                        window.location.href = 'testes.html'; 
+                    });
+                } else {
+                    console.log('Login cancelado ou não autorizado.');
+                }
+            }, {scope: 'public_profile,email'});
+        }
     </script>
 </body>
 </html>
