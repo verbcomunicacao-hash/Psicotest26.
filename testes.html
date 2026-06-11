@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liw Mind | Dashboard de Resultados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background: #f8fafc; color: #1e293b; }
+        .card { border-radius: 48px; background: white; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div class="max-w-5xl mx-auto space-y-10">
+        <header class="flex justify-between items-center">
+            <h1 class="text-4xl font-black tracking-tighter text-indigo-600">LIW MIND</h1>
+            <a href="index.html" class="text-sm font-bold text-slate-400 hover:text-indigo-600 transition">Voltar ao Início</a>
+        </header>
+
+        <main class="grid md:grid-cols-2 gap-10">
+            <div class="card p-10 flex flex-col items-center justify-center">
+                <h2 class="text-2xl font-bold mb-8 text-center">Mapeamento Comportamental</h2>
+                <div class="w-full max-w-xs">
+                    <canvas id="chart"></canvas>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="card p-8 bg-indigo-600 text-white">
+                    <h3 class="text-xl font-bold mb-2">Insights do Liw</h3>
+                    <p id="insight" class="opacity-90 leading-relaxed"></p>
+                </div>
+                <div class="card p-8 border border-slate-100">
+                    <h3 class="font-bold mb-2 text-slate-800">Bibliografia Fiel</h3>
+                    <p class="text-sm text-slate-500 italic">Herrmann, N. (1996). The Whole Brain Business Book. McGraw-Hill.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center p-10">
+            <p class="text-sm text-slate-400 italic">Este teste não substitui o laudo psicológico oficial. É essencial a validação do profissional de saúde.</p>
+        </footer>
+    </div>
+
+    <script>
+        const scores = JSON.parse(localStorage.getItem('liw_mind_results')) || {A:25, B:25, C:25, D:25};
+        
+        new Chart(document.getElementById('chart'), {
+            type: 'pie',
+            data: {
+                labels: ['Analítico (A)', 'Organizado (B)', 'Relacional (C)', 'Experimental (D)'],
+                datasets: [{
+                    data: [scores.A, scores.B, scores.C, scores.D],
+                    backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        const max = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        const insights = {
+            A: "Você possui uma mente altamente analítica e focada em dados. O Liw sugere que você utilize essa força para decisões estratégicas baseadas em evidências.",
+            B: "Sua força está na organização e nos processos. Você é o pilar que garante que os planos saiam do papel com precisão e pontualidade.",
+            C: "Você é movido por conexões humanas. Sua empatia e habilidade de trabalhar em equipe são suas maiores ferramentas de influência.",
+            D: "Sua mente é visionária e disruptiva. O mundo precisa da sua criatividade e intuição para inovar e ver o que ninguém mais vê."
+        };
+        document.getElementById('insight').innerText = insights[max];
+    </script>
+</body>
+</html>
