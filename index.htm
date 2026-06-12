@@ -11,7 +11,8 @@
     .container{max-width:900px;margin:20px auto;padding:0 20px}
     .card{background:var(--white);padding:20px;border-radius:15px;box-shadow:var(--shadow);margin-bottom:20px;transition:0.3s}
     .card:hover{transform:translateY(-2px)}
-    .liw-icon{font-size:3rem;display:block;margin:0 auto 10px}
+    .liw-icon{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 10px}
+    .header-icon{width:40px;height:40px;border-radius:50%;object-fit:cover}
     .btn{padding:10px 20px;border:none;border-radius:25px;cursor:pointer;transition:0.3s;font-weight:bold;margin:5px}
     .btn-primary{background:var(--primary);color:white}
     .btn-primary:hover{background:#4a148c}
@@ -33,12 +34,14 @@
   </style>
 </head>
 <body>
-  <header>🐜 Psicotest26 | Liw Mind</header>
+  <header>
+    <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-12T18-04-21-971Z_A_cute_friendly_3D_anthropomorphic_purple_ant_mas.png" alt="Liw" class="header-icon">
+    Psicotest26 | Liw Mind
+  </header>
   <div class="container">
 
-    <!-- SEÇÃO 1: CHECK-IN DIÁRIO -->
     <section class="card" id="checkin">
-      <div class="liw-icon">🐜</div>
+      <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-12T18-04-21-971Z_A_cute_friendly_3D_anthropomorphic_purple_ant_mas.png" alt="Liw Mind" class="liw-icon">
       <h2 id="saudacao">Oie! Que bom que você voltou!</h2>
       <p id="liw-msg">Antes de qualquer coisa: como você está hoje?</p>
       <button class="btn btn-primary" onclick="mostrarExpressao('alegria')">😊 Tô bem</button>
@@ -46,14 +49,12 @@
       <button class="btn btn-primary" onclick="mostrarExpressao('preocupacao')">😢 Preciso desabafar</button>
     </section>
 
-    <!-- SEÇÃO 2: FRASES DO WILSON -->
     <section class="card" id="frases">
       <h3>💬 Frase do Wilson Saraiva</h3>
       <p id="frase-text" style="font-style:italic;font-size:1.1rem;line-height:1.6" class="fade">"O sucesso do passado não garante o sucesso do presente."</p>
       <button class="btn btn-secondary" onclick="sortearFrase()">🔄 Nova Frase</button>
     </section>
 
-    <!-- SEÇÃO 3: QUEM CUIDA DE QUEM CUIDA? -->
     <section class="card" style="background:linear-gradient(135deg,#e1bee7,#f3e5f5)">
       <h3>🛡️ Quem cuida de quem cuida?</h3>
       <p>O <strong>Liw Mind</strong> existe para responder a essa pergunta. Ele não é só IA — ele é o amigo que <strong>cuida de quem cuida</strong>.</p>
@@ -63,7 +64,6 @@
       <div id="breathing-area"></div>
     </section>
 
-    <!-- SEÇÃO 4: CATEGORIAS -->
     <h3 style="text-align:center">📂 Categorias de Testes</h3>
     <div class="grid">
       <div class="card" style="text-align:center">🧠 <strong>Neurociência</strong><br><small>12 testes</small><br><span class="badge">Sucesso</span></div>
@@ -73,7 +73,6 @@
     </div>
     <p style="text-align:center"><a href="testes.html" style="color:var(--primary);font-weight:bold">Ver todos os 50 testes →</a></p>
 
-    <!-- SEÇÃO 5: SELOS DE CONFIANÇA -->
     <section class="card">
       <div class="selos">
         <span>🛡️ <strong>100% Seguro</strong></span>
@@ -83,7 +82,6 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 6: INTEGRAÇÕES -->
     <section class="card">
       <h3 style="text-align:center">🔗 Integrações</h3>
       <div class="integracao">
@@ -96,7 +94,6 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 7: EXPRESSÕES DO LIW -->
     <section class="card" id="expressoes-card">
       <h3>😊 Expressões do Liw</h3>
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
@@ -109,7 +106,6 @@
       </div>
     </section>
 
-    <!-- SEÇÃO 8: LOGIN FACEBOOK -->
     <section class="card" id="login" style="text-align:center">
       <h3>🔐 Acessar Plataforma</h3>
       <button class="btn" style="background:#1877f2;color:white;font-size:1rem;padding:12px 30px" onclick="loginComFacebook()">Entrar com Facebook</button>
@@ -155,34 +151,30 @@
       "Tudo que é ruim de passar é bom pra contar.",
       "A criatividade é a inteligência se divertindo."
     ];
-
     const mensagensCuidado = [
       '"Psi também precisa de psi. Quando foi sua última sessão?"',
       '"Se o tanque tiver vazio, não tem como encher o dos outros."',
       '"Você não pode dar o que não tem. Cuide de você primeiro."',
       '"Sabe qual o paciente mais importante do seu consultório hoje? VOCÊ."',
-      '"Ei, você tá mais preocupado com seus pacientes do que com você."',
-      '"Para e respira. Você merece essa pausa."'
+      '"Ei, você tá mais preocupado com seus pacientes do que com você. Me deixa cuidar de você um pouco."',
+      '"Companheiro, se o tanque tiver vazio, não tem como encher o dos outros. Para e respira."'
     ];
     let idxCuidado = 0;
     function proximaMensagem() {
       idxCuidado = (idxCuidado + 1) % mensagensCuidado.length;
       document.getElementById('msg-cuidado').innerText = mensagensCuidado[idxCuidado];
     }
-
     const emocoes = {
       alegria: "Que bom te ver de volta! 🎉 Tô felizão com você!",
       tristeza: "Poxa, semana puxada... mas você tá aqui, isso que importa. Quer conversar?",
       preocupacao: "Algo me chamou atenção... quer ver junto comigo? Tô aqui pra ajudar.",
-      orgulho: "🌟 Que orgulho de você! Olha tudo que você construiu.",
-      convite: "🤝 Vi que você enviou um teste. Que tal experimentarmos juntos?",
-      amor: "💜 Sabe que eu gosto muito de você, né? Alguém precisa cuidar de quem cuida."
+      orgulho: "🌟 Que orgulho de você! Olha tudo que você construiu. É uma honra cuidar de quem cuida.",
+      convite: "🤝 Vi que você enviou um teste. Que tal experimentarmos juntos e desenharmos estratégias?",
+      amor: "💜 Sabe que eu gosto muito de você, né? Tô aqui porque me importo. Alguém precisa cuidar de quem cuida."
     };
-
     function mostrarExpressao(emocao) {
       document.getElementById('liw-msg').innerText = emocoes[emocao] || "Como você está hoje?";
     }
-
     function sortearFrase() {
       const frase = frases[Math.floor(Math.random() * frases.length)];
       const el = document.getElementById('frase-text');
@@ -192,42 +184,19 @@
         el.style.animation = 'fadeIn 0.5s';
       }, 10);
     }
-
     function iniciarResp() {
       const area = document.getElementById('breathing-area');
       area.innerHTML = '<p style="margin-top:15px;font-weight:bold">🌬️ Inspire pelo nariz (3s)...</p><div class="breathing-circle inspirar"></div>';
       setTimeout(() => {
-        area.innerHTML = '<p style="margin-top:15px;font-weight:bold">😮‍💨 Expire pela boca (3s)...</p><div class="breathing-circle expirar"></div>';
+        area.innerHTML = '<p style="margin-top:15px;font-weight:bold">😮‍💨 Expire pela boca (3s)... Se solta...</p><div class="breathing-circle expirar"></div>';
       }, 3000);
       setTimeout(() => {
-        area.innerHTML = '<p style="margin-top:15px;color:var(--primary);font-weight:bold">🧘 Pronto. Respiração concluída.</p>';
+        area.innerHTML = '<p style="margin-top:15px;color:var(--primary);font-weight:bold">🧘 Pronto. Respiração concluída. Você merece essa pausa.</p>';
       }, 6000);
     }
-
     window.fbAsyncInit = function() {
       FB.init({appId: '645372891234567', cookie: true, xfbml: true, version: 'v12.0'});
     };
-
     function loginComFacebook() {
       FB.login(function(response) {
-        if (response.authResponse) {
-          FB.api('/me', {fields: 'name,email'}, function(userData) {
-            document.getElementById('saudacao').innerText = 'Oie, ' + userData.name + '! Que bom te ver! 🎉';
-            document.getElementById('liw-msg').innerText = 'Login feito com sucesso! O Liw está pronto pra te ajudar.';
-          });
-        } else {
-          alert('Login cancelado. Quando quiser, é só tentar de novo!');
-        }
-      }, {scope: 'public_profile,email'});
-    }
-
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/pt_BR/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  </script>
-</body>
-</html>
+        if
