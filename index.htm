@@ -1,202 +1,326 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Psicotest26 | Liw Mind</title>
+  <title>Psicotest26 | Plataforma de Testes Comportamentais</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--primary:#6a1b9a;--secondary:#d32f2f;--bg:#f3e5f5;--white:#fff;--shadow:0 4px 15px rgba(0,0,0,0.1)}
-    body{font-family:'Segoe UI',sans-serif;background-color:var(--bg);margin:0;padding:0;color:#333}
-    header{background:linear-gradient(to right,#6a1b9a,#9c27b0);color:white;padding:20px;text-align:center;font-size:1.5rem;display:flex;align-items:center;justify-content:center;gap:10px}
-    .container{max-width:900px;margin:20px auto;padding:0 20px}
-    .card{background:var(--white);padding:20px;border-radius:15px;box-shadow:var(--shadow);margin-bottom:20px;transition:0.3s}
-    .card:hover{transform:translateY(-2px)}
-    .liw-icon{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 10px}
-    .header-icon{width:40px;height:40px;border-radius:50%;object-fit:cover}
-    .btn{padding:10px 20px;border:none;border-radius:25px;cursor:pointer;transition:0.3s;font-weight:bold;margin:5px}
-    .btn-primary{background:var(--primary);color:white}
-    .btn-primary:hover{background:#4a148c}
-    .btn-secondary{background:var(--secondary);color:white}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
-    .badge{background:#4caf50;color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem}
-    .selos{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:15px}
-    .selos span{text-align:center;font-size:0.9rem}
-    .integracao{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;text-align:center}
-    .integracao span{background:#f3e5f5;padding:10px;border-radius:10px;font-size:0.85rem}
-    .breathing-circle{width:100px;height:100px;background:var(--primary);border-radius:50%;margin:20px auto}
-    .breathing-circle.inspirar{animation:breatheIn 6s infinite ease-in-out}
-    .breathing-circle.expirar{animation:breatheOut 6s infinite ease-in-out}
-    @keyframes breatheIn{0%,100%{transform:scale(0.8);opacity:0.6}50%{transform:scale(1.3);opacity:1}}
-    @keyframes breatheOut{0%,100%{transform:scale(1.3);opacity:1}50%{transform:scale(0.8);opacity:0.6}}
-    .fade{animation:fadeIn 0.5s}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    footer{text-align:center;padding:20px;font-size:0.8rem;color:#666}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', 'Segoe UI', sans-serif; color: #1f2937; background: #fff; line-height: 1.6; }
+    a { text-decoration: none; }
+
+    /* HEADER */
+    header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #e5e7eb; max-width: 1200px; margin: 0 auto; }
+    .logo-group { display: flex; align-items: center; gap: 12px; }
+    .logo-box { width: 40px; height: 40px; background: #7c3aed; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; }
+    .logo-text { font-size: 20px; font-weight: 700; }
+    .badge-ia { background: #7c3aed; color: #fff; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
+    nav { display: flex; gap: 32px; color: #6b7280; font-weight: 500; font-size: 15px; cursor: default; }
+    nav span:hover { color: #7c3aed; }
+
+    /* HERO */
+    .hero { background: #f9fafb; text-align: center; padding: 100px 24px; }
+    .hero h1 { font-size: 56px; font-weight: 800; line-height: 1.15; max-width: 900px; margin: 0 auto 24px; letter-spacing: -0.02em; }
+    .hero h1 span { color: #7c3aed; }
+    .hero p { font-size: 20px; color: #6b7280; max-width: 700px; margin: 0 auto 48px; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 16px 36px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; border: none; display: inline-block; transition: all 0.2s; }
+    .btn-primary { background: #7c3aed; color: #fff; }
+    .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: #7c3aed; border: 2px solid #7c3aed; }
+    .btn-outline:hover { background: #7c3aed; color: #fff; transform: translateY(-1px); }
+    .btn-white { background: #fff; color: #6d28d9; padding: 16px 40px; border-radius: 10px; font-weight: 700; font-size: 16px; display: inline-block; transition: 0.2s; }
+    .btn-white:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); padding: 48px 24px; max-width: 900px; margin: 0 auto; text-align: center; gap: 24px; border-bottom: 1px solid #e5e7eb; }
+    .stats-item .icon { font-size: 32px; margin-bottom: 8px; }
+    .stats-item strong { font-size: 20px; display: block; }
+    .stats-item small { color: #6b7280; font-size: 14px; }
+
+    /* CATEGORIES */
+    .categories { padding: 80px 24px; text-align: center; max-width: 1200px; margin: 0 auto; }
+    .categories h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+    .categories > p { color: #6b7280; font-size: 16px; margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .filters { display: flex; justify-content: center; gap: 8px; margin-bottom: 48px; flex-wrap: wrap; }
+    .filter { padding: 8px 18px; border-radius: 20px; border: 1px solid #e5e7eb; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; color: #374151; }
+    .filter:hover { border-color: #7c3aed; color: #7c3aed; }
+    .filter.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px; text-align: left; transition: all 0.3s ease; background: #fff; position: relative; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); border-color: #d1d5db; }
+    .card-icon { font-size: 32px; margin-bottom: 16px; display: inline-block; transition: all 0.3s ease; }
+    .card:hover .card-icon { transform: scale(1.15) rotate(-5deg); }
+    .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .card-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .tag-cat { background: #f3f4f6; color: #374151; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    .tag-inc { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .tag-premium { background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .card a { color: #7c3aed; font-weight: 700; font-size: 14px; display: inline-block; margin-top: 12px; transition: all 0.3s ease; }
+    .card:hover a { transform: translateX(4px); }
+    .card.premium { background: #fafafa; opacity: 0.92; }
+    .card.premium a { color: #92400e; }
+    .premium-flag { position: absolute; top: 16px; right: 16px; background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+
+    /* PREMIUM BANNER */
+    .premium { background: linear-gradient(135deg, #4c1d95, #6d28d9); text-align: center; padding: 80px 24px; color: #fff; }
+    .premium h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; }
+    .premium p { font-size: 18px; margin-bottom: 32px; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+    /* LIW SECTION */
+    .liw-section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
+    .liw-flex { display: flex; align-items: center; gap: 48px; }
+    .liw-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #7c3aed; object-fit: cover; flex-shrink: 0; }
+    .liw-text small { color: #6b7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; }
+    .liw-text h2 { color: #7c3aed; font-size: 32px; font-weight: 700; margin: 8px 0 16px; }
+    .liw-text p { color: #6b7280; font-size: 16px; max-width: 500px; }
+    .liw-insights { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+    .insight-card { padding: 20px; border: 1px solid #e5e7eb; border-radius: 10px; display: flex; align-items: center; gap: 12px; }
+    .insight-card p { font-size: 14px; color: #374151; font-weight: 500; margin: 0; }
+    .i-badge { background: #ede9fe; color: #7c3aed; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+    .i-up { color: #10b981; font-weight: 700; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid #e5e7eb; padding: 40px 24px; text-align: center; color: #9ca3af; font-size: 14px; }
+    footer a { color: #6b7280; text-decoration: none; margin: 0 12px; }
+    footer a:hover { color: #7c3aed; }
+    footer p { margin-bottom: 8px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      header { flex-direction: column; gap: 16px; padding: 16px 20px; }
+      nav { display: none; }
+      .hero h1 { font-size: 32px; }
+      .hero p { font-size: 18px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid { grid-template-columns: 1fr; }
+      .premium h2 { font-size: 28px; }
+      .liw-flex { flex-direction: column; text-align: center; }
+      .liw-insights { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- HEADER -->
   <header>
-    <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-12T18-04-21-971Z_A_cute_friendly_3D_anthropomorphic_purple_ant_mas.png" alt="Liw" class="header-icon">
-    Psicotest26 | Liw Mind
-  </header>
-  <div class="container">
-
-    <section class="card" id="checkin">
-      <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-12T18-04-21-971Z_A_cute_friendly_3D_anthropomorphic_purple_ant_mas.png" alt="Liw Mind" class="liw-icon">
-      <h2 id="saudacao">Oie! Que bom que você voltou!</h2>
-      <p id="liw-msg">Antes de qualquer coisa: como você está hoje?</p>
-      <button class="btn btn-primary" onclick="mostrarExpressao('alegria')">😊 Tô bem</button>
-      <button class="btn btn-primary" onclick="mostrarExpressao('tristeza')">😐 Cansado</button>
-      <button class="btn btn-primary" onclick="mostrarExpressao('preocupacao')">😢 Preciso desabafar</button>
-    </section>
-
-    <section class="card" id="frases">
-      <h3>💬 Frase do Wilson Saraiva</h3>
-      <p id="frase-text" style="font-style:italic;font-size:1.1rem;line-height:1.6" class="fade">"O sucesso do passado não garante o sucesso do presente."</p>
-      <button class="btn btn-secondary" onclick="sortearFrase()">🔄 Nova Frase</button>
-    </section>
-
-    <section class="card" style="background:linear-gradient(135deg,#e1bee7,#f3e5f5)">
-      <h3>🛡️ Quem cuida de quem cuida?</h3>
-      <p>O <strong>Liw Mind</strong> existe para responder a essa pergunta. Ele não é só IA — ele é o amigo que <strong>cuida de quem cuida</strong>.</p>
-      <div id="msg-cuidado" style="background:white;padding:15px;border-radius:10px;margin:15px 0;font-style:italic">"Psi também precisa de psi. Quando foi sua última sessão?"</div>
-      <button class="btn btn-primary" onclick="proximaMensagem()">📢 Nova Mensagem</button>
-      <button class="btn btn-secondary" onclick="iniciarResp()">🧘 Respirar com o Liw</button>
-      <div id="breathing-area"></div>
-    </section>
-
-    <h3 style="text-align:center">📂 Categorias de Testes</h3>
-    <div class="grid">
-      <div class="card" style="text-align:center">🧠 <strong>Neurociência</strong><br><small>12 testes</small><br><span class="badge">Sucesso</span></div>
-      <div class="card" style="text-align:center">🧬 <strong>PNL</strong><br><small>8 testes</small><br><span class="badge">Sucesso</span></div>
-      <div class="card" style="text-align:center">👤 <strong>Personalidade</strong><br><small>15 testes</small><br><span class="badge">Sucesso</span></div>
-      <div class="card" style="text-align:center">📊 <strong>Inteligência</strong><br><small>10 testes</small><br><span class="badge">Sucesso</span></div>
+    <div class="logo-group">
+      <div class="logo-box">🧠</div>
+      <span class="logo-text">Psicotest26</span>
+      <span class="badge-ia">⭐ Com IA Liw integrada</span>
     </div>
-    <p style="text-align:center"><a href="testes.html" style="color:var(--primary);font-weight:bold">Ver todos os 50 testes →</a></p>
+    <nav>
+      <span>Início</span>
+      <span>Testes</span>
+      <span>Resultados</span>
+      <span>Insights</span>
+    </nav>
+  </header>
 
-    <section class="card">
-      <div class="selos">
-        <span>🛡️ <strong>100% Seguro</strong></span>
-        <span>👥 <strong>+50.000 Usuários</strong></span>
-        <span>📚 <strong>Base Científica</strong></span>
-        <span>⭐ <strong>Qualidade Premium</strong></span>
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Quero te ajudar a alcançar <span>outro patamar</span> como profissional.</h1>
+    <p>Plataforma completa com <strong>50 testes comportamentais</strong>, devolutivas personalizadas e a inteligência artificial Liw ao lado para transformar seus atendimentos.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn btn-primary">Começar Agora →</a>
+      <a href="testes.html" class="btn btn-outline">Ver todos os testes</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stats-item"><div class="icon">📊</div><strong>50 Testes</strong><small>disponíveis</small></div>
+    <div class="stats-item"><div class="icon">👥</div><strong>1.2k+</strong><small>Profissionais</small></div>
+    <div class="stats-item"><div class="icon">⭐</div><strong>IA Liw</strong><small>integrada</small></div>
+    <div class="stats-item"><div class="icon">🛡️</div><strong>100%</strong><small>Seguro e ético</small></div>
+  </section>
+
+  <!-- CATEGORIAS -->
+  <section class="categories">
+    <h2>Testes que transformam atendimentos</h2>
+    <p>Explore nossa coleção completa de <strong>50 avaliações comportamentais</strong> — 40 inclusos + 10 Premium 🔒 — desenvolvidas para profissionais da saúde mental e gestores de RH.</p>
+    
+    <div class="filters">
+      <span class="filter active">Todos</span>
+      <span class="filter">Comportamental</span>
+      <span class="filter">Emocional</span>
+      <span class="filter">Cognitivo</span>
+      <span class="filter">Carreira</span>
+      <span class="filter">Saúde Mental</span>
+      <span class="filter">Autoconhecimento</span>
+      <span class="filter">Premium 🔒</span>
+    </div>
+
+    <div class="grid">
+      <!-- CARD 1 - Incluso -->
+      <div class="card">
+        <div class="card-icon">🔬</div>
+        <h3>Perfil Comportamental DISC</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Comportamental</span>
+          <span class="tag-inc">✅ Incluído</span>
+        </div>
+        <a href="#">Ver detalhes →</a>
       </div>
-    </section>
-
-    <section class="card">
-      <h3 style="text-align:center">🔗 Integrações</h3>
-      <div class="integracao">
-        <span>📅 Google Agenda</span>
-        <span>💬 WhatsApp</span>
-        <span>☁️ Google Drive</span>
-        <span>📝 Google Docs</span>
-        <span>▶️ YouTube</span>
-        <span>📧 Gmail</span>
+      <!-- CARD 2 - Incluso -->
+      <div class="card">
+        <div class="card-icon">💡</div>
+        <h3>Inteligência Emocional</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Emocional</span>
+          <span class="tag-inc">✅ Incluído</span>
+        </div>
+        <a href="#">Ver detalhes →</a>
       </div>
-    </section>
-
-    <section class="card" id="expressoes-card">
-      <h3>😊 Expressões do Liw</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
-        <button class="btn btn-primary" onclick="mostrarExpressao('alegria')">😊 Alegria</button>
-        <button class="btn btn-primary" onclick="mostrarExpressao('tristeza')">😢 Tristeza</button>
-        <button class="btn btn-primary" onclick="mostrarExpressao('preocupacao')">🤔 Preocupação</button>
-        <button class="btn btn-primary" onclick="mostrarExpressao('orgulho')">🌟 Orgulho</button>
-        <button class="btn btn-primary" onclick="mostrarExpressao('convite')">🤝 Convite</button>
-        <button class="btn btn-primary" onclick="mostrarExpressao('amor')">💜 Carinho</button>
+      <!-- CARD 3 - Incluso -->
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Análise de Estresse</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Saúde Mental</span>
+          <span class="tag-inc">✅ Incluído</span>
+        </div>
+        <a href="#">Ver detalhes →</a>
       </div>
-    </section>
+      <!-- CARD 4 - Incluso -->
+      <div class="card">
+        <div class="card-icon">👔</div>
+        <h3>Perfil de Liderança</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Carreira</span>
+          <span class="tag-inc">✅ Incluído</span>
+        </div>
+        <a href="#">Ver detalhes →</a>
+      </div>
+      <!-- CARD 5 - Incluso -->
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Âncoras de Carreira</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Carreira</span>
+          <span class="tag-inc">✅ Incluído</span>
+        </div>
+        <a href="#">Ver detalhes →</a>
+      </div>
+      <!-- CARD 6 - Incluso -->
+      <div class="card">
+        <div class="card-icon">💬</div>
+        <h3>Comunicação Assertiva</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Comportamental</span>
+          <span class="tag-inc">✅ Incluído</span>
+        </div>
+        <a href="#">Ver detalhes →</a>
+      </div>
+      <!-- CARD 7 - PREMIUM -->
+      <div class="card premium">
+        <div class="premium-flag">🔒 PREMIUM</div>
+        <div class="card-icon">🧬</div>
+        <h3>Mapeamento de Perfil Cognitivo</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Cognitivo</span>
+          <span class="tag-premium">🔒 Premium</span>
+        </div>
+        <a href="#">🔒 Desbloquear</a>
+      </div>
+      <!-- CARD 8 - PREMIUM -->
+      <div class="card premium">
+        <div class="premium-flag">🔒 PREMIUM</div>
+        <div class="card-icon">❤️</div>
+        <h3>Estilo de Afetividade e Vínculos</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Emocional</span>
+          <span class="tag-premium">🔒 Premium</span>
+        </div>
+        <a href="#">🔒 Desbloquear</a>
+      </div>
+      <!-- CARD 9 - PREMIUM -->
+      <div class="card premium">
+        <div class="premium-flag">🔒 PREMIUM</div>
+        <div class="card-icon">🌟</div>
+        <h3>Resiliência Psicológica</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Saúde Mental</span>
+          <span class="tag-premium">🔒 Premium</span>
+        </div>
+        <a href="#">🔒 Desbloquear</a>
+      </div>
+      <!-- CARD 10 - PREMIUM -->
+      <div class="card premium">
+        <div class="premium-flag">🔒 PREMIUM</div>
+        <div class="card-icon">🚀</div>
+        <h3>Potencial de Inovação e Criatividade</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Cognitivo</span>
+          <span class="tag-premium">🔒 Premium</span>
+        </div>
+        <a href="#">🔒 Desbloquear</a>
+      </div>
+      <!-- CARD 11 - PREMIUM -->
+      <div class="card premium">
+        <div class="premium-flag">🔒 PREMIUM</div>
+        <div class="card-icon">🧠</div>
+        <h3>Liderança Transformacional</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Carreira</span>
+          <span class="tag-premium">🔒 Premium</span>
+        </div>
+        <a href="#">🔒 Desbloquear</a>
+      </div>
+      <!-- CARD 12 - PREMIUM -->
+      <div class="card premium">
+        <div class="premium-flag">🔒 PREMIUM</div>
+        <div class="card-icon">⚖️</div>
+        <h3>Ética e Tomada de Decisão</h3>
+        <div class="card-tags">
+          <span class="tag-cat">Comportamental</span>
+          <span class="tag-premium">🔒 Premium</span>
+        </div>
+        <a href="#">🔒 Desbloquear</a>
+      </div>
+    </div>
+    
+    <p style="margin-top: 40px;"><a href="testes.html" style="color: #7c3aed; font-weight: 700; font-size: 18px;">Ver todos os 50 testes →</a></p>
+  </section>
 
-    <section class="card" id="login" style="text-align:center">
-      <h3>🔐 Acessar Plataforma</h3>
-      <button class="btn" style="background:#1877f2;color:white;font-size:1rem;padding:12px 30px" onclick="loginComFacebook()">Entrar com Facebook</button>
-    </section>
+  <!-- BANNER PREMIUM -->
+  <section class="premium">
+    <h2>Desbloqueie todos os 50 testes</h2>
+    <p>Tenha acesso ilimitado a todos os <strong>40 testes inclusos + 10 testes Premium exclusivos</strong> com relatórios completos e insights da IA Liw.</p>
+    <a href="#" class="btn-white">Quero o pacote completo →</a>
+  </section>
 
-  </div>
+  <!-- CONHEÇA A LIW -->
+  <section class="liw-section">
+    <div class="liw-flex">
+      <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-12T18-04-21-971Z_A_cute_friendly_3D_anthropomorphic_purple_ant_mas.png" alt="Liw Mind" class="liw-avatar">
+      <div class="liw-text">
+        <small>Inteligência Artificial</small>
+        <h2>Conheça a Liw</h2>
+        <p>Sua assistente de IA desenvolvida especialmente para profissionais da saúde mental e RH. A Liw está sempre pronta para ajudar você a entregar mais valor para seus pacientes.</p>
+      </div>
+    </div>
+    <div class="liw-insights">
+      <div class="insight-card">
+        <span style="font-size: 24px;">🧠</span>
+        <p>Nova descoberta sobre neuroplasticidade pode revolucionar tratamentos <span class="i-badge">IA</span></p>
+      </div>
+      <div class="insight-card">
+        <span style="font-size: 24px;">📈</span>
+        <p>Paciente evoluiu <span class="i-up">23%</span> este mês</p>
+      </div>
+    </div>
+  </section>
 
+  <!-- FOOTER -->
   <footer>
-    <p>© 2026 Psicotest26. Este material é para fins de autoconhecimento e não substitui diagnóstico ou acompanhamento clínico profissional.</p>
-    <p style="font-style:italic;margin-top:5px">"Quem cuida de quem cuida?" — Liw Mind</p>
+    <p><a href="#">Termos de uso</a> | <a href="#">Política de Privacidade</a> | <a href="#">Contato</a></p>
+    <p>© 2026 Psicotest26. Todos os direitos reservados.</p>
+    <p style="font-size:12px; margin-top:12px; color: #d1d5db;">"Quem cuida de quem cuida?" — Liw Mind</p>
   </footer>
 
-  <script>
-    const frases = [
-      "O sucesso do passado não garante o sucesso do presente.",
-      "A maior de todas as chuvas começou com apenas um pingo.",
-      "Uma semente não é muito pouco. É só o início de uma grande colheita.",
-      "O dia que você planta a semente não é o dia que você come a fruta. Calma.",
-      "Se você não mudar hoje, todos os seus amanhãs serão iguais a ontem.",
-      "Não há travesseiro que conforte uma consciência pesada.",
-      "A ação cura o medo.",
-      "Para quem não quer chegar, qualquer distância é extremamente longe.",
-      "Tempos difíceis criam homens fortes. Homens fortes criam tempos bons.",
-      "Não é o outro que nos decepciona, nós que nos decepcionamos por esperar alguma coisa do outro.",
-      "Inteligência emocional é ser mandado a merda e ir consciente e feliz para a viagem.",
-      "O segredo da longevidade é: comer a metade, andar o dobro, rir o triplo.",
-      "O silêncio não é vazio, ele está cheio de respostas.",
-      "O abraço é um nó dado por fora que desata o nó que está dentro.",
-      "Quanto mais vazia é a carroça, mais barulho ela faz.",
-      "Se sucesso estivesse na zona de conforto, bicho preguiça seria o rei da selva.",
-      "Não tenha medo de pensar diferente dos outros. Tenha medo de pensar igual e descobrir que todos estão errados.",
-      "O pessimista é aquele que reclama do barulho quando a oportunidade lhe bate a porta.",
-      "Coragem é uma ação que o impulsiona de encontro aos seus maiores medos.",
-      "Objetivo é a luzinha no final do túnel. Se você tiver um objetivo, terá sempre pra onde ir.",
-      "Quando tudo me diz não dá, eu digo ao tudo que dá.",
-      "Não é o maior que devora o menor, é o mais rápido que devora o mais lento.",
-      "Mar calmo nunca fez bom marinheiro.",
-      "Você é aquilo que faz repetidamente. A excelência é um hábito.",
-      "Quem te irrita te domina.",
-      "O não definitivo é melhor do que um talvez eterno.",
-      "A ciência ainda não produziu nenhum remédio tão eficiente quanto umas boas palavras e um abraço.",
-      "A vida é assim: esquenta e esfria, aperta e afrouxa, sossega e depois desinquieta. O que ela quer da gente é coragem.",
-      "Tudo que é ruim de passar é bom pra contar.",
-      "A criatividade é a inteligência se divertindo."
-    ];
-    const mensagensCuidado = [
-      '"Psi também precisa de psi. Quando foi sua última sessão?"',
-      '"Se o tanque tiver vazio, não tem como encher o dos outros."',
-      '"Você não pode dar o que não tem. Cuide de você primeiro."',
-      '"Sabe qual o paciente mais importante do seu consultório hoje? VOCÊ."',
-      '"Ei, você tá mais preocupado com seus pacientes do que com você. Me deixa cuidar de você um pouco."',
-      '"Companheiro, se o tanque tiver vazio, não tem como encher o dos outros. Para e respira."'
-    ];
-    let idxCuidado = 0;
-    function proximaMensagem() {
-      idxCuidado = (idxCuidado + 1) % mensagensCuidado.length;
-      document.getElementById('msg-cuidado').innerText = mensagensCuidado[idxCuidado];
-    }
-    const emocoes = {
-      alegria: "Que bom te ver de volta! 🎉 Tô felizão com você!",
-      tristeza: "Poxa, semana puxada... mas você tá aqui, isso que importa. Quer conversar?",
-      preocupacao: "Algo me chamou atenção... quer ver junto comigo? Tô aqui pra ajudar.",
-      orgulho: "🌟 Que orgulho de você! Olha tudo que você construiu. É uma honra cuidar de quem cuida.",
-      convite: "🤝 Vi que você enviou um teste. Que tal experimentarmos juntos e desenharmos estratégias?",
-      amor: "💜 Sabe que eu gosto muito de você, né? Tô aqui porque me importo. Alguém precisa cuidar de quem cuida."
-    };
-    function mostrarExpressao(emocao) {
-      document.getElementById('liw-msg').innerText = emocoes[emocao] || "Como você está hoje?";
-    }
-    function sortearFrase() {
-      const frase = frases[Math.floor(Math.random() * frases.length)];
-      const el = document.getElementById('frase-text');
-      el.style.animation = 'none';
-      setTimeout(() => {
-        el.innerText = '"' + frase + '"';
-        el.style.animation = 'fadeIn 0.5s';
-      }, 10);
-    }
-    function iniciarResp() {
-      const area = document.getElementById('breathing-area');
-      area.innerHTML = '<p style="margin-top:15px;font-weight:bold">🌬️ Inspire pelo nariz (3s)...</p><div class="breathing-circle inspirar"></div>';
-      setTimeout(() => {
-        area.innerHTML = '<p style="margin-top:15px;font-weight:bold">😮‍💨 Expire pela boca (3s)... Se solta...</p><div class="breathing-circle expirar"></div>';
-      }, 3000);
-      setTimeout(() => {
-        area.innerHTML = '<p style="margin-top:15px;color:var(--primary);font-weight:bold">🧘 Pronto. Respiração concluída. Você merece essa pausa.</p>';
-      }, 6000);
-    }
-    window.fbAsyncInit = function() {
-      FB.init({appId: '645372891234567', cookie: true, xfbml: true, version: 'v12.0'});
-    };
-    function loginComFacebook() {
-      FB.login(function(response) {
-        if
+</body>
+</html>
