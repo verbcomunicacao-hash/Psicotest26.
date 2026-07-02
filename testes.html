@@ -1,101 +1,505 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Psicotest26 | Catálogo de Testes</title>
-  <style>
-    body{font-family:'Segoe UI',sans-serif;background-color:#f3e5f5;margin:0;padding:0}
-    header{background:linear-gradient(to right,#6a1b9a,#9c27b0);color:white;padding:20px;display:flex;align-items:center;gap:20px}
-    header a{color:white;text-decoration:none;font-weight:bold}
-    main{max-width:1200px;margin:20px auto;padding:0 20px}
-    .controls{margin-bottom:20px}
-    .search-bar{width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px}
-    .filter-btns{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
-    button{padding:8px 15px;border:none;border-radius:20px;cursor:pointer;background:#fff;border:1px solid #9c27b0;color:#9c27b0}
-    button.active{background:#9c27b0;color:#fff}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-    .card{background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-    .badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:0.8em;color:#fff;margin-bottom:10px}
-    .card h3{margin:10px 0;font-size:0.95rem}
-    .card p{font-size:0.85em;color:#666}
-    @media(max-width:992px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:600px){.grid{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testes Psicométricos · Liw</title>
+<style>
+  :root{
+    --bg:#0b1437;
+    --bg-2:#121c4a;
+    --roxo:#8b5cf6;
+    --roxo-2:#a78bfa;
+    --roxo-3:#6d28d9;
+    --txt:#e8ecff;
+    --txt-soft:#a9b3d6;
+    --card:rgba(255,255,255,.04);
+    --border:rgba(139,92,246,.25);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 20% -10%,#1a2566 0%,transparent 60%),
+               radial-gradient(900px 500px at 100% 0%,#2a1a5e 0%,transparent 55%),
+               var(--bg);
+    color:var(--txt);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:24px 16px 60px;
+  }
+  header{
+    width:100%;max-width:880px;display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.5px}
+  .logo .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--roxo),var(--roxo-3));box-shadow:0 0 14px var(--roxo)}
+  .badge{font-size:12px;color:var(--txt-soft);border:1px solid var(--border);padding:6px 12px;border-radius:999px;background:var(--card)}
+
+  .card{
+    width:100%;max-width:880px;background:var(--card);
+    border:1px solid var(--border);border-radius:20px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 20px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+    padding:28px;position:relative;overflow:hidden;
+  }
+
+  /* Progresso */
+  .progress-wrap{margin-bottom:22px}
+  .progress-top{display:flex;justify-content:space-between;font-size:13px;color:var(--txt-soft);margin-bottom:8px}
+  .progress-track{height:10px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden}
+  .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--roxo-3),var(--roxo),var(--roxo-2));border-radius:999px;transition:width .5s cubic-bezier(.22,1,.36,1);box-shadow:0 0 18px rgba(139,92,246,.6)}
+
+  /* Telas */
+  .screen{display:none;animation:fade .45s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* Tela inicial */
+  .hero{text-align:center;padding:30px 10px 10px}
+  .hero h1{font-size:30px;margin-bottom:10px;background:linear-gradient(90deg,#fff,var(--roxo-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--txt-soft);max-width:560px;margin:0 auto 24px;line-height:1.6}
+  .btn{
+    cursor:pointer;border:none;border-radius:14px;padding:14px 26px;font-size:15px;font-weight:600;
+    color:#fff;background:linear-gradient(135deg,var(--roxo),var(--roxo-3));
+    box-shadow:0 10px 30px rgba(109,40,217,.45);transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(109,40,217,.6)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--roxo-2)}
+  .btn.ghost:hover{background:rgba(139,92,246,.12)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+  /* Mascote */
+  .mascot-area{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
+  .liw{
+    flex:0 0 auto;width:84px;height:84px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%,#c4b5fd,var(--roxo) 60%,var(--roxo-3));
+    display:flex;align-items:center;justify-content:center;position:relative;
+    box-shadow:0 0 0 4px rgba(139,92,246,.15), 0 10px 30px rgba(109,40,217,.5);
+    animation:float 3.5s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .liw .face{position:relative;width:46px;height:46px}
+  .liw .eye{position:absolute;width:9px;height:9px;background:#0b1437;border-radius:50%;top:14px}
+  .liw .eye.l{left:8px}.liw .eye.r{right:8px}
+  .liw .mouth{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:16px;height:8px;border:2px solid #0b1437;border-top:none;border-radius:0 0 16px 16px}
+  .bubble{
+    position:relative;flex:1;background:rgba(167,139,250,.12);border:1px solid var(--border);
+    border-radius:14px;padding:14px 16px;font-size:14.5px;line-height:1.55;color:var(--txt);
+    min-height:56px;
+  }
+  .bubble::before{
+    content:"";position:absolute;left:-9px;top:18px;width:14px;height:14px;background:rgba(167,139,250,.12);
+    border-left:1px solid var(--border);border-bottom:1px solid var(--border);transform:rotate(45deg);
+  }
+
+  /* Pergunta */
+  .question{font-size:21px;font-weight:600;margin:6px 0 18px;line-height:1.4}
+  .options{display:flex;flex-direction:column;gap:12px}
+  .option{
+    cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);
+    border-radius:14px;padding:16px 18px;font-size:15px;color:var(--txt);
+    transition:all .18s ease;display:flex;align-items:center;gap:12px;
+  }
+  .option:hover{border-color:var(--roxo);background:rgba(139,92,246,.12);transform:translateX(4px)}
+  .option .key{flex:0 0 auto;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    background:rgba(139,92,246,.18);color:var(--roxo-2);font-weight:700;font-size:13px}
+  .option.selected{border-color:var(--roxo);background:rgba(139,92,246,.2);box-shadow:0 0 0 1px var(--roxo) inset}
+  .option.selected .key{background:var(--roxo);color:#fff}
+
+  .nav{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+
+  /* Resultado */
+  .result-head{text-align:center;margin-bottom:24px}
+  .result-head h2{font-size:26px;margin-bottom:6px}
+  .result-head p{color:var(--txt-soft)}
+  .chart{display:flex;flex-direction:column;gap:18px;margin-top:10px}
+  .bar-row{display:grid;grid-template-columns:160px 1fr 56px;align-items:center;gap:12px}
+  .bar-label{font-size:14px;color:var(--txt-soft)}
+  .bar-track{height:18px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--roxo-3),var(--roxo),var(--roxo-2));transition:width 1s cubic-bezier(.22,1,.36,1);box-shadow:0 0 16px rgba(139,92,246,.5)}
+  .bar-value{text-align:right;font-weight:700;color:var(--roxo-2);font-variant-numeric:tabular-nums}
+  .summary{margin-top:26px;padding:18px;border:1px dashed var(--border);border-radius:14px;color:var(--txt-soft);font-size:14.5px;line-height:1.6}
+  .result-actions{display:flex;justify-content:center;gap:12px;margin-top:24px}
+
+  .loading{text-align:center;padding:40px;color:var(--txt-soft)}
+  .error{color:#ff8fb0;border:1px solid rgba(255,143,176,.3);background:rgba(255,143,176,.08);padding:14px;border-radius:12px}
+
+  footer{margin-top:22px;color:var(--txt-soft);font-size:12px;text-align:center}
+</style>
 </head>
 <body>
+
   <header>
-    <div><a href="index.htm">← Voltar</a></div>
-    <h1>🐜 Psicotest26 | Liw Mind</h1>
+    <div class="logo"><span class="dot"></span> Liw · Testes Psicométricos</div>
+    <div class="badge" id="badge">Pronto para começar</div>
   </header>
-  <main>
-    <h2>📋 Catálogo de Testes</h2>
-    <p>50 testes comportamentais e psicológicos disponíveis</p>
-    <div class="controls">
-      <input type="text" id="search" class="search-bar" placeholder="Buscar por título...">
-      <div class="filter-btns" id="filters"></div>
-    </div>
-    <div class="grid" id="test-grid"></div>
+
+  <main class="card">
+
+    <!-- Tela inicial -->
+    <section class="screen active" id="screen-start">
+      <div class="hero">
+        <h1>Conheça-se melhor com o Liw</h1>
+        <p>Responda a uma série de perguntas rápidas e receba um perfil psicométrico visual ao final. O Liw vai te acompanhar em cada etapa. 🚀</p>
+        <button class="btn" id="btn-start">Iniciar testes</button>
+      </div>
+    </section>
+
+    <!-- Tela de carregamento -->
+    <section class="screen" id="screen-loading">
+      <div class="loading">Carregando perguntas…</div>
+    </section>
+
+    <!-- Tela de erro -->
+    <section class="screen" id="screen-error">
+      <div class="error" id="error-msg">Não foi possível carregar o arquivo testes.json.</div>
+      <div class="result-actions">
+        <button class="btn ghost" id="btn-retry">Tentar novamente</button>
+      </div>
+    </section>
+
+    <!-- Tela de perguntas -->
+    <section class="screen" id="screen-quiz">
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <span id="progress-label">Pergunta 1 de ?</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+      </div>
+
+      <div class="mascot-area">
+        <div class="liw" aria-hidden="true">
+          <div class="face">
+            <div class="eye l"></div>
+            <div class="eye r"></div>
+            <div class="mouth"></div>
+          </div>
+        </div>
+        <div class="bubble" id="bubble">Olá! Eu sou o Liw. Vamos começar? 😊</div>
+      </div>
+
+      <div class="question" id="question-text">…</div>
+      <div class="options" id="options"></div>
+
+      <div class="nav">
+        <button class="btn ghost" id="btn-prev">Voltar</button>
+        <button class="btn" id="btn-next" disabled>Próximo</button>
+      </div>
+    </section>
+
+    <!-- Tela de resultado -->
+    <section class="screen" id="screen-result">
+      <div class="result-head">
+        <h2>Seu perfil psicométrico</h2>
+        <p id="result-sub">Aqui está o resumo das suas dimensões avaliadas.</p>
+      </div>
+
+      <div class="mascot-area">
+        <div class="liw" aria-hidden="true">
+          <div class="face">
+            <div class="eye l"></div>
+            <div class="eye r"></div>
+            <div class="mouth"></div>
+          </div>
+        </div>
+        <div class="bubble" id="result-bubble">Pronto! Confira seu resultado abaixo. 🎉</div>
+      </div>
+
+      <div class="chart" id="chart"></div>
+      <div class="summary" id="summary"></div>
+
+      <div class="result-actions">
+        <button class="btn ghost" id="btn-restart">Refazer testes</button>
+      </div>
+    </section>
+
   </main>
-  <script>
-    const colors = {
-      Comportamental:"#2196f3", Psicológico:"#9c27b0", Personalidade:"#4caf50",
-      Cognitivo:"#ff9800", Social:"#e91e63", Negócios:"#f44336", Saúde:"#b71c1c",
-      Filosófico:"#3f51b5", Liderança:"#00bcd4", Carreira:"#009688",
-      "Soft Skills":"#ffeb3b", Gestão:"#9e9e9e", Relacional:"#e91e63",
-      Comercial:"#795548", Neuropsicológico:"#4a148c", Inovação:"#cddc39",
-      Produtividade:"#8bc34a"
-    };
-    let tests = [];
-    const grid = document.getElementById('test-grid');
-    const search = document.getElementById('search');
-    const filters = document.getElementById('filters');
 
-    async function loadTests() {
-      const res = await fetch('testes.json');
-      tests = await res.json();
-      renderFilters();
-      renderTests(tests);
+  <footer>© Liw · Interface de testes psicométricos</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const JSON_URL = "testes.json";
+
+  const state = {
+    data: null,
+    current: 0,
+    answers: [], // {perguntaId, opcaoIndex, dimensao, peso}
+    scores: {},  // dimensao -> soma
+    maxScores: {} // dimensao -> soma máxima possível
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const screens = {
+    start: $("screen-start"),
+    loading: $("screen-loading"),
+    error: $("screen-error"),
+    quiz: $("screen-quiz"),
+    result: $("screen-result")
+  };
+
+  function showScreen(name){
+    Object.values(screens).forEach(s => s.classList.remove("active"));
+    screens[name].classList.add("active");
+  }
+
+  function setBadge(text){ $("badge").textContent = text; }
+
+  // Frases do Liw por contexto
+  const liwLines = {
+    intro: [
+      "Olá! Eu sou o Liw. Vamos começar? 😊",
+      "Responda com sinceridade, não existe resposta certa!"
+    ],
+    mid: [
+      "Você está indo muito bem! 🌟",
+      "Mais uma e a gente chega lá!",
+      "Continue assim, estou torcendo por você!"
+    ],
+    last: [
+      "Última pergunta! Quase lá… 🏁",
+      "Depois dessa, vou montar seu perfil!"
+    ],
+    pick: [
+      "Boa escolha! Toque em Próximo.",
+      "Ótimo, pode continuar quando quiser.",
+      "Selecionado! 👍"
+    ]
+  };
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function setBubble(text){
+    const b = $("bubble");
+    b.style.opacity = 0;
+    setTimeout(() => { b.textContent = text; b.style.transition = "opacity .3s"; b.style.opacity = 1; }, 120);
+  }
+
+  async function loadQuestions(){
+    showScreen("loading");
+    setBadge("Carregando…");
+    try{
+      const res = await fetch(JSON_URL, { cache: "no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      if(!data || !Array.isArray(data.perguntas) || data.perguntas.length === 0){
+        throw new Error("Formato inválido");
+      }
+      state.data = data;
+      state.current = 0;
+      state.answers = new Array(data.perguntas.length).fill(null);
+      computeMaxScores(data);
+      startQuiz();
+    }catch(err){
+      console.error(err);
+      $("error-msg").textContent =
+        "Não foi possível carregar o arquivo testes.json. Verifique se o arquivo existe e está no formato correto.";
+      showScreen("error");
+      setBadge("Erro ao carregar");
     }
+  }
 
-    function renderFilters() {
-      const tipos = ["Todos", ...new Set(tests.map(t => t.tipo))];
-      tipos.forEach(t => {
-        const btn = document.createElement('button');
-        btn.innerText = t;
-        btn.onclick = () => filtrar(t, btn);
-        filters.appendChild(btn);
+  function computeMaxScores(data){
+    state.maxScores = {};
+    state.scores = {};
+    const dims = data.dimensoes || {};
+    Object.keys(dims).forEach(d => { state.maxScores[d] = 0; state.scores[d] = 0; });
+    data.perguntas.forEach(p => {
+      (p.opcoes || []).forEach(op => {
+        const d = op.dimensao || (dims[Object.keys(dims)[0]] ? Object.keys(dims)[0] : "Geral");
+        const w = Number(op.peso || 1);
+        state.maxScores[d] = (state.maxScores[d] || 0) + w;
+        state.scores[d] = state.scores[d] || 0;
       });
+    });
+    // Garantia de chave "Geral" caso não haja dimensões definidas
+    if(Object.keys(state.maxScores).length === 0){
+      state.maxScores["Geral"] = data.perguntas.length;
+      state.scores["Geral"] = 0;
     }
+  }
 
-    function renderTests(data) {
-      grid.innerHTML = '';
-      data.forEach(t => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <span class="badge" style="background:${colors[t.tipo] || '#000'}">${t.tipo}</span>
-          <h3>${t.titulo}</h3>
-          <p>📝 ${t.perguntas} perguntas</p>
-          ${t.bibliografia ? `<p>📖 ${t.bibliografia}</p>` : ''}
-        `;
-        grid.appendChild(card);
-      });
+  function startQuiz(){
+    setBadge("Em andamento");
+    showScreen("quiz");
+    setBubble(pick(liwLines.intro));
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    const p = state.data.perguntas[state.current];
+    const total = state.data.perguntas.length;
+
+    // Progresso
+    const pct = Math.round((state.current / total) * 100);
+    $("progress-bar").style.width = pct + "%";
+    $("progress-label").textContent = `Pergunta ${state.current+1} de ${total}`;
+    $("progress-percent").textContent = pct + "%";
+
+    // Pergunta
+    $("question-text").textContent = p.texto || p.pergunta || `Pergunta ${state.current+1}`;
+
+    // Opções
+    const opts = $("options");
+    opts.innerHTML = "";
+    (p.opcoes || []).forEach((op, i) => {
+      const el = document.createElement("div");
+      el.className = "option";
+      const sel = state.answers[state.current] && state.answers[state.current].opcaoIndex === i;
+      if(sel) el.classList.add("selected");
+      el.innerHTML = `<div class="key">${String.fromCharCode(65+i)}</div><div>${op.texto}</div>`;
+      el.addEventListener("click", () => selectOption(i, el));
+      opts.appendChild(el);
+    });
+
+    // Botões
+    $("btn-prev").disabled = state.current === 0;
+    const answered = state.answers[state.current] !== null;
+    $("btn-next").disabled = !answered;
+    $("btn-next").textContent = (state.current === total-1) ? "Ver resultado" : "Próximo";
+
+    // Fala do Liw conforme etapa
+    if(state.current === 0){
+      // mantém intro
+    } else if(state.current === total-1){
+      setBubble(pick(liwLines.last));
+    } else if(state.current % 2 === 0){
+      setBubble(pick(liwLines.mid));
     }
+  }
 
-    function filtrar(tipo, btn) {
-      document.querySelectorAll('.filter-btns button').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      const filtrados = tipo === 'Todos' ? tests : tests.filter(t => t.tipo === tipo);
-      renderTests(filtrados);
-    }
+  function selectOption(i, el){
+    const p = state.data.perguntas[state.current];
+    const op = p.opcoes[i];
+    const dims = state.data.dimensoes || {};
+    const d = op.dimensao || (Object.keys(dims)[0] || "Geral");
+    const w = Number(op.peso || 1);
 
-    search.oninput = (e) => {
-      const val = e.target.value.toLowerCase();
-      renderTests(tests.filter(t => t.titulo.toLowerCase().includes(val)));
+    state.answers[state.current] = {
+      perguntaId: p.id || state.current,
+      opcaoIndex: i,
+      dimensao: d,
+      peso: w
     };
 
-    loadTests();
-  </script>
+    document.querySelectorAll("#options .option").forEach(o => o.classList.remove("selected"));
+    el.classList.add("selected");
+    $("btn-next").disabled = false;
+    setBubble(pick(liwLines.pick));
+  }
+
+  function next(){
+    if(state.answers[state.current] === null) return;
+    if(state.current === state.data.perguntas.length - 1){
+      finishQuiz();
+      return;
+    }
+    state.current++;
+    renderQuestion();
+  }
+
+  function prev(){
+    if(state.current === 0) return;
+    state.current--;
+    renderQuestion();
+  }
+
+  function finishQuiz(){
+    // Recalcula scores
+    Object.keys(state.scores).forEach(d => state.scores[d] = 0);
+    state.answers.forEach(a => {
+      if(!a) return;
+      state.scores[a.dimensao] = (state.scores[a.dimensao] || 0) + a.peso;
+    });
+
+    // Progresso 100%
+    $("progress-bar").style.width = "100%";
+    $("progress-percent").textContent = "100%";
+
+    setBadge("Concluído");
+    showScreen("result");
+    renderResult();
+  }
+
+  function renderResult(){
+    const dims = state.data.dimensoes || {};
+    const chart = $("chart");
+    chart.innerHTML = "";
+
+    const entries = Object.keys(state.scores).map(d => {
+      const max = state.maxScores[d] || 1;
+      const val = state.scores[d] || 0;
+      const pct = Math.round((val / max) * 100);
+      return { dim:d, label: dims[d] || d, val, max, pct };
+    }).sort((a,b) => b.pct - a.pct);
+
+    entries.forEach(e => {
+      const row = document.createElement("div");
+      row.className = "bar-row";
+      row.innerHTML = `
+        <div class="bar-label">${e.label}</div>
+        <div class="bar-track"><div class="bar-fill" data-pct="${e.pct}"></div></div>
+        <div class="bar-value">${e.pct}%</div>
+      `;
+      chart.appendChild(row);
+    });
+
+    // Anima as barras
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".bar-fill").forEach(b => { b.style.width = b.dataset.pct + "%"; });
+    });
+
+    // Resumo textual
+    const top = entries[0];
+    const low = entries[entries.length-1];
+    let txt = `Sua dimensão mais forte foi <strong style="color:var(--roxo-2)">${top.label}</strong> com ${top.pct}%. `;
+    if(entries.length > 1){
+      txt += `Já <strong style="color:var(--txt)">${low.label}</strong> apareceu como ponto de atenção (${low.pct}%). `;
+    }
+    txt += "Use esses dados como autoconhecimento — eles não são um diagnóstico clínico.";
+    $("summary").innerHTML = txt;
+
+    // Fala final do Liw
+    $("result-bubble").textContent = `Pronto! Seu destaque foi ${top.label}. 🎉`;
+  }
+
+  function restart(){
+    state.current = 0;
+    state.answers = [];
+    Object.keys(state.scores).forEach(d => state.scores[d] = 0);
+    setBadge("Pronto para começar");
+    showScreen("start");
+  }
+
+  // Eventos
+  $("btn-start").addEventListener("click", loadQuestions);
+  $("btn-retry").addEventListener("click", loadQuestions);
+  $("btn-next").addEventListener("click", next);
+  $("btn-prev").addEventListener("click", prev);
+  $("btn-restart").addEventListener("click", restart);
+
+  // Atalhos de teclado
+  document.addEventListener("keydown", (e) => {
+    if(!screens.quiz.classList.contains("active")) return;
+    if(e.key === "Enter" && !$("btn-next").disabled){ next(); }
+    if(e.key === "ArrowLeft" && !$("btn-prev").disabled){ prev(); }
+    if(e.key === "ArrowRight" && !$("btn-next").disabled){ next(); }
+    // 1-9 seleciona opção
+    const n = parseInt(e.key,10);
+    if(!isNaN(n) && n>=1){
+      const opts = document.querySelectorAll("#options .option");
+      if(opts[n-1]) opts[n-1].click();
+    }
+  });
+
+})();
+</script>
 </body>
 </html>
