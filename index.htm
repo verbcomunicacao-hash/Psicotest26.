@@ -1,326 +1,565 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Psicotest26 | Plataforma de Testes Comportamentais</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Psicotest26 — Ecossistema profissional de avaliações psicológicas digitais. Testes científicos, relatórios inteligentes e acompanhamento contínuo." />
+  <meta name="theme-color" content="#7c3aed" />
+  <title>Psicotest26 — Avaliações Psicológicas Inteligentes</title>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', 'Segoe UI', sans-serif; color: #1f2937; background: #fff; line-height: 1.6; }
-    a { text-decoration: none; }
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #7c3aed;
+      --primary-dark: #5b21b6;
+      --primary-light: #a78bfa;
+      --primary-soft: #ede9fe;
+      --ink: #1e1b2e;
+      --muted: #6b6786;
+      --bg: #ffffff;
+      --bg-alt: #f7f6fc;
+      --card: #ffffff;
+      --ring: rgba(124, 58, 237, 0.18);
+      --shadow: 0 18px 50px rgba(91, 33, 182, 0.12);
+      --radius: 18px;
+      --maxw: 1180px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img, svg { display: block; max-width: 100%; }
+    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
 
-    /* HEADER */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #e5e7eb; max-width: 1200px; margin: 0 auto; }
-    .logo-group { display: flex; align-items: center; gap: 12px; }
-    .logo-box { width: 40px; height: 40px; background: #7c3aed; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; }
-    .logo-text { font-size: 20px; font-weight: 700; }
-    .badge-ia { background: #7c3aed; color: #fff; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
-    nav { display: flex; gap: 32px; color: #6b7280; font-weight: 500; font-size: 15px; cursor: default; }
-    nav span:hover { color: #7c3aed; }
+    /* ===== Header ===== */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(160%) blur(12px);
+      border-bottom: 1px solid rgba(124,58,237,0.10);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -0.02em; }
+    .brand .logo {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: grid; place-items: center; color: #fff; font-weight: 900; box-shadow: var(--ring);
+    }
+    .brand span b { color: var(--primary); }
+    .nav-links { display: flex; gap: 26px; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 600; font-size: 0.95rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--primary); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 999px; font-weight: 700; cursor: pointer;
+      border: none; transition: transform .15s ease, box-shadow .2s ease, background .2s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 10px 24px rgba(124,58,237,0.35); }
+    .btn-primary:hover { transform: translateY(-2px); background: var(--primary-dark); }
+    .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary-light); }
+    .btn-ghost:hover { background: var(--primary-soft); }
+    .menu-toggle { display: none; background: none; border: none; cursor: pointer; }
 
-    /* HERO */
-    .hero { background: #f9fafb; text-align: center; padding: 100px 24px; }
-    .hero h1 { font-size: 56px; font-weight: 800; line-height: 1.15; max-width: 900px; margin: 0 auto 24px; letter-spacing: -0.02em; }
-    .hero h1 span { color: #7c3aed; }
-    .hero p { font-size: 20px; color: #6b7280; max-width: 700px; margin: 0 auto 48px; }
-    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .btn { padding: 16px 36px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; border: none; display: inline-block; transition: all 0.2s; }
-    .btn-primary { background: #7c3aed; color: #fff; }
-    .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
-    .btn-outline { background: transparent; color: #7c3aed; border: 2px solid #7c3aed; }
-    .btn-outline:hover { background: #7c3aed; color: #fff; transform: translateY(-1px); }
-    .btn-white { background: #fff; color: #6d28d9; padding: 16px 40px; border-radius: 10px; font-weight: 700; font-size: 16px; display: inline-block; transition: 0.2s; }
-    .btn-white:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    /* ===== Hero ===== */
+    .hero { position: relative; padding: 80px 0 90px; background:
+      radial-gradient(1100px 500px at 80% -10%, rgba(124,58,237,0.16), transparent 60%),
+      radial-gradient(900px 500px at 0% 10%, rgba(167,139,250,0.12), transparent 55%);
+      overflow: hidden;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
+      background: var(--primary-soft); color: var(--primary-dark); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 18px;
+    }
+    .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgba(124,58,237,0.18); }
+    h1 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); line-height: 1.08; letter-spacing: -0.03em; font-weight: 900; }
+    h1 .grad { background: linear-gradient(120deg, var(--primary), var(--primary-light)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead { color: var(--muted); font-size: 1.12rem; margin: 18px 0 28px; max-width: 560px; }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 28px; margin-top: 36px; flex-wrap: wrap; }
+    .stat b { display: block; font-size: 1.5rem; color: var(--primary); font-weight: 900; }
+    .stat span { color: var(--muted); font-size: 0.9rem; }
 
-    /* STATS */
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); padding: 48px 24px; max-width: 900px; margin: 0 auto; text-align: center; gap: 24px; border-bottom: 1px solid #e5e7eb; }
-    .stats-item .icon { font-size: 32px; margin-bottom: 8px; }
-    .stats-item strong { font-size: 20px; display: block; }
-    .stats-item small { color: #6b7280; font-size: 14px; }
+    /* Mascot stage */
+    .mascot-stage { position: relative; display: grid; place-items: center; min-height: 420px; }
+    .mascot-glow { position: absolute; inset: 0; background: radial-gradient(closest-side, rgba(124,58,237,0.22), transparent 70%); filter: blur(8px); }
+    .mascot { width: 360px; max-width: 90vw; animation: floaty 5s ease-in-out infinite; filter: drop-shadow(0 26px 40px rgba(91,33,182,0.28)); }
+    @keyframes floaty { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-14px) rotate(1deg); } }
 
-    /* CATEGORIES */
-    .categories { padding: 80px 24px; text-align: center; max-width: 1200px; margin: 0 auto; }
-    .categories h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
-    .categories > p { color: #6b7280; font-size: 16px; margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto; }
-    .filters { display: flex; justify-content: center; gap: 8px; margin-bottom: 48px; flex-wrap: wrap; }
-    .filter { padding: 8px 18px; border-radius: 20px; border: 1px solid #e5e7eb; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; color: #374151; }
-    .filter:hover { border-color: #7c3aed; color: #7c3aed; }
-    .filter.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+    /* ===== Sections ===== */
+    section { padding: 84px 0; }
+    .section-head { text-align: center; max-width: 720px; margin: 0 auto 52px; }
+    .eyebrow { color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.78rem; }
+    h2 { font-size: clamp(1.7rem, 3.2vw, 2.5rem); letter-spacing: -0.02em; margin: 10px 0 12px; font-weight: 900; }
+    .section-head p { color: var(--muted); }
 
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px; text-align: left; transition: all 0.3s ease; background: #fff; position: relative; }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); border-color: #d1d5db; }
-    .card-icon { font-size: 32px; margin-bottom: 16px; display: inline-block; transition: all 0.3s ease; }
-    .card:hover .card-icon { transform: scale(1.15) rotate(-5deg); }
-    .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
-    .card-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .tag-cat { background: #f3f4f6; color: #374151; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
-    .tag-inc { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .tag-premium { background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-    .card a { color: #7c3aed; font-weight: 700; font-size: 14px; display: inline-block; margin-top: 12px; transition: all 0.3s ease; }
-    .card:hover a { transform: translateX(4px); }
-    .card.premium { background: #fafafa; opacity: 0.92; }
-    .card.premium a { color: #92400e; }
-    .premium-flag { position: absolute; top: 16px; right: 16px; background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+    .features { background: var(--bg-alt); }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .card {
+      background: var(--card); border: 1px solid rgba(124,58,237,0.08); border-radius: var(--radius);
+      padding: 28px; box-shadow: var(--shadow); transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 26px 60px rgba(91,33,182,0.18); }
+    .card .ico {
+      width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--primary-soft), #fff); color: var(--primary); margin-bottom: 16px;
+      border: 1px solid rgba(124,58,237,0.12);
+    }
+    .card h3 { font-size: 1.18rem; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 0.96rem; }
 
-    /* PREMIUM BANNER */
-    .premium { background: linear-gradient(135deg, #4c1d95, #6d28d9); text-align: center; padding: 80px 24px; color: #fff; }
-    .premium h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; }
-    .premium p { font-size: 18px; margin-bottom: 32px; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto; }
+    /* Ecosystem / modules */
+    .modules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .module {
+      border-radius: var(--radius); padding: 22px; background: linear-gradient(180deg, #fff, var(--bg-alt));
+      border: 1px solid rgba(124,58,237,0.10); text-align: center; transition: transform .2s, border-color .2s;
+    }
+    .module:hover { transform: translateY(-4px); border-color: var(--primary-light); }
+    .module .badge { width: 46px; height: 46px; margin: 0 auto 12px; border-radius: 12px; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 900; }
+    .module h4 { font-size: 1.02rem; margin-bottom: 6px; }
+    .module p { color: var(--muted); font-size: 0.86rem; }
 
-    /* LIW SECTION */
-    .liw-section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
-    .liw-flex { display: flex; align-items: center; gap: 48px; }
-    .liw-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #7c3aed; object-fit: cover; flex-shrink: 0; }
-    .liw-text small { color: #6b7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; }
-    .liw-text h2 { color: #7c3aed; font-size: 32px; font-weight: 700; margin: 8px 0 16px; }
-    .liw-text p { color: #6b7280; font-size: 16px; max-width: 500px; }
-    .liw-insights { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
-    .insight-card { padding: 20px; border: 1px solid #e5e7eb; border-radius: 10px; display: flex; align-items: center; gap: 12px; }
-    .insight-card p { font-size: 14px; color: #374151; font-weight: 500; margin: 0; }
-    .i-badge { background: #ede9fe; color: #7c3aed; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
-    .i-up { color: #10b981; font-weight: 700; }
+    /* Steps */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: step; }
+    .step { position: relative; padding: 26px 22px 22px; border-radius: var(--radius); background: #fff; border: 1px solid rgba(124,58,237,0.10); }
+    .step::before { counter-increment: step; content: counter(step); position: absolute; top: -16px; left: 22px; width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 900; box-shadow: 0 8px 18px rgba(124,58,237,0.35); }
+    .step h4 { margin: 6px 0 6px; }
+    .step p { color: var(--muted); font-size: 0.9rem; }
 
-    /* FOOTER */
-    footer { border-top: 1px solid #e5e7eb; padding: 40px 24px; text-align: center; color: #9ca3af; font-size: 14px; }
-    footer a { color: #6b7280; text-decoration: none; margin: 0 12px; }
-    footer a:hover { color: #7c3aed; }
-    footer p { margin-bottom: 8px; }
+    /* Testimonials */
+    .quotes { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .quote { background: #fff; border-radius: var(--radius); padding: 26px; border: 1px solid rgba(124,58,237,0.10); box-shadow: var(--shadow); }
+    .quote p { color: var(--ink); font-style: italic; }
+    .quote .who { margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+    .quote .avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; display: grid; place-items: center; font-weight: 800; }
+    .quote .who small { color: var(--muted); display: block; }
 
-    /* RESPONSIVE */
-    @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 768px) {
-      header { flex-direction: column; gap: 16px; padding: 16px 20px; }
-      nav { display: none; }
-      .hero h1 { font-size: 32px; }
-      .hero p { font-size: 18px; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .grid { grid-template-columns: 1fr; }
-      .premium h2 { font-size: 28px; }
-      .liw-flex { flex-direction: column; text-align: center; }
-      .liw-insights { grid-template-columns: 1fr; }
+    /* CTA */
+    .cta-band { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border-radius: 26px; padding: 56px 40px; text-align: center; box-shadow: 0 30px 70px rgba(91,33,182,0.30); }
+    .cta-band h2 { color: #fff; }
+    .cta-band p { color: rgba(255,255,255,0.9); margin: 10px auto 26px; max-width: 620px; }
+    .cta-band .btn-primary { background: #fff; color: var(--primary-dark); }
+    .cta-band .btn-primary:hover { background: #f3eefe; }
+    .cta-band .btn-ghost { color: #fff; border-color: rgba(255,255,255,0.6); }
+    .cta-band .btn-ghost:hover { background: rgba(255,255,255,0.12); }
+
+    /* Footer */
+    footer { background: #15122a; color: #c9c5e0; padding: 60px 0 30px; }
+    .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; }
+    footer h5 { color: #fff; margin-bottom: 14px; font-size: 1rem; }
+    footer a { display: block; color: #b8b3d6; padding: 5px 0; transition: color .2s; }
+    footer a:hover { color: #fff; }
+    .foot-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; color: #fff; font-weight: 800; }
+    .foot-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 36px; padding-top: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.85rem; color: #8e89ad; }
+
+    /* ===== Scroll animations ===== */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal.delay-1 { transition-delay: .08s; }
+    .reveal.delay-2 { transition-delay: .16s; }
+    .reveal.delay-3 { transition-delay: .24s; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 960px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .mascot-stage { min-height: 360px; order: -1; }
+      .cards, .modules, .steps, .quotes { grid-template-columns: repeat(2, 1fr); }
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 620px) {
+      .nav-links { display: none; }
+      .menu-toggle { display: inline-flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column; position: absolute; top: 72px; right: 16px; left: 16px;
+        background: #fff; border: 1px solid rgba(124,58,237,0.12); border-radius: 14px; padding: 18px; box-shadow: var(--shadow);
+      }
+      .cards, .modules, .steps, .quotes, .foot-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 18px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- ===== Header ===== -->
   <header>
-    <div class="logo-group">
-      <div class="logo-box">🧠</div>
-      <span class="logo-text">Psicotest26</span>
-      <span class="badge-ia">⭐ Com IA Liw integrada</span>
+    <div class="container nav">
+      <a class="brand" href="#top">
+        <span class="logo">P26</span>
+        <span>Psico<b>test26</b></span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#features">Recursos</a>
+        <a href="#ecosystem">Ecossistema</a>
+        <a href="#how">Como funciona</a>
+        <a href="#proof">Depoimentos</a>
+        <a href="#contact">Contato</a>
+        <a class="btn btn-primary" href="#start">Começar agora</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
     </div>
-    <nav>
-      <span>Início</span>
-      <span>Testes</span>
-      <span>Resultados</span>
-      <span>Insights</span>
-    </nav>
   </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <h1>Quero te ajudar a alcançar <span>outro patamar</span> como profissional.</h1>
-    <p>Plataforma completa com <strong>50 testes comportamentais</strong>, devolutivas personalizadas e a inteligência artificial Liw ao lado para transformar seus atendimentos.</p>
-    <div class="hero-btns">
-      <a href="#" class="btn btn-primary">Começar Agora →</a>
-      <a href="testes.html" class="btn btn-outline">Ver todos os testes</a>
+  <!-- ===== Hero ===== -->
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="pill"><span class="dot"></span> Plataforma científica de avaliações psicológicas</span>
+          <h1>Transforme avaliação psicológica em <span class="grad">decisões clínicas precisas</span></h1>
+          <p class="lead">O Psicotest26 é o ecossistema completo para aplicação, correção e interpretação de testes psicológicos digitais — com relatórios inteligentes, validação científica e acompanhamento longitudinal.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#start">Iniciar avaliação</a>
+            <a class="btn btn-ghost" href="#how">Ver como funciona</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat"><b>+120</b><span>Instrumentos validados</span></div>
+            <div class="stat"><b>98%</b><span>Precisão dos relatórios</span></div>
+            <div class="stat"><b>+45k</b><span>Avaliações realizadas</span></div>
+          </div>
+        </div>
+
+        <!-- Mascote Liw (SVG 3D estilo Pixar) -->
+        <div class="mascot-stage reveal delay-2" aria-label="Mascote Liw">
+          <div class="mascot-glow"></div>
+          <svg class="mascot" viewBox="0 0 420 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Liw, mascote do Psicotest26">
+            <defs>
+              <radialGradient id="bodyGrad" cx="38%" cy="30%" r="75%">
+                <stop offset="0%" stop-color="#c4b5fd"/>
+                <stop offset="45%" stop-color="#8b5cf6"/>
+                <stop offset="100%" stop-color="#5b21b6"/>
+              </radialGradient>
+              <radialGradient id="headGrad" cx="40%" cy="28%" r="75%">
+                <stop offset="0%" stop-color="#ddd6fe"/>
+                <stop offset="50%" stop-color="#a78bfa"/>
+                <stop offset="100%" stop-color="#6d28d9"/>
+              </radialGradient>
+              <linearGradient id="visorGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#e9d5ff" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.9"/>
+              </linearGradient>
+              <radialGradient id="cheekGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#f472b6" stop-opacity="0.75"/>
+                <stop offset="100%" stop-color="#f472b6" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#4c1d95"/>
+              </linearGradient>
+              <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6"/>
+              </filter>
+            </defs>
+
+            <!-- Sombra do chão -->
+            <ellipse cx="210" cy="430" rx="120" ry="20" fill="rgba(91,33,182,0.25)" filter="url(#soft)"/>
+
+            <!-- Corpo (gota 3D) -->
+            <path d="M210 120 C300 120 330 210 318 290 C308 360 270 410 210 410 C150 410 112 360 102 290 C90 210 120 120 210 120 Z" fill="url(#bodyGrad)"/>
+            <!-- Reflexo do corpo -->
+            <path d="M150 170 C140 210 138 270 158 320 C168 345 180 360 196 366" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="10" stroke-linecap="round"/>
+
+            <!-- Cabeça -->
+            <ellipse cx="210" cy="150" rx="96" ry="88" fill="url(#headGrad)"/>
+            <!-- Topo brilhante da cabeça -->
+            <ellipse cx="186" cy="112" rx="40" ry="24" fill="rgba(255,255,255,0.45)"/>
+
+            <!-- Visor / óculos inteligente -->
+            <rect x="128" y="132" width="164" height="56" rx="28" fill="url(#visorGrad)" stroke="#4c1d95" stroke-width="3"/>
+            <!-- Tela do visor -->
+            <rect x="140" y="142" width="140" height="36" rx="18" fill="url(#screenGrad)"/>
+            <!-- Gráfico na tela -->
+            <polyline points="150,168 168,158 184,164 200,150 216,160 232,148 248,158 266,150 272,156" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+            <circle cx="272" cy="156" r="3" fill="#fbbf24"/>
+            <!-- Reflexo do visor -->
+            <path d="M140 150 q20 -10 40 0" stroke="rgba(255,255,255,0.7)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+            <!-- Bochechas -->
+            <circle cx="150" cy="196" r="16" fill="url(#cheekGrad)"/>
+            <circle cx="270" cy="196" r="16" fill="url(#cheekGrad)"/>
+
+            <!-- Sorriso -->
+            <path d="M188 210 q22 26 44 0" fill="none" stroke="#3b1d6e" stroke-width="5" stroke-linecap="round"/>
+            <!-- Dente brilho -->
+            <path d="M198 214 q12 10 24 0" fill="#ffffff" opacity="0.85"/>
+
+            <!-- Antena com bolinha -->
+            <line x1="210" y1="66" x2="210" y2="92" stroke="#5b21b6" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="210" cy="58" r="12" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+            <circle cx="206" cy="54" r="4" fill="#fff7ed"/>
+
+            <!-- Braços -->
+            <path d="M118 250 c-26 -6 -46 6 -52 26" fill="none" stroke="#6d28d9" stroke-width="16" stroke-linecap="round"/>
+            <path d="M302 250 c26 -6 46 6 52 26" fill="none" stroke="#6d28d9" stroke-width="16" stroke-linecap="round"/>
+            <!-- Mãos -->
+            <circle cx="64" cy="280" r="13" fill="#a78bfa"/>
+            <circle cx="356" cy="280" r="13" fill="#a78bfa"/>
+
+            <!-- Prancheta (avaliação) na mão direita -->
+            <g transform="rotate(14 356 280)">
+              <rect x="332" y="250" width="52" height="66" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="3"/>
+              <rect x="344" y="244" width="28" height="10" rx="4" fill="#7c3aed"/>
+              <line x1="340" y1="270" x2="376" y2="270" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/>
+              <line x1="340" y1="282" x2="372" y2="282" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/>
+              <line x1="340" y1="294" x2="368" y2="294" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/>
+              <path d="M360 300 l6 6 l10 -14" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+
+            <!-- Pés -->
+            <ellipse cx="172" cy="418" rx="34" ry="16" fill="#4c1d95"/>
+            <ellipse cx="248" cy="418" rx="34" ry="16" fill="#4c1d95"/>
+            <ellipse cx="172" cy="414" rx="20" ry="8" fill="#a78bfa" opacity="0.6"/>
+            <ellipse cx="248" cy="414" rx="20" ry="8" fill="#a78bfa" opacity="0.6"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Features ===== -->
+    <section id="features" class="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Recursos</span>
+          <h2>Tecnologia a serviço da avaliação psicológica</h2>
+          <p>Um conjunto integrado de ferramentas para profissionais, instituições e pesquisadores.</p>
+        </div>
+        <div class="cards">
+          <article class="card reveal">
+            <div class="ico">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <h3>Banco científico</h3>
+            <p>Mais de 120 instrumentos com validação nacional e internacional, atualizados continuamente.</p>
+          </article>
+          <article class="card reveal delay-1">
+            <div class="ico">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+            </div>
+            <h3>Relatórios inteligentes</h3>
+            <p>Interpretação automática com perfis, índices e gráficos prontos para a decisão clínica.</p>
+          </article>
+          <article class="card reveal delay-2">
+            <div class="ico">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Segurança e LGPD</h3>
+            <p>Criptografia ponta a ponta, consentimento digital e conformidade total com a LGPD.</p>
+          </article>
+          <article class="card reveal">
+            <div class="ico">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+            </div>
+            <h3>Aplicação remota</h3>
+            <p>Envie testes por link seguro e acompanhe o respondente em tempo real, de qualquer dispositivo.</p>
+          </article>
+          <article class="card reveal delay-1">
+            <div class="ico">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+            </div>
+            <h3>Acompanhamento longitudinal</h3>
+            <p>Compare retestes, evolução de sintomas e indicadores ao longo do tempo.</p>
+          </article>
+          <article class="card reveal delay-2">
+            <div class="ico">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+            </div>
+            <h3>Prontuário integrado</h3>
+            <p>Histórico centralizado por paciente, com anotações e exportação em PDF.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Ecosystem ===== -->
+    <section id="ecosystem">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Ecossistema Psicotest26</span>
+          <h2>Um sistema, múltiplos módulos</h2>
+          <p>Plataforma modular que atende do consultório individual às grandes instituições.</p>
+        </div>
+        <div class="modules">
+          <div class="module reveal">
+            <div class="badge">T</div>
+            <h4>Test Library</h4>
+            <p>Catálogo completo de instrumentos por área.</p>
+          </div>
+          <div class="module reveal delay-1">
+            <div class="badge">R</div>
+            <h4>Reports AI</h4>
+            <p>Geração de laudos com interpretação assistida.</p>
+          </div>
+          <div class="module reveal delay-2">
+            <div class="badge">C</div>
+            <h4>Clinic Hub</h4>
+            <p>Gestão de equipes, agendas e pacientes.</p>
+          </div>
+          <div class="module reveal delay-3">
+            <div class="badge">L</div>
+            <h4>Lab Research</h4>
+            <p>Coleta de dados e exportação para pesquisa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== How it works ===== -->
+    <section id="how" class="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Como funciona</span>
+          <h2>Do convite ao laudo em 4 passos</h2>
+          <p>Fluxo guiado, seguro e auditável para cada avaliação.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <h4>Selecione o instrumento</h4>
+            <p>Escolha entre testes por área, faixa etária e objetivo clínico.</p>
+          </div>
+          <div class="step reveal delay-1">
+            <h4>Convite ao respondente</h4>
+            <p>Link seguro com consentimento digital e instruções automáticas.</p>
+          </div>
+          <div class="step reveal delay-2">
+            <h4>Correção automática</h4>
+            <p>Escoragem conforme normas técnicas e perfis interpretativos.</p>
+          </div>
+          <div class="step reveal delay-3">
+            <h4>Laudo e acompanhamento</h4>
+            <p>Relatório em PDF, prontuário e retestes longitudinais.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Testimonials ===== -->
+    <section id="proof">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Depoimentos</span>
+          <h2>Profissionais que confiam no Psicotest26</h2>
+        </div>
+        <div class="quotes">
+          <figure class="quote reveal">
+            <p>“Reduzi em 70% o tempo de elaboração de laudos. A interpretação automática é precisa e segura.”</p>
+            <figcaption class="who">
+              <span class="avatar">MR</span>
+              <div><strong>Dra. Mariana R.</strong><small>Psicóloga clínica</small></div>
+            </figcaption>
+          </figure>
+          <figure class="quote reveal delay-1">
+            <p>“Usamos na clínica-escola para padronizar avaliações. O acompanhamento longitudinal mudou nossa prática.”</p>
+            <figcaption class="who">
+              <span class="avatar">JS</span>
+              <div><strong>Prof. João S.</strong><small>Universidade Federal</small></div>
+            </figcaption>
+          </figure>
+          <figure class="quote reveal delay-2">
+            <p>“A conformidade com a LGPD e o controle de equipe foram decisivos para adotarmos em toda a rede.”</p>
+            <figcaption class="who">
+              <span class="avatar">CA</span>
+              <div><strong>Carla A.</strong><small>Coordenadora institucional</small></div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section id="start">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Leve o Psicotest26 para a sua prática</h2>
+          <p>Comece gratuitamente e descubra como avaliar com ciência, agilidade e segurança.</p>
+          <div class="hero-cta" style="justify-content:center">
+            <a class="btn btn-primary" href="#contact">Criar conta gratuita</a>
+            <a class="btn btn-ghost" href="#contact">Falar com especialista</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer id="contact">
+    <div class="container">
+      <div class="foot-grid">
+        <div>
+          <div class="foot-brand">
+            <span class="logo" style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:grid;place-items:center;color:#fff;font-weight:900">P26</span>
+            Psicotest26
+          </div>
+          <p>Ecossistema profissional para avaliações psicológicas digitais.</p>
+        </div>
+        <div>
+          <h5>Produto</h5>
+          <a href="#features">Recursos</a>
+          <a href="#ecosystem">Ecossistema</a>
+          <a href="#how">Como funciona</a>
+          <a href="#start">Planos</a>
+        </div>
+        <div>
+          <h5>Empresa</h5>
+          <a href="#">Sobre</a>
+          <a href="#">Pesquisa</a>
+          <a href="#">Carreiras</a>
+          <a href="#">Blog</a>
+        </div>
+        <div>
+          <h5>Contato</h5>
+          <a href="mailto:contato@psicotest26.com">contato@psicotest26.com</a>
+          <a href="#">Suporte</a>
+          <a href="#">Documentação</a>
+          <a href="#">Política de privacidade</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year"></span> Psicotest26. Todos os direitos reservados.</span>
+        <span>Feito com ciência e tecnologia — Mascote Liw 🤖</span>
+      </div>
     </div>
-  </section>
-
-  <!-- STATS -->
-  <section class="stats">
-    <div class="stats-item"><div class="icon">📊</div><strong>50 Testes</strong><small>disponíveis</small></div>
-    <div class="stats-item"><div class="icon">👥</div><strong>1.2k+</strong><small>Profissionais</small></div>
-    <div class="stats-item"><div class="icon">⭐</div><strong>IA Liw</strong><small>integrada</small></div>
-    <div class="stats-item"><div class="icon">🛡️</div><strong>100%</strong><small>Seguro e ético</small></div>
-  </section>
-
-  <!-- CATEGORIAS -->
-  <section class="categories">
-    <h2>Testes que transformam atendimentos</h2>
-    <p>Explore nossa coleção completa de <strong>50 avaliações comportamentais</strong> — 40 inclusos + 10 Premium 🔒 — desenvolvidas para profissionais da saúde mental e gestores de RH.</p>
-    
-    <div class="filters">
-      <span class="filter active">Todos</span>
-      <span class="filter">Comportamental</span>
-      <span class="filter">Emocional</span>
-      <span class="filter">Cognitivo</span>
-      <span class="filter">Carreira</span>
-      <span class="filter">Saúde Mental</span>
-      <span class="filter">Autoconhecimento</span>
-      <span class="filter">Premium 🔒</span>
-    </div>
-
-    <div class="grid">
-      <!-- CARD 1 - Incluso -->
-      <div class="card">
-        <div class="card-icon">🔬</div>
-        <h3>Perfil Comportamental DISC</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Comportamental</span>
-          <span class="tag-inc">✅ Incluído</span>
-        </div>
-        <a href="#">Ver detalhes →</a>
-      </div>
-      <!-- CARD 2 - Incluso -->
-      <div class="card">
-        <div class="card-icon">💡</div>
-        <h3>Inteligência Emocional</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Emocional</span>
-          <span class="tag-inc">✅ Incluído</span>
-        </div>
-        <a href="#">Ver detalhes →</a>
-      </div>
-      <!-- CARD 3 - Incluso -->
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3>Análise de Estresse</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Saúde Mental</span>
-          <span class="tag-inc">✅ Incluído</span>
-        </div>
-        <a href="#">Ver detalhes →</a>
-      </div>
-      <!-- CARD 4 - Incluso -->
-      <div class="card">
-        <div class="card-icon">👔</div>
-        <h3>Perfil de Liderança</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Carreira</span>
-          <span class="tag-inc">✅ Incluído</span>
-        </div>
-        <a href="#">Ver detalhes →</a>
-      </div>
-      <!-- CARD 5 - Incluso -->
-      <div class="card">
-        <div class="card-icon">🎯</div>
-        <h3>Âncoras de Carreira</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Carreira</span>
-          <span class="tag-inc">✅ Incluído</span>
-        </div>
-        <a href="#">Ver detalhes →</a>
-      </div>
-      <!-- CARD 6 - Incluso -->
-      <div class="card">
-        <div class="card-icon">💬</div>
-        <h3>Comunicação Assertiva</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Comportamental</span>
-          <span class="tag-inc">✅ Incluído</span>
-        </div>
-        <a href="#">Ver detalhes →</a>
-      </div>
-      <!-- CARD 7 - PREMIUM -->
-      <div class="card premium">
-        <div class="premium-flag">🔒 PREMIUM</div>
-        <div class="card-icon">🧬</div>
-        <h3>Mapeamento de Perfil Cognitivo</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Cognitivo</span>
-          <span class="tag-premium">🔒 Premium</span>
-        </div>
-        <a href="#">🔒 Desbloquear</a>
-      </div>
-      <!-- CARD 8 - PREMIUM -->
-      <div class="card premium">
-        <div class="premium-flag">🔒 PREMIUM</div>
-        <div class="card-icon">❤️</div>
-        <h3>Estilo de Afetividade e Vínculos</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Emocional</span>
-          <span class="tag-premium">🔒 Premium</span>
-        </div>
-        <a href="#">🔒 Desbloquear</a>
-      </div>
-      <!-- CARD 9 - PREMIUM -->
-      <div class="card premium">
-        <div class="premium-flag">🔒 PREMIUM</div>
-        <div class="card-icon">🌟</div>
-        <h3>Resiliência Psicológica</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Saúde Mental</span>
-          <span class="tag-premium">🔒 Premium</span>
-        </div>
-        <a href="#">🔒 Desbloquear</a>
-      </div>
-      <!-- CARD 10 - PREMIUM -->
-      <div class="card premium">
-        <div class="premium-flag">🔒 PREMIUM</div>
-        <div class="card-icon">🚀</div>
-        <h3>Potencial de Inovação e Criatividade</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Cognitivo</span>
-          <span class="tag-premium">🔒 Premium</span>
-        </div>
-        <a href="#">🔒 Desbloquear</a>
-      </div>
-      <!-- CARD 11 - PREMIUM -->
-      <div class="card premium">
-        <div class="premium-flag">🔒 PREMIUM</div>
-        <div class="card-icon">🧠</div>
-        <h3>Liderança Transformacional</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Carreira</span>
-          <span class="tag-premium">🔒 Premium</span>
-        </div>
-        <a href="#">🔒 Desbloquear</a>
-      </div>
-      <!-- CARD 12 - PREMIUM -->
-      <div class="card premium">
-        <div class="premium-flag">🔒 PREMIUM</div>
-        <div class="card-icon">⚖️</div>
-        <h3>Ética e Tomada de Decisão</h3>
-        <div class="card-tags">
-          <span class="tag-cat">Comportamental</span>
-          <span class="tag-premium">🔒 Premium</span>
-        </div>
-        <a href="#">🔒 Desbloquear</a>
-      </div>
-    </div>
-    
-    <p style="margin-top: 40px;"><a href="testes.html" style="color: #7c3aed; font-weight: 700; font-size: 18px;">Ver todos os 50 testes →</a></p>
-  </section>
-
-  <!-- BANNER PREMIUM -->
-  <section class="premium">
-    <h2>Desbloqueie todos os 50 testes</h2>
-    <p>Tenha acesso ilimitado a todos os <strong>40 testes inclusos + 10 testes Premium exclusivos</strong> com relatórios completos e insights da IA Liw.</p>
-    <a href="#" class="btn-white">Quero o pacote completo →</a>
-  </section>
-
-  <!-- CONHEÇA A LIW -->
-  <section class="liw-section">
-    <div class="liw-flex">
-      <img src="https://generated-images.adapta.one/verbcomunicacao%40gmail.com/019ead7e-c833-74de-8776-7bf8231e0b2b/2026-06-12T18-04-21-971Z_A_cute_friendly_3D_anthropomorphic_purple_ant_mas.png" alt="Liw Mind" class="liw-avatar">
-      <div class="liw-text">
-        <small>Inteligência Artificial</small>
-        <h2>Conheça a Liw</h2>
-        <p>Sua assistente de IA desenvolvida especialmente para profissionais da saúde mental e RH. A Liw está sempre pronta para ajudar você a entregar mais valor para seus pacientes.</p>
-      </div>
-    </div>
-    <div class="liw-insights">
-      <div class="insight-card">
-        <span style="font-size: 24px;">🧠</span>
-        <p>Nova descoberta sobre neuroplasticidade pode revolucionar tratamentos <span class="i-badge">IA</span></p>
-      </div>
-      <div class="insight-card">
-        <span style="font-size: 24px;">📈</span>
-        <p>Paciente evoluiu <span class="i-up">23%</span> este mês</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p><a href="#">Termos de uso</a> | <a href="#">Política de Privacidade</a> | <a href="#">Contato</a></p>
-    <p>© 2026 Psicotest26. Todos os direitos reservados.</p>
-    <p style="font-size:12px; margin-top:12px; color: #d1d5db;">"Quem cuida de quem cuida?" — Liw Mind</p>
   </footer>
 
+  <script>
+    // Ano dinâmico
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Menu mobile
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Parallax suave do mascote
+    const mascot = document.querySelector('.mascot');
+    window.addEventListener('scroll', () => {
+      if (!mascot) return;
+      const y = window.scrollY * 0.06;
+      mascot.style.transform = `translateY(${y}px)`;
+    }, { passive: true });
+  </script>
 </body>
 </html>
