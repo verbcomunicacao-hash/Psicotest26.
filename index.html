@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Psicotest26 — Avaliação psicológica inteligente</title>
+<meta name="description" content="Psicotest26: plataforma inteligente de avaliação psicológica com relatórios automatizados, segurança e ecossistema integrado." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --purple:#7c3aed;
+    --purple-600:#6d28d9;
+    --purple-700:#5b21b6;
+    --purple-300:#a78bfa;
+    --purple-100:#ede9fe;
+    --purple-50:#f5f3ff;
+    --ink:#1b1530;
+    --muted:#6b6480;
+    --bg:#fbfaff;
+    --white:#ffffff;
+    --radius:22px;
+    --shadow-sm:0 6px 18px rgba(124,58,237,.10);
+    --shadow-md:0 18px 50px rgba(124,58,237,.18);
+    --shadow-lg:0 30px 80px rgba(124,58,237,.22);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Manrope',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;line-height:1.15;letter-spacing:-.02em}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .container{width:min(1180px,92%);margin-inline:auto}
+
+  /* ===== Navbar ===== */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    backdrop-filter:saturate(180%) blur(14px);
+    background:rgba(251,250,255,.72);
+    border-bottom:1px solid rgba(124,58,237,.08);
+    transition:all .35s ease;
+  }
+  .nav.scrolled{background:rgba(255,255,255,.92);box-shadow:var(--shadow-sm)}
+  .nav__inner{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.25rem;font-family:'Plus Jakarta Sans'}
+  .brand__mark{
+    width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(135deg,var(--purple),#a855f7);
+    display:grid;place-items:center;color:#fff;font-weight:800;
+    box-shadow:0 8px 20px rgba(124,58,237,.35);
+  }
+  .brand__mark svg{width:24px;height:24px}
+  .nav__links{display:flex;gap:30px;align-items:center}
+  .nav__links a{font-weight:600;color:var(--muted);font-size:.95rem;transition:color .2s}
+  .nav__links a:hover{color:var(--purple)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;
+    cursor:pointer;border:none;transition:transform .2s,box-shadow .2s,background .2s;
+    font-family:'Plus Jakarta Sans';
+  }
+  .btn--primary{background:linear-gradient(135deg,var(--purple),#9333ea);color:#fff;box-shadow:0 12px 28px rgba(124,58,237,.35)}
+  .btn--primary:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(124,58,237,.45)}
+  .btn--ghost{background:transparent;color:var(--purple);border:1.5px solid rgba(124,58,237,.25)}
+  .btn--ghost:hover{background:var(--purple-50)}
+  .nav__toggle{display:none;background:none;border:none;cursor:pointer;width:44px;height:44px;border-radius:12px}
+  .nav__toggle span{display:block;width:22px;height:2px;background:var(--ink);margin:5px auto;transition:.3s}
+
+  /* ===== Hero ===== */
+  .hero{position:relative;padding:160px 0 90px;overflow:hidden}
+  .hero__bg{
+    position:absolute;inset:0;z-index:-1;
+    background:
+      radial-gradient(60% 50% at 80% 10%,rgba(168,85,247,.18),transparent 60%),
+      radial-gradient(50% 40% at 10% 20%,rgba(124,58,237,.14),transparent 60%),
+      linear-gradient(180deg,#fbfaff,#f3effe);
+  }
+  .hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
+    background:var(--purple-50);color:var(--purple-700);font-weight:700;font-size:.82rem;
+    border:1px solid rgba(124,58,237,.18);margin-bottom:22px;
+  }
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--purple);box-shadow:0 0 0 4px rgba(124,58,237,.2);animation:pulse 2s infinite}
+  @keyframes pulse{50%{transform:scale(1.3);opacity:.7}}
+  .hero h1{font-size:clamp(2.4rem,5vw,3.7rem);font-weight:800}
+  .hero h1 .grad{background:linear-gradient(120deg,var(--purple),#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{color:var(--muted);font-size:1.15rem;margin:22px 0 32px;max-width:540px}
+  .hero__cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero__stats{display:flex;gap:34px;margin-top:46px;flex-wrap:wrap}
+  .stat b{display:block;font-size:1.7rem;font-family:'Plus Jakarta Sans';color:var(--purple-700)}
+  .stat span{font-size:.85rem;color:var(--muted);font-weight:600}
+
+  /* ===== Mascote Liw (3D Pixar-ish) ===== */
+  .mascot-stage{
+    position:relative;display:grid;place-items:center;
+    perspective:1200px;
+  }
+  .mascot-glow{
+    position:absolute;width:120%;height:120%;border-radius:50%;
+    background:radial-gradient(circle,rgba(167,139,250,.55),transparent 65%);
+    filter:blur(20px);z-index:-1;animation:floatGlow 6s ease-in-out infinite;
+  }
+  @keyframes floatGlow{50%{transform:scale(1.08);opacity:.85}}
+  .liw{
+    width:min(420px,90%);aspect-ratio:1/1;position:relative;
+    transform-style:preserve-3d;animation:liwFloat 5s ease-in-out infinite;
+  }
+  @keyframes liwFloat{50%{transform:translateY(-18px) rotate(-2deg)}}
+  .liw svg{width:100%;height:100%;filter:drop-shadow(0 40px 50px rgba(124,58,237,.35))}
+
+  /* ===== Section base ===== */
+  section{padding:100px 0}
+  .section__head{text-align:center;max-width:680px;margin:0 auto 60px}
+  .eyebrow{color:var(--purple);font-weight:700;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase}
+  .section__head h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:800;margin:14px 0 16px}
+  .section__head p{color:var(--muted);font-size:1.08rem}
+
+  /* ===== Recursos ===== */
+  .features__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .card{
+    background:var(--white);border:1px solid rgba(124,58,237,.08);border-radius:var(--radius);
+    padding:34px 28px;box-shadow:var(--shadow-sm);transition:transform .35s,box-shadow .35s;
+    position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--purple),#c084fc);transform:scaleX(0);transform-origin:left;transition:transform .4s;
+  }
+  .card:hover{transform:translateY(-8px);box-shadow:var(--shadow-md)}
+  .card:hover::before{transform:scaleX(1)}
+  .card__icon{
+    width:58px;height:58px;border-radius:16px;display:grid;place-items:center;margin-bottom:20px;
+    background:linear-gradient(135deg,var(--purple-100),#f5f3ff);color:var(--purple);
+  }
+  .card__icon svg{width:28px;height:28px}
+  .card h3{font-size:1.25rem;margin-bottom:10px}
+  .card p{color:var(--muted);font-size:.98rem}
+
+  /* ===== Ecossistema ===== */
+  .eco{background:linear-gradient(180deg,#f3effe,#fbfaff)}
+  .eco__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .eco__item{
+    background:var(--white);border-radius:18px;padding:26px 22px;text-align:center;
+    border:1px solid rgba(124,58,237,.08);box-shadow:var(--shadow-sm);transition:transform .3s;
+  }
+  .eco__item:hover{transform:translateY(-6px)}
+  .eco__icon{
+    width:64px;height:64px;border-radius:18px;margin:0 auto 16px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--purple),#9333ea);color:#fff;box-shadow:0 12px 24px rgba(124,58,237,.3);
+  }
+  .eco__icon svg{width:30px;height:30px}
+  .eco__item h4{font-size:1.05rem;margin-bottom:6px}
+  .eco__item p{font-size:.88rem;color:var(--muted)}
+
+  .eco__flow{
+    margin-top:50px;background:var(--white);border:1px solid rgba(124,58,237,.1);
+    border-radius:var(--radius);padding:40px;box-shadow:var(--shadow-sm);
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:center;
+  }
+  .flow-step{text-align:center;position:relative}
+  .flow-step .num{
+    width:46px;height:46px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;
+    background:var(--purple-50);color:var(--purple-700);font-weight:800;font-family:'Plus Jakarta Sans';
+  }
+  .flow-step h5{font-size:.98rem;margin-bottom:4px}
+  .flow-step p{font-size:.82rem;color:var(--muted)}
+  .flow-step:not(:last-child)::after{
+    content:"";position:absolute;top:23px;right:-30px;width:40px;height:2px;
+    background:linear-gradient(90deg,var(--purple),rgba(124,58,237,.2));
+  }
+
+  /* ===== CTA ===== */
+  .cta{padding:120px 0}
+  .cta__box{
+    position:relative;border-radius:32px;padding:80px 50px;text-align:center;overflow:hidden;
+    background:linear-gradient(135deg,var(--purple-700),var(--purple));
+    box-shadow:var(--shadow-lg);color:#fff;
+  }
+  .cta__box::before,.cta__box::after{
+    content:"";position:absolute;border-radius:50%;filter:blur(10px);opacity:.5;
+  }
+  .cta__box::before{width:300px;height:300px;background:#a855f7;top:-120px;right:-80px}
+  .cta__box::after{width:260px;height:260px;background:#5b21b6;bottom:-120px;left:-60px}
+  .cta__box h2{font-size:clamp(2rem,4.5vw,3rem);position:relative;z-index:1}
+  .cta__box p{font-size:1.15rem;opacity:.92;margin:18px auto 34px;max-width:560px;position:relative;z-index:1}
+  .cta__box .btn--white{background:#fff;color:var(--purple-700);box-shadow:0 18px 40px rgba(0,0,0,.25)}
+  .cta__box .btn--white:hover{transform:translateY(-3px)}
+  .cta__box .btn--outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
+  .cta__box .btn--outline:hover{background:rgba(255,255,255,.12)}
+  .cta__actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+  /* ===== Footer ===== */
+  footer{background:#1b1530;color:#c4bdd6;padding:60px 0 30px}
+  .footer__grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .footer__brand .brand{color:#fff;margin-bottom:16px}
+  .footer__brand p{font-size:.92rem;max-width:280px}
+  footer h5{color:#fff;font-size:.95rem;margin-bottom:16px;font-family:'Plus Jakarta Sans'}
+  footer ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  footer ul a{font-size:.9rem;color:#c4bdd6;transition:color .2s}
+  footer ul a:hover{color:#fff}
+  .footer__bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.85rem}
+
+  /* ===== Scroll reveal ===== */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .reveal.visible{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}.reveal.d4{transition-delay:.4s}
+
+  /* ===== Responsive ===== */
+  @media(max-width:980px){
+    .hero__grid{grid-template-columns:1fr;text-align:center}
+    .hero p.lead{margin-inline:auto}
+    .hero__cta,.hero__stats{justify-content:center}
+    .features__grid{grid-template-columns:repeat(2,1fr)}
+    .eco__grid{grid-template-columns:repeat(2,1fr)}
+    .eco__flow{grid-template-columns:repeat(2,1fr);gap:36px}
+    .flow-step:not(:last-child)::after{display:none}
+    .footer__grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:680px){
+    .nav__links{display:none}
+    .nav__toggle{display:block}
+    .nav__links.open{display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;background:#fff;padding:24px;box-shadow:var(--shadow-md);gap:18px}
+    .features__grid{grid-template-columns:1fr}
+    .eco__grid{grid-template-columns:1fr 1fr}
+    .eco__flow{grid-template-columns:1fr}
+    .footer__grid{grid-template-columns:1fr}
+    .cta__box{padding:60px 26px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="#" class="brand">
+      <span class="brand__mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v2a5 5 0 0 0-2 4 5 5 0 0 0 5 5 5 5 0 0 0 4 2 5 5 0 0 0 4-2 5 5 0 0 0 5-5 5 5 0 0 0-2-4V7a5 5 0 0 0-5-5Z"/><path d="M9 11h.01M15 11h.01"/></svg>
+      </span>
+      Psicotest<span style="color:var(--purple)">26</span>
+    </a>
+    <nav class="nav__links" id="navLinks">
+      <a href="#recursos">Recursos</a>
+      <a href="#ecossistema">Ecossistema</a>
+      <a href="#cta">Começar</a>
+      <a href="#" class="btn btn--ghost">Entrar</a>
+      <a href="#cta" class="btn btn--primary">Testar grátis</a>
+    </nav>
+    <button class="nav__toggle" id="navToggle" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="container hero__grid">
+    <div class="hero__copy reveal">
+      <span class="pill"><span class="dot"></span> Plataforma inteligente de avaliação psicológica</span>
+      <h1>Avaliação psicológica <span class="grad">precisa, humana e automatizada</span> com o Psicotest26</h1>
+      <p class="lead">Relatórios clínicos em minutos, validação científica dos instrumentos e um ecossistema completo para psicólogos, clínicas e instituições.</p>
+      <div class="hero__cta">
+        <a href="#cta" class="btn btn--primary">Começar agora</a>
+        <a href="#recursos" class="btn btn--ghost">Ver recursos</a>
+      </div>
+      <div class="hero__stats">
+        <div class="stat"><b>+120</b><span>Testes validados</span></div>
+        <div class="stat"><b>98%</b><span>Precisão dos relatórios</span></div>
+        <div class="stat"><b>+18k</b><span>Profissionais ativos</span></div>
+      </div>
+    </div>
+
+    <!-- Mascote Liw -->
+    <div class="mascot-stage reveal d2">
+      <div class="mascot-glow"></div>
+      <div class="liw" id="liw">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bodyGrad" cx="38%" cy="32%" r="75%">
+              <stop offset="0%" stop-color="#c4b5fd"/>
+              <stop offset="45%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#5b21b6"/>
+            </radialGradient>
+            <radialGradient id="headGrad" cx="40%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ddd6fe"/>
+              <stop offset="50%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#7c3aed"/>
+            </radialGradient>
+            <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fb7185" stop-opacity=".8"/>
+              <stop offset="100%" stop-color="#fb7185" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="horn" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f5d0fe"/>
+              <stop offset="100%" stop-color="#c084fc"/>
+            </linearGradient>
+            <radialGradient id="shine" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
+              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Sombra chão -->
+          <ellipse cx="200" cy="372" rx="110" ry="18" fill="rgba(91,33,182,.25)"/>
+
+          <!-- Corpo -->
+          <path d="M140 250 Q200 215 260 250 Q300 290 285 340 Q200 365 115 340 Q100 290 140 250 Z" fill="url(#bodyGrad)"/>
+          <path d="M150 255 Q200 230 250 255" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="3"/>
+
+          <!-- Braços -->
+          <ellipse cx="118" cy="300" rx="26" ry="40" fill="url(#bodyGrad)" transform="rotate(-18 118 300)"/>
+          <ellipse cx="282" cy="300" rx="26" ry="40" fill="url(#bodyGrad)" transform="rotate(18 282 300)"/>
+
+          <!-- Cabeça -->
+          <ellipse cx="200" cy="160" rx="105" ry="98" fill="url(#headGrad)"/>
+
+          <!-- Chifre/antena mágica -->
+          <path d="M195 70 Q200 30 210 68 Z" fill="url(#horn)"/>
+          <circle cx="205" cy="58" r="9" fill="#f0abfc"/>
+          <circle cx="203" cy="55" r="3" fill="#fff" opacity=".9"/>
+
+          <!-- Brilho cabeça -->
+          <ellipse cx="160" cy="120" rx="34" ry="22" fill="url(#shine)"/>
+
+          <!-- Orelhas -->
+          <ellipse cx="100" cy="160" rx="22" ry="34" fill="url(#headGrad)" transform="rotate(-20 100 160)"/>
+          <ellipse cx="300" cy="160" rx="22" ry="34" fill="url(#headGrad)" transform="rotate(20 300 160)"/>
+          <ellipse cx="102" cy="162" rx="10" ry="18" fill="#7c3aed" opacity=".5" transform="rotate(-20 102 162)"/>
+          <ellipse cx="298" cy="162" rx="10" ry="18" fill="#7c3aed" opacity=".5" transform="rotate(20 298 162)"/>
+
+          <!-- Olhos -->
+          <ellipse cx="165" cy="165" rx="22" ry="26" fill="#fff"/>
+          <ellipse cx="235" cy="165" rx="22" ry="26" fill="#fff"/>
+          <circle cx="168" cy="170" r="13" fill="#2e1065"/>
+          <circle cx="238" cy="170" r="13" fill="#2e1065"/>
+          <circle cx="172" cy="166" r="4.5" fill="#fff"/>
+          <circle cx="242" cy="166" r="4.5" fill="#fff"/>
+          <circle cx="163" cy="175" r="2" fill="#fff" opacity=".7"/>
+          <circle cx="233" cy="175" r="2" fill="#fff" opacity=".7"/>
+
+          <!-- Bochechas -->
+          <circle cx="140" cy="195" r="16" fill="url(#cheek)"/>
+          <circle cx="260" cy="195" r="16" fill="url(#cheek)"/>
+
+          <!-- Boca sorridente -->
+          <path d="M178 205 Q200 228 222 205" fill="none" stroke="#2e1065" stroke-width="5" stroke-linecap="round"/>
+          <path d="M186 210 Q200 220 214 210" fill="#fb7185"/>
+
+          <!-- Patinhas -->
+          <ellipse cx="165" cy="358" rx="30" ry="14" fill="#6d28d9"/>
+          <ellipse cx="235" cy="358" rx="30" ry="14" fill="#6d28d9"/>
+          <ellipse cx="165" cy="354" rx="14" ry="6" fill="#a78bfa" opacity=".6"/>
+          <ellipse cx="235" cy="354" rx="14" ry="6" fill="#a78bfa" opacity=".6"/>
+
+          <!-- Tablet Psicotest26 nas mãos -->
+          <rect x="150" y="262" width="100" height="66" rx="12" fill="#1b1530"/>
+          <rect x="156" y="268" width="88" height="48" rx="7" fill="#7c3aed"/>
+          <rect x="162" y="274" width="30" height="6" rx="3" fill="#fff" opacity=".9"/>
+          <rect x="162" y="286" width="52" height="5" rx="2.5" fill="#fff" opacity=".6"/>
+          <rect x="162" y="296" width="40" height="5" rx="2.5" fill="#fff" opacity=".6"/>
+          <circle cx="234" cy="292" r="10" fill="#a78bfa"/>
+          <path d="M230 292 l3 3 l6 -6" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Recursos ===== -->
+<section id="recursos">
+  <div class="container">
+    <div class="section__head reveal">
+      <span class="eyebrow">Recursos</span>
+      <h2>Tudo que você precisa para avaliar com confiança</h2>
+      <p>O Psicotest26 reúne instrumentos validados, inteligência de relatórios e segurança de dados em uma só plataforma.</p>
+    </div>
+    <div class="features__grid">
+      <article class="card reveal d1">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>Testes validados</h3>
+        <p>Biblioteca com mais de 120 instrumentos científicos atualizados e em conformidade com as normas do CFP.</p>
+      </article>
+      <article class="card reveal d2">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div>
+        <h3>Relatórios automáticos</h3>
+        <p>Geração de laudos interpretativos em minutos, com gráficos, perfis e sugestões de encaminhamento.</p>
+      </article>
+      <article class="card reveal d3">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Segurança LGPD</h3>
+        <p>Criptografia ponta a ponta, auditoria de acessos e armazenamento em conformidade com a LGPD.</p>
+      </article>
+      <article class="card reveal d1">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+        <h3>Analytics inteligente</h3>
+        <p>Dashboards com indicadores clínicos, evolução do paciente e comparativos normativos em tempo real.</p>
+      </article>
+      <article class="card reveal d2">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Multiusuário</h3>
+        <p>Equipes, clínicas e instituições com perfis, permissões e colaboração em tempo real entre profissionais.</p>
+      </article>
+      <article class="card reveal d3">
+        <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>Aplicativo responsivo</h3>
+        <p>Aplique testes em qualquer dispositivo. O paciente responde no celular, tablet ou computador sem fricção.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Ecossistema ===== -->
+<section id="ecossistema" class="eco">
+  <div class="container">
+    <div class="section__head reveal">
+      <span class="eyebrow">Ecossistema</span>
+      <h2>Um sistema conectado do teste ao laudo</h2>
+      <p>O Psicotest26 integra cada etapa do fluxo clínico, conectando profissionais, pacientes e dados em uma única rede.</p>
+    </div>
+
+    <div class="eco__grid">
+      <div class="eco__item reveal d1">
+        <div class="eco__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9M14 17H5M20 7a3 3 0 1 0-6 0M9 17a3 3 0 1 0-6 0"/></svg></div>
+        <h4>Psicotest Core</h4>
+        <p>Motor de aplicação e correção dos testes.</p>
+      </div>
+      <div class="eco__item reveal d2">
+        <div class="eco__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h4>Liw AI</h4>
+        <p>Assistente que sugere interpretações e laudos.</p>
+      </div>
+      <div class="eco__item reveal d3">
+        <div class="eco__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+        <h4>Clinic Cloud</h4>
+        <p>Gestão de clínicas, agendas e prontuários.</p>
+      </div>
+      <div class="eco__item reveal d4">
+        <div class="eco__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+        <h4>Reports Hub</h4>
+        <p>Central de relatórios exportáveis e assinados.</p>
+      </div>
+    </div>
+
+    <div class="eco__flow reveal">
+      <div class="flow-step"><div class="num">1</div><h5>Triagem</h5><p>Paciente preenche dados iniciais</p></div>
+      <div class="flow-step"><div class="num">2</div><h5>Aplicação</h5><p>Testes aplicados pelo Psicotest Core</p></div>
+      <div class="flow-step"><div class="num">3</div><h5>Análise</h5><p>Liw AI interpreta os resultados</p></div>
+      <div class="flow-step"><div class="num">4</div><h5>Laudo</h5><p>Relatório final no Reports Hub</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section id="cta" class="cta">
+  <div class="container">
+    <div class="cta__box reveal">
+      <h2>Pronto para transformar sua prática clínica?</h2>
+      <p>Junte-se a mais de 18 mil profissionais que já avaliam com precisão, agilidade e segurança usando o Psicotest26.</p>
+      <div class="cta__actions">
+        <a href="#" class="btn btn--white">Testar grátis por 14 dias</a>
+        <a href="#" class="btn btn--outline">Falar com especialista</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="#" class="brand">
+          <span class="brand__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v2a5 5 0 0 0-2 4 5 5 0 0 0 5 5 5 5 0 0 0 4 2 5 5 0 0 0 4-2 5 5 0 0 0 5-5 5 5 0 0 0-2-4V7a5 5 0 0 0-5-5Z"/></svg></span>
+          Psicotest26
+        </a>
+        <p>A plataforma inteligente para avaliação psicológica. Conheça o Liw, seu assistente clínico.</p>
+      </div>
+      <div>
+        <h5>Produto</h5>
+        <ul><li><a href="#recursos">Recursos</a></li><li><a href="#ecossistema">Ecossistema</a></li><li><a href="#">Preços</a></li><li><a href="#">Integrações</a></li></ul>
+      </div>
+      <div>
+        <h5>Empresa</h5>
+        <ul><li><a href="#">Sobre</a></li><li><a href="#">Blog</a></li><li><a href="#">Carreiras</a></li><li><a href="#">Contato</a></li></ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul><li><a href="#">Privacidade</a></li><li><a href="#">Termos</a></li><li><a href="#">LGPD</a></li><li><a href="#">Status</a></li></ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 Psicotest26. Todos os direitos reservados.</span>
+      <span>Feito com 💜 e ciência.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Menu mobile
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Mascote Liw: leve parallax 3D com o mouse
+  const liw = document.getElementById('liw');
+  const stage = liw.parentElement;
+  stage.addEventListener('mousemove', (ev) => {
+    const r = stage.getBoundingClientRect();
+    const x = ((ev.clientX - r.left) / r.width - 0.5) * 18;
+    const y = ((ev.clientY - r.top) / r.height - 0.5) * 18;
+    liw.style.transform = `rotateY(${x}deg) rotateX(${-y}deg) translateY(-10px)`;
+  });
+  stage.addEventListener('mouseleave', () => { liw.style.transform = ''; });
+</script>
+</body>
+</html>
