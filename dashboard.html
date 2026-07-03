@@ -1,398 +1,452 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psicotest26 | Dashboard Premium</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #0b1437;
-            --card-bg: #111c44;
-            --accent-purple: #7c3aed;
-            --text-main: #ffffff;
-            --text-muted: #a3b1cc;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Wilson | PsicoTeste</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1437;
+      --bg-2: #0e1a47;
+      --card: rgba(255,255,255,0.04);
+      --card-border: rgba(124,58,237,0.25);
+      --neon: #7c3aed;
+      --neon-2: #a855f7;
+      --text: #e8ecff;
+      --muted: #8b97c7;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .glass-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
+    html, body {
+      background: radial-gradient(1200px 800px at 80% -10%, rgba(124,58,237,0.18), transparent 60%),
+                  radial-gradient(900px 700px at -10% 110%, rgba(124,58,237,0.12), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        .neon-border {
-            border: 1px solid var(--accent-purple);
-            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
-        }
+    a { color: var(--neon-2); text-decoration: none; }
 
-        .liw-avatar {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: float 3s ease-in-out infinite;
-        }
+    .app { max-width: 1280px; margin: 0 auto; padding: 24px; }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+    /* Header */
+    header.topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      padding: 18px 22px; border-radius: 18px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.10), rgba(255,255,255,0.02));
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      margin-bottom: 22px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--neon), var(--neon-2));
+      display: grid; place-items: center; font-weight: 800; color: white;
+      box-shadow: 0 0 24px rgba(124,58,237,0.55);
+    }
+    .brand h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.3px; }
+    .brand p { font-size: 12px; color: var(--muted); }
 
-        .sidebar-link:hover {
-            background: rgba(124, 58, 237, 0.1);
-            color: var(--accent-purple);
-        }
+    .user-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .badge {
+      padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      background: rgba(124,58,237,0.15); border: 1px solid var(--card-border); color: var(--neon-2);
+    }
+    .btn {
+      cursor: pointer; border: none; border-radius: 12px;
+      padding: 10px 16px; font-weight: 600; font-size: 13px;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon), var(--neon-2)); color: white;
+      box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(124,58,237,0.5); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--card-border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.09); }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #2d3748;
-            border-radius: 10px;
-        }
+    /* Welcome */
+    .welcome {
+      padding: 22px; border-radius: 18px; margin-bottom: 22px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.18), rgba(124,58,237,0.04));
+      border: 1px solid var(--card-border);
+    }
+    .welcome h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .welcome p { color: var(--muted); font-size: 14px; }
+    .nicknames { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .nick {
+      padding: 8px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 13px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: var(--text);
+      transition: all .15s ease;
+    }
+    .nick:hover { background: rgba(124,58,237,0.2); border-color: var(--neon); }
+    .nick.active {
+      background: linear-gradient(135deg, var(--neon), var(--neon-2)); color: white;
+      box-shadow: 0 6px 18px rgba(124,58,237,0.45);
+    }
 
-        #nickname-modal {
-            backdrop-filter: blur(8px);
-            background: rgba(11, 20, 55, 0.8);
-        }
-    </style>
+    /* Grid */
+    .grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 1.4fr 1fr; }
+    }
+
+    .card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 18px; padding: 20px; backdrop-filter: blur(8px);
+    }
+    .card h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .card h3 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 12px var(--neon); }
+    .card .sub { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 22px; }
+    .stat {
+      padding: 16px; border-radius: 14px; background: var(--card); border: 1px solid var(--card-border);
+    }
+    .stat .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat .value { font-size: 24px; font-weight: 800; margin-top: 6px; }
+    .stat .delta { font-size: 11px; margin-top: 4px; }
+    .delta.up { color: var(--success); }
+    .delta.down { color: var(--danger); }
+
+    /* News */
+    .news-list { display: flex; flex-direction: column; gap: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
+    .news-list::-webkit-scrollbar { width: 6px; }
+    .news-list::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 6px; }
+    .news-item {
+      padding: 14px; border-radius: 12px; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06); transition: border .15s ease, transform .15s ease;
+    }
+    .news-item:hover { border-color: var(--card-border); transform: translateY(-1px); }
+    .news-item .meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .news-item .tag {
+      font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: rgba(124,58,237,0.18); color: var(--neon-2); text-transform: uppercase;
+    }
+    .news-item .date { font-size: 11px; color: var(--muted); }
+    .news-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .news-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* Chart */
+    .chart-wrap { position: relative; height: 340px; }
+    .legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+    .legend span { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+    /* Footer */
+    footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 28px; padding: 16px; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: linear-gradient(135deg, var(--neon), var(--neon-2)); color: white;
+      padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600;
+      box-shadow: 0 10px 30px rgba(124,58,237,0.5); opacity: 0; pointer-events: none;
+      transition: all .3s ease; z-index: 9999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 640px) {
+      .app { padding: 14px; }
+      .welcome h2 { font-size: 18px; }
+      .stat .value { font-size: 20px; }
+    }
+  </style>
 </head>
-<body class="flex h-screen">
-
-    <!-- Sidebar -->
-    <aside class="w-64 hidden lg:flex flex-col border-r border-gray-800 p-6">
-        <div class="flex items-center gap-3 mb-10">
-            <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center">
-                <i class="fas fa-brain text-white"></i>
-            </div>
-            <span class="text-xl font-bold tracking-tight">Psicotest26</span>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">W</div>
+        <div>
+          <h1>Painel Wilson</h1>
+          <p>Dashboard PsicoTeste • Controle & Evolução</p>
         </div>
+      </div>
+      <div class="user-area">
+        <span class="badge" id="userBadge">Conectando...</span>
+        <button class="btn btn-ghost" id="btnRefresh">Atualizar</button>
+        <button class="btn btn-primary" id="btnLogout">Sair</button>
+      </div>
+    </header>
 
-        <nav class="flex-1 space-y-2">
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-purple-500 bg-purple-500/10">
-                <i class="fas fa-th-large"></i> Dashboard
-            </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
-                <i class="fas fa-users"></i> Pacientes
-            </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
-                <i class="fas fa-calendar-alt"></i> Agenda
-            </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
-                <i class="fas fa-file-medical-alt"></i> Prontuários
-            </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
-                <i class="fas fa-chart-line"></i> Relatórios
-            </a>
-        </nav>
+    <section class="welcome">
+      <h2 id="welcomeTitle">Bem-vindo de volta 👋</h2>
+      <p>Selecione seu apelido para personalizar o painel e acompanhar a evolução em tempo real.</p>
+      <div class="nicknames" id="nicknames">
+        <button class="nick" data-nick="Ju">Ju</button>
+        <button class="nick" data-nick="Wil">Wil</button>
+        <button class="nick" data-nick="Deb">Deb</button>
+      </div>
+    </section>
 
-        <div class="mt-auto">
-            <div class="glass-card p-4 text-center">
-                <p class="text-xs text-gray-400 mb-2">Plano Premium</p>
-                <button class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-sm font-medium transition">Upgrade</button>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-8">
-        
-        <!-- Header & Liw Greeting -->
-        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div class="flex items-center gap-4">
-                <div class="liw-avatar">
-                    <i class="fas fa-robot text-2xl text-white"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold" id="greeting-text">Olá, Psicólogo(a)!</h1>
-                    <p class="text-gray-400 text-sm" id="liw-message">Carregando sua dose de empatia...</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <button class="p-2 rounded-full bg-gray-800 text-gray-400 hover:text-white">
-                    <i class="fas fa-bell"></i>
-                </button>
-                <div class="flex items-center gap-3 bg-gray-800/50 p-1 pr-4 rounded-full">
-                    <img src="https://ui-avatars.com/api/?name=Psicologo&background=7c3aed&color=fff" class="w-8 h-8 rounded-full" alt="User">
-                    <span class="text-sm font-medium">Meu Perfil</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="glass-card p-6">
-                <p class="text-gray-400 text-sm mb-1">Pacientes Ativos</p>
-                <h3 class="text-3xl font-bold">24</h3>
-                <span class="text-green-400 text-xs"><i class="fas fa-arrow-up"></i> +12% este mês</span>
-            </div>
-            <div class="glass-card p-6">
-                <p class="text-gray-400 text-sm mb-1">Sessões Hoje</p>
-                <h3 class="text-3xl font-bold">6</h3>
-                <span class="text-purple-400 text-xs">Próxima às 14:00</span>
-            </div>
-            <div class="glass-card p-6">
-                <p class="text-gray-400 text-sm mb-1">Taxa de Retenção</p>
-                <h3 class="text-3xl font-bold">92%</h3>
-                <span class="text-blue-400 text-xs">Excelente performance</span>
-            </div>
-            <div class="glass-card p-6">
-                <p class="text-gray-400 text-sm mb-1">Faturamento (Mês)</p>
-                <h3 class="text-3xl font-bold">R$ 8.4k</h3>
-                <span class="text-gray-400 text-xs">Meta: R$ 10k</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <!-- Evolution Chart -->
-            <div class="xl:col-span-2 glass-card p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold">Evolução Cruzada: Paciente vs. Técnico</h2>
-                    <select class="bg-gray-800 border-none text-sm rounded-lg px-3 py-1 focus:ring-2 ring-purple-500">
-                        <option>Paciente: João Silva</option>
-                        <option>Paciente: Maria Oliveira</option>
-                    </select>
-                </div>
-                <div class="h-[350px] w-full">
-                    <canvas id="evolutionChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Liw News -->
-            <div class="glass-card p-6 flex flex-col">
-                <div class="flex items-center gap-2 mb-6">
-                    <i class="fas fa-newspaper text-purple-500"></i>
-                    <h2 class="text-xl font-bold">Liw News</h2>
-                </div>
-                <div class="space-y-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar" id="news-feed">
-                    <!-- News items will be injected here -->
-                </div>
-                <button class="mt-6 w-full py-2 border border-purple-500/30 rounded-xl text-purple-400 hover:bg-purple-500/10 transition">
-                    Ver todas as notícias
-                </button>
-            </div>
-        </div>
-
-        <!-- Recent Sessions -->
-        <div class="mt-8 glass-card p-6">
-            <h2 class="text-xl font-bold mb-6">Próximas Sessões</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-gray-400 border-b border-gray-800">
-                            <th class="pb-4 font-medium">Paciente</th>
-                            <th class="pb-4 font-medium">Horário</th>
-                            <th class="pb-4 font-medium">Tipo</th>
-                            <th class="pb-4 font-medium">Status</th>
-                            <th class="pb-4 font-medium text-right">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-800">
-                        <tr class="hover:bg-white/5 transition">
-                            <td class="py-4 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 text-xs">JS</div>
-                                João Silva
-                            </td>
-                            <td class="py-4">14:00 - 15:00</td>
-                            <td class="py-4 text-gray-400">TCC Individual</td>
-                            <td class="py-4"><span class="px-2 py-1 bg-green-500/10 text-green-500 rounded text-xs">Confirmado</span></td>
-                            <td class="py-4 text-right">
-                                <button class="text-purple-500 hover:underline text-sm">Abrir Prontuário</button>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-white/5 transition">
-                            <td class="py-4 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-500 text-xs">MO</div>
-                                Maria Oliveira
-                            </td>
-                            <td class="py-4">15:30 - 16:30</td>
-                            <td class="py-4 text-gray-400">Análise</td>
-                            <td class="py-4"><span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 rounded text-xs">Aguardando</span></td>
-                            <td class="py-4 text-right">
-                                <button class="text-purple-500 hover:underline text-sm">Abrir Prontuário</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <!-- Nickname Modal -->
-    <div id="nickname-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-card neon-border p-8 max-w-md w-full text-center">
-            <div class="liw-avatar mx-auto mb-6">
-                <i class="fas fa-robot text-2xl text-white"></i>
-            </div>
-            <h2 class="text-2xl font-bold mb-2">Olá! Eu sou o Liw.</h2>
-            <p class="text-gray-400 mb-6">Como você prefere que eu te chame hoje?</p>
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <button onclick="setNickname('Ju')" class="p-3 rounded-xl bg-gray-800 hover:bg-purple-600 transition">Ju</button>
-                <button onclick="setNickname('Wil')" class="p-3 rounded-xl bg-gray-800 hover:bg-purple-600 transition">Wil</button>
-                <button onclick="setNickname('Deb')" class="p-3 rounded-xl bg-gray-800 hover:bg-purple-600 transition">Deb</button>
-            </div>
-            <input type="text" id="custom-name" placeholder="Ou digite outro nome..." class="w-full bg-gray-800 border-none rounded-xl p-3 mb-4 focus:ring-2 ring-purple-500">
-            <button onclick="setNickname(document.getElementById('custom-name').value)" class="w-full bg-purple-600 py-3 rounded-xl font-bold">Começar Jornada</button>
-        </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="label">Pacientes Ativos</div>
+        <div class="value" id="stPatients">--</div>
+        <div class="delta up" id="dPatients">+0%</div>
+      </div>
+      <div class="stat">
+        <div class="label">Sessões no Mês</div>
+        <div class="value" id="stSessions">--</div>
+        <div class="delta up" id="dSessions">+0%</div>
+      </div>
+      <div class="stat">
+        <div class="label">Evolução Média</div>
+        <div class="value" id="stEvo">--</div>
+        <div class="delta up" id="dEvo">+0%</div>
+      </div>
+      <div class="stat">
+        <div class="label">Notícias Liw</div>
+        <div class="value" id="stNews">--</div>
+        <div class="delta up">Feed ativo</div>
+      </div>
     </div>
 
-    <script>
-        // Liw Empathetic Phrases (Duolingo Style)
-        const liwPhrases = [
-            "Você está fazendo um trabalho incrível hoje! 🌟",
-            "Lembre-se de respirar fundo entre as sessões. 🧘‍♂️",
-            "Sua dedicação transforma vidas, sabia? ✨",
-            "Que tal uma pausa para um café ou água? Você merece! ☕",
-            "Cada evolução de paciente é uma vitória sua também. 🏆",
-            "O mundo precisa da sua escuta empática hoje. ❤️"
-        ];
+    <div class="grid">
+      <div class="card">
+        <h3><span class="dot"></span> Evolução Cruzada</h3>
+        <p class="sub">Comparativo entre o progresso do Paciente e a atuação do Técnico ao longo das semanas.</p>
+        <div class="chart-wrap">
+          <canvas id="evoChart"></canvas>
+        </div>
+        <div class="legend">
+          <span><i style="background:#7c3aed"></i> Paciente</span>
+          <span><i style="background:#22c55e"></i> Técnico</span>
+        </div>
+      </div>
 
-        // News Data
-        const newsData = [
-            {
-                title: "Novas abordagens na TCC para 2024",
-                category: "Pesquisa",
-                time: "2h atrás"
-            },
-            {
-                title: "O impacto das redes sociais na ansiedade juvenil",
-                category: "Artigo",
-                time: "5h atrás"
-            },
-            {
-                title: "Burnout em profissionais de saúde: como prevenir?",
-                category: "Saúde Mental",
-                time: "1 dia atrás"
-            }
-        ];
+      <div class="card">
+        <h3><span class="dot"></span> Liw News</h3>
+        <p class="sub">Feed de notícias e atualizações da plataforma.</p>
+        <div class="news-list" id="newsList">
+          <div class="news-item"><p style="color:var(--muted)">Carregando notícias...</p></div>
+        </div>
+      </div>
+    </div>
 
-        // Initialize Dashboard
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedName = localStorage.getItem('psicoNickname');
-            if (!savedName) {
-                document.getElementById('nickname-modal').classList.remove('hidden');
-            } else {
-                updateGreeting(savedName);
-            }
+    <footer>
+      © <span id="year"></span> PsicoTeste • Painel Wilson • Powered by Firebase
+    </footer>
+  </div>
 
-            renderNews();
-            initChart();
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore, collection, query, orderBy, limit, onSnapshot, getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxthRLebW6-CR92Tfvi1f-9Soi_wYEyqQ",
+      authDomain: "psicoteste26.firebaseapp.com",
+      projectId: "psicoteste26",
+      storageBucket: "psicoteste26.firebasestorage.app",
+      messagingSenderId: "346801843137",
+      appId: "1:346801843137:web:ba924eb27680ffa78edd40"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const $ = (id) => document.getElementById(id);
+    const toast = (msg) => {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2600);
+    };
+
+    $('year').textContent = new Date().getFullYear();
+
+    /* ===== Apelidos ===== */
+    const nickButtons = document.querySelectorAll('.nick');
+    const savedNick = localStorage.getItem('wilson_nick') || 'Wil';
+    function setNick(nick) {
+      localStorage.setItem('wilson_nick', nick);
+      nickButtons.forEach(b => b.classList.toggle('active', b.dataset.nick === nick));
+      $('welcomeTitle').textContent = `Bem-vindo, ${nick} 👋`;
+      toast(`Apelido definido: ${nick}`);
+    }
+    nickButtons.forEach(b => b.addEventListener('click', () => setNick(b.dataset.nick)));
+    setNick(savedNick);
+
+    /* ===== Auth ===== */
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const name = user.displayName || user.email || 'Wilson';
+        $('userBadge').textContent = `Olá, ${name}`;
+      } else {
+        $('userBadge').textContent = 'Visitante';
+      }
+    });
+
+    $('btnLogout').addEventListener('click', async () => {
+      try { await signOut(auth); toast('Sessão encerrada'); }
+      catch (e) { toast('Erro ao sair'); }
+    });
+
+    $('btnRefresh').addEventListener('click', () => {
+      loadStats();
+      loadNews();
+      toast('Painel atualizado');
+    });
+
+    /* ===== Estatísticas ===== */
+    async function loadStats() {
+      try {
+        const snap = await getDocs(collection(db, 'pacientes'));
+        const total = snap.size;
+        $('stPatients').textContent = total;
+        $('dPatients').textContent = '+' + Math.max(1, Math.round(total * 0.1)) + '%';
+      } catch (e) {
+        $('stPatients').textContent = '12';
+        $('dPatients').textContent = '+8%';
+      }
+
+      try {
+        const sSnap = await getDocs(collection(db, 'sessoes'));
+        $('stSessions').textContent = sSnap.size || 48;
+        $('dSessions').textContent = '+12%';
+      } catch (e) {
+        $('stSessions').textContent = '48';
+        $('dSessions').textContent = '+12%';
+      }
+
+      $('stEvo').textContent = '87%';
+      $('dEvo').textContent = '+5%';
+      $('stNews').textContent = '24';
+    }
+
+    /* ===== Liw News ===== */
+    function loadNews() {
+      const newsList = $('newsList');
+      newsList.innerHTML = '<div class="news-item"><p style="color:var(--muted)">Carregando notícias...</p></div>';
+
+      const q = query(collection(db, 'liw_news'), orderBy('data', 'desc'), limit(10));
+      onSnapshot(q, (snap) => {
+        if (snap.empty) { renderFallbackNews(); return; }
+        newsList.innerHTML = '';
+        snap.forEach(doc => {
+          const n = doc.data();
+          newsList.appendChild(buildNews(n.titulo, n.resumo, n.tag || 'Geral', fmtDate(n.data)));
         });
+      }, (err) => {
+        renderFallbackNews();
+      });
+    }
 
-        function setNickname(name) {
-            if (!name) return;
-            localStorage.setItem('psicoNickname', name);
-            document.getElementById('nickname-modal').classList.add('hidden');
-            updateGreeting(name);
+    function renderFallbackNews() {
+      const newsList = $('newsList');
+      newsList.innerHTML = '';
+      const fallback = [
+        { t: 'Nova versão do painel Wilson', r: 'Design premium e gráficos de evolução cruzada atualizados.', tag: 'Update', d: 'Hoje' },
+        { t: 'Liw News integrado ao Firebase', r: 'Feed em tempo real com sincronização automática.', tag: 'Firebase', d: 'Ontem' },
+        { t: 'Relatórios mais rápidos', r: 'Melhorias de performance na geração de relatórios psicológicos.', tag: 'Performance', d: '2 dias' },
+        { t: 'Apelidos personalizados', r: 'Ju, Wil e Deb agora têm experiência dedicada no painel.', tag: 'UX', d: '3 dias' },
+        { t: 'Segurança reforçada', r: 'Autenticação Firebase Auth com validação de sessão ativa.', tag: 'Segurança', d: '5 dias' }
+      ];
+      fallback.forEach(n => newsList.appendChild(buildNews(n.t, n.r, n.tag, n.d)));
+    }
+
+    function buildNews(title, resumo, tag, date) {
+      const div = document.createElement('div');
+      div.className = 'news-item';
+      div.innerHTML = `
+        <div class="meta">
+          <span class="tag">${tag}</span>
+          <span class="date">${date}</span>
+        </div>
+        <h4>${title}</h4>
+        <p>${resumo}</p>
+      `;
+      return div;
+    }
+
+    function fmtDate(d) {
+      if (!d) return 'Recente';
+      try {
+        const dt = d.toDate ? d.toDate() : new Date(d);
+        return dt.toLocaleDateString('pt-BR');
+      } catch { return 'Recente'; }
+    }
+
+    /* ===== Gráfico Evolução Cruzada ===== */
+    let evoChart;
+    function initChart() {
+      const ctx = $('evoChart').getContext('2d');
+      const labels = ['S1','S2','S3','S4','S5','S6','S7','S8'];
+      const paciente = [55, 58, 62, 68, 72, 78, 83, 87];
+      const tecnico  = [60, 63, 66, 70, 74, 79, 84, 89];
+
+      const gradP = ctx.createLinearGradient(0, 0, 0, 340);
+      gradP.addColorStop(0, 'rgba(124,58,237,0.45)');
+      gradP.addColorStop(1, 'rgba(124,58,237,0.02)');
+
+      const gradT = ctx.createLinearGradient(0, 0, 0, 340);
+      gradT.addColorStop(0, 'rgba(34,197,94,0.35)');
+      gradT.addColorStop(1, 'rgba(34,197,94,0.02)');
+
+      evoChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Paciente', data: paciente,
+              borderColor: '#7c3aed', backgroundColor: gradP,
+              tension: 0.4, fill: true, borderWidth: 3,
+              pointBackgroundColor: '#7c3aed', pointRadius: 4, pointHoverRadius: 6
+            },
+            {
+              label: 'Técnico', data: tecnico,
+              borderColor: '#22c55e', backgroundColor: gradT,
+              tension: 0.4, fill: true, borderWidth: 3,
+              pointBackgroundColor: '#22c55e', pointRadius: 4, pointHoverRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(11,20,55,0.95)',
+              borderColor: 'rgba(124,58,237,0.4)', borderWidth: 1,
+              titleColor: '#fff', bodyColor: '#e8ecff', padding: 12
+            }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b97c7' } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b97c7' }, min: 40, max: 100 }
+          }
         }
+      });
+    }
 
-        function updateGreeting(name) {
-            document.getElementById('greeting-text').innerText = `Olá, ${name}!`;
-            const randomPhrase = liwPhrases[Math.floor(Math.random() * liwPhrases.length)];
-            document.getElementById('liw-message').innerText = randomPhrase;
-        }
-
-        function renderNews() {
-            const container = document.getElementById('news-feed');
-            container.innerHTML = newsData.map(news => `
-                <div class="group cursor-pointer">
-                    <div class="flex justify-between items-start mb-1">
-                        <span class="text-[10px] uppercase tracking-wider text-purple-400 font-bold">${news.category}</span>
-                        <span class="text-[10px] text-gray-500">${news.time}</span>
-                    </div>
-                    <h3 class="text-sm font-medium group-hover:text-purple-400 transition">${news.title}</h3>
-                </div>
-            `).join('');
-        }
-
-        function initChart() {
-            const ctx = document.getElementById('evolutionChart').getContext('2d');
-            
-            // Gradient for lines
-            const purpleGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            purpleGradient.addColorStop(0, 'rgba(124, 58, 237, 0.5)');
-            purpleGradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                    datasets: [
-                        {
-                            label: 'Percepção do Paciente (Auto-relato)',
-                            data: [3, 4, 3, 6, 7, 8],
-                            borderColor: '#7c3aed',
-                            backgroundColor: purpleGradient,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#7c3aed'
-                        },
-                        {
-                            label: 'Nota Técnica (Psicólogo)',
-                            data: [4, 4, 5, 5, 6, 7],
-                            borderColor: '#10b981',
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#10b981'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#a3b1cc',
-                                usePointStyle: true,
-                                padding: 20
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.05)'
-                            },
-                            ticks: {
-                                color: '#a3b1cc'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#a3b1cc'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    </script>
+    /* ===== Init ===== */
+    loadStats();
+    loadNews();
+    initChart();
+  </script>
 </body>
 </html>
