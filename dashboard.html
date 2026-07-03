@@ -1,612 +1,398 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Psicotest26 · Dashboard do Psicólogo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-  :root{
-    --bg:#0b1437;
-    --bg-2:#0e1a47;
-    --panel:#121f54;
-    --panel-2:#162562;
-    --border:#22307a;
-    --purple:#7c3aed;
-    --purple-2:#8b5cf6;
-    --purple-soft:rgba(124,58,237,.15);
-    --text:#e8ecff;
-    --muted:#9aa6d6;
-    --green:#22c55e;
-    --amber:#f59e0b;
-    --red:#ef4444;
-    --blue:#3b82f6;
-    --radius:16px;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family:'Inter',system-ui,sans-serif;
-    background:radial-gradient(1200px 600px at 80% -10%,rgba(124,58,237,.18),transparent 60%),var(--bg);
-    color:var(--text);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  a{color:inherit;text-decoration:none}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-
-  /* Layout */
-  .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-
-  /* Sidebar */
-  .sidebar{
-    background:linear-gradient(180deg,var(--bg-2),var(--bg));
-    border-right:1px solid var(--border);
-    padding:22px 16px;
-    position:sticky;top:0;height:100vh;overflow:auto;
-  }
-  .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
-  .brand .logo{
-    width:42px;height:42px;border-radius:12px;
-    background:linear-gradient(135deg,var(--purple),var(--purple-2));
-    display:grid;place-items:center;font-weight:800;color:#fff;font-size:18px;
-    box-shadow:0 8px 20px rgba(124,58,237,.45)
-  }
-  .brand .name{font-weight:700;font-size:16px;line-height:1.1}
-  .brand .sub{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
-  .nav{display:flex;flex-direction:column;gap:4px}
-  .nav-item{
-    display:flex;align-items:center;gap:12px;
-    padding:11px 12px;border-radius:10px;color:var(--muted);
-    font-size:14px;font-weight:500;transition:.15s;width:100%;text-align:left
-  }
-  .nav-item:hover{background:var(--purple-soft);color:var(--text)}
-  .nav-item.active{background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(124,58,237,.08));color:#fff;border:1px solid rgba(124,58,237,.35)}
-  .nav-item .ic{width:20px;height:20px;flex:0 0 auto}
-  .nav-section{font-size:11px;color:#5b6aa0;letter-spacing:.14em;text-transform:uppercase;margin:18px 12px 8px}
-
-  /* Main */
-  .main{display:flex;flex-direction:column;min-width:0}
-  .topbar{
-    position:sticky;top:0;z-index:20;
-    display:flex;align-items:center;gap:16px;
-    padding:16px 28px;background:rgba(11,20,55,.7);backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--border)
-  }
-  .topbar h1{font-size:18px;font-weight:700}
-  .topbar .sub{font-size:12px;color:var(--muted)}
-  .search{flex:1;max-width:420px;margin-left:18px;position:relative}
-  .search input{
-    width:100%;padding:10px 14px 10px 38px;border-radius:10px;
-    background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:13px;outline:none
-  }
-  .search input:focus{border-color:var(--purple)}
-  .search .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
-  .topbar .spacer{flex:1}
-  .user{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--border)}
-  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#5b21b6);display:grid;place-items:center;font-weight:700;font-size:13px}
-  .user .meta{font-size:12px;line-height:1.2}
-  .user .meta b{font-weight:600}
-  .user .meta span{color:var(--muted);font-size:11px}
-
-  .content{padding:24px 28px 60px;display:grid;grid-template-columns:1fr 380px;gap:22px;align-items:start}
-
-  /* Cards */
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-  .card-h{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border)}
-  .card-h h2{font-size:15px;font-weight:700}
-  .card-h .pill{font-size:11px;color:var(--muted);background:var(--panel-2);padding:4px 10px;border-radius:999px;border:1px solid var(--border)}
-  .card-b{padding:18px}
-
-  /* Stats */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
-  .stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden}
-  .stat::after{content:"";position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.25),transparent 70%)}
-  .stat .label{font-size:12px;color:var(--muted);font-weight:500}
-  .stat .value{font-size:26px;font-weight:800;margin-top:6px}
-  .stat .delta{font-size:11px;margin-top:4px;display:inline-flex;align-items:center;gap:4px}
-  .delta.up{color:var(--green)} .delta.down{color:var(--red)} .delta.neutral{color:var(--muted)}
-
-  /* Patient list */
-  .patients{display:flex;flex-direction:column}
-  .patient{
-    display:grid;grid-template-columns:42px 1fr auto auto;gap:14px;align-items:center;
-    padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s
-  }
-  .patient:hover{background:var(--panel-2)}
-  .patient.active{background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(124,58,237,.04));border-left:3px solid var(--purple)}
-  .patient:last-child{border-bottom:none}
-  .p-av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;background:linear-gradient(135deg,#4f46e5,#7c3aed)}
-  .p-name{font-weight:600;font-size:14px}
-  .p-meta{font-size:12px;color:var(--muted)}
-  .badge{font-size:11px;padding:4px 10px;border-radius:999px;font-weight:600}
-  .badge.ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)}
-  .badge.warn{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)}
-  .badge.risk{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
-  .p-tests{font-size:12px;color:var(--muted);text-align:right}
-
-  /* Detail */
-  .detail-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px}
-  .chart-wrap{height:300px;position:relative}
-  .history{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow:auto;padding-right:4px}
-  .h-item{display:flex;gap:12px;padding:12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border)}
-  .h-date{font-size:11px;color:var(--muted);white-space:nowrap}
-  .h-test{font-weight:600;font-size:13px}
-  .h-score{font-size:12px;color:var(--muted)}
-  .h-score b{color:var(--text)}
-
-  /* Liw panel */
-  .liw{position:sticky;top:90px}
-  .liw-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border)}
-  .liw-av{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--purple),#a855f7);display:grid;place-items:center;font-weight:800;color:#fff;box-shadow:0 6px 18px rgba(124,58,237,.5)}
-  .liw-head .t{font-weight:700;font-size:14px}
-  .liw-head .s{font-size:11px;color:var(--muted)}
-  .liw-status{margin-left:auto;font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 2s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-  .liw-body{padding:18px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 220px);overflow:auto}
-  .liw-msg{font-size:13px;color:var(--text);background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;white-space:pre-wrap;line-height:1.6}
-  .liw-msg.ai{border-left:3px solid var(--purple)}
-  .liw-msg.muted{color:var(--muted);font-style:italic}
-  .liw-actions{display:flex;gap:8px;flex-wrap:wrap}
-  .btn{padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--panel-2);transition:.15s}
-  .btn:hover{border-color:var(--purple)}
-  .btn.primary{background:linear-gradient(135deg,var(--purple),#6d28d9);border-color:transparent;color:#fff}
-  .btn.primary:hover{filter:brightness(1.1)}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .typing{display:inline-flex;gap:4px;align-items:center}
-  .typing span{width:6px;height:6px;border-radius:50%;background:var(--purple-2);animation:blink 1.2s infinite both}
-  .typing span:nth-child(2){animation-delay:.2s} .typing span:nth-child(3){animation-delay:.4s}
-  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
-
-  /* Scrollbar */
-  ::-webkit-scrollbar{width:8px;height:8px}
-  ::-webkit-scrollbar-thumb{background:#2a3a82;border-radius:8px}
-  ::-webkit-scrollbar-track{background:transparent}
-
-  /* Empty state */
-  .empty{text-align:center;padding:40px 20px;color:var(--muted)}
-  .empty .ic{font-size:34px;margin-bottom:10px;opacity:.6}
-
-  /* Toast */
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--purple);color:var(--text);padding:12px 18px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);opacity:0;transition:.3s;z-index:100}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-  /* Responsive */
-  @media (max-width:1100px){
-    .content{grid-template-columns:1fr}
-    .liw{position:static;max-height:none}
-    .detail-grid{grid-template-columns:1fr}
-  }
-  @media (max-width:820px){
-    .app{grid-template-columns:1fr}
-    .sidebar{position:fixed;left:-280px;width:260px;z-index:50;transition:.25s}
-    .sidebar.open{left:0}
-    .stats{grid-template-columns:repeat(2,1fr)}
-    .topbar{padding:14px 16px}
-    .content{padding:18px}
-    .menu-toggle{display:inline-flex !important}
-  }
-  .menu-toggle{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:var(--panel);border:1px solid var(--border)}
-  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
-  .backdrop.show{display:block}
-</style>
-</head>
-<body>
-<div class="app">
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="logo">P26</div>
-      <div>
-        <div class="name">Psicotest26</div>
-        <div class="sub">Painel Clínico</div>
-      </div>
-    </div>
-    <nav class="nav">
-      <div class="nav-section">Geral</div>
-      <button class="nav-item active"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
-      <button class="nav-item"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Pacientes</button>
-      <button class="nav-item"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Testes</button>
-      <button class="nav-item"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Relatórios</button>
-      <div class="nav-section">Inteligência</div>
-      <button class="nav-item"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/><path d="M9 21h6"/></svg>Liw Insights</button>
-      <div class="nav-section">Conta</div>
-      <button class="nav-item"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configurações</button>
-    </nav>
-  </aside>
-  <div class="backdrop" id="backdrop" onclick="toggleMenu()"></div>
-
-  <!-- Main -->
-  <main class="main">
-    <header class="topbar">
-      <button class="menu-toggle" onclick="toggleMenu()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <div>
-        <h1>Dashboard do Psicólogo</h1>
-        <div class="sub">Visão clínica integrada com Liw Insights</div>
-      </div>
-      <div class="search">
-        <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Buscar paciente por nome..." />
-      </div>
-      <div class="spacer"></div>
-      <div class="user">
-        <div class="avatar">DR</div>
-        <div class="meta"><b>Dra. Renata Lima</b><br/><span>Psicóloga CRP 06/123456</span></div>
-      </div>
-    </header>
-
-    <div class="content">
-      <!-- Left column -->
-      <section>
-        <!-- Stats -->
-        <div class="stats">
-          <div class="stat"><div class="label">Pacientes ativos</div><div class="value" id="stPatients">—</div><div class="delta up">+3 este mês</div></div>
-          <div class="stat"><div class="label">Testes realizados</div><div class="value" id="stTests">—</div><div class="delta up">+18 esta semana</div></div>
-          <div class="stat"><div class="label">Em acompanhamento</div><div class="value" id="stFollow">—</div><div class="delta neutral">estável</div></div>
-          <div class="stat"><div class="label">Sinais de alerta</div><div class="value" id="stRisk">—</div><div class="delta down">requer atenção</div></div>
-        </div>
-
-        <!-- Patients -->
-        <div class="card" style="margin-bottom:22px">
-          <div class="card-h"><h2>Pacientes</h2><span class="pill" id="pillCount">0 cadastrados</span></div>
-          <div class="patients" id="patientList"></div>
-        </div>
-
-        <!-- Detail -->
-        <div class="card">
-          <div class="card-h">
-            <h2 id="detailTitle">Selecione um paciente</h2>
-            <span class="pill" id="detailPill">Evolução longitudinal</span>
-          </div>
-          <div class="card-b">
-            <div class="detail-grid">
-              <div>
-                <div class="chart-wrap"><canvas id="evolutionChart"></canvas></div>
-              </div>
-              <div>
-                <div style="font-size:12px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em">Histórico de testes</div>
-                <div class="history" id="historyList"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Liw Insights -->
-      <aside class="card liw">
-        <div class="liw-head">
-          <div class="liw-av">L</div>
-          <div><div class="t">Liw Insights</div><div class="s">IA clínica · Psicotest26</div></div>
-          <div class="liw-status"><span class="dot"></span>online</div>
-        </div>
-        <div class="liw-body" id="liwBody">
-          <div class="liw-msg muted">Olá, Dra. Renata. Selecione um paciente para que eu gere uma resenha clínica automática baseada nos resultados de testes.json.</div>
-        </div>
-        <div style="padding:14px 18px;border-top:1px solid var(--border)" class="liw-actions">
-          <button class="btn primary" id="btnResenha" onclick="gerarResenha()" disabled>Gerar resenha</button>
-          <button class="btn" id="btnTendencia" onclick="gerarTendencia()" disabled>Análise de tendência</button>
-          <button class="btn" id="btnSugestao" onclick="gerarSugestoes()" disabled>Sugestões</button>
-        </div>
-      </aside>
-    </div>
-  </main>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-  /* ===== Estado global ===== */
-  let dados = { pacientes: [], testes: [] };
-  let pacienteSelecionado = null;
-  let chart = null;
-
-  /* ===== Utilidades ===== */
-  const $ = (s) => document.querySelector(s);
-  const initials = (nome) => nome.split(' ').filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase();
-  const fmtData = (iso) => {
-    const d = new Date(iso);
-    if(isNaN(d)) return iso;
-    return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
-  };
-  function toast(msg){
-    const t=$('#toast'); t.textContent=msg; t.classList.add('show');
-    clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600);
-  }
-  function toggleMenu(){ $('#sidebar').classList.toggle('open'); $('#backdrop').classList.toggle('show'); }
-
-  /* ===== Carregamento de dados ===== */
-  async function carregarDados(){
-    try{
-      const res = await fetch('testes.json', {cache:'no-store'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      dados = await res.json();
-      if(!dados.pacientes) dados.pacientes = [];
-      if(!dados.testes) dados.testes = [];
-    }catch(err){
-      console.warn('testes.json não encontrado, usando dados de demonstração.', err);
-      dados = dadosDemo();
-    }
-    renderizar();
-  }
-
-  /* ===== Estrutura esperada de testes.json =====
-  {
-    "pacientes": [
-      { "id":"p1", "nome":"Ana Souza", "idade":29, "inicio":"2024-01-10" }
-    ],
-    "testes": [
-      { "id":"t1", "pacienteId":"p1", "data":"2024-01-15", "tipo":"PHQ-9", "escala":"0-27", "score":14, "interpretacao":"moderado" }
-    ]
-  }
-  ===== */
-
-  function dadosDemo(){
-    return {
-      pacientes:[
-        {id:'p1',nome:'Ana Souza',idade:29,inicio:'2024-01-10'},
-        {id:'p2',nome:'Bruno Carvalho',idade:34,inicio:'2024-02-02'},
-        {id:'p3',nome:'Carla Mendes',idade:41,inicio:'2023-11-18'},
-        {id:'p4',nome:'Diego Ramos',idade:23,inicio:'2024-03-21'},
-        {id:'p5',nome:'Eduarda Pires',idade:37,inicio:'2024-04-05'}
-      ],
-      testes:[
-        {id:'t1',pacienteId:'p1',data:'2024-01-15',tipo:'PHQ-9',escala:'0-27',score:16,interpretacao:'moderado'},
-        {id:'t2',pacienteId:'p1',data:'2024-02-15',tipo:'PHQ-9',escala:'0-27',score:12,interpretacao:'leve-moderado'},
-        {id:'t3',pacienteId:'p1',data:'2024-03-15',tipo:'PHQ-9',escala:'0-27',score:9,interpretacao:'leve'},
-        {id:'t4',pacienteId:'p1',data:'2024-04-15',tipo:'GAD-7',escala:'0-21',score:11,interpretacao:'moderado'},
-        {id:'t5',pacienteId:'p2',data:'2024-02-10',tipo:'PHQ-9',escala:'0-27',score:21,interpretacao:'severo'},
-        {id:'t6',pacienteId:'p2',data:'2024-03-10',tipo:'PHQ-9',escala:'0-27',score:18,interpretacao:'moderado-severo'},
-        {id:'t7',pacienteId:'p2',data:'2024-04-10',tipo:'PHQ-9',escala:'0-27',score:15,interpretacao:'moderado'},
-        {id:'t8',pacienteId:'p3',data:'2023-12-01',tipo:'GAD-7',escala:'0-21',score:8,interpretacao:'leve'},
-        {id:'t9',pacienteId:'p3',data:'2024-01-01',tipo:'GAD-7',escala:'0-21',score:6,interpretacao:'leve'},
-        {id:'t10',pacienteId:'p3',data:'2024-02-01',tipo:'GAD-7',escala:'0-21',score:5,interpretacao:'mínimo'},
-        {id:'t11',pacienteId:'p4',data:'2024-03-28',tipo:'PHQ-9',escala:'0-27',score:19,interpretacao:'moderado-severo'},
-        {id:'t12',pacienteId:'p4',data:'2024-04-28',tipo:'PHQ-9',escala:'0-27',score:20,interpretacao:'severo'},
-        {id:'t13',pacienteId:'p5',data:'2024-04-10',tipo:'GAD-7',escala:'0-21',score:4,interpretacao:'mínimo'},
-        {id:'t14',pacienteId:'p5',data:'2024-05-10',tipo:'GAD-7',escala:'0-21',score:3,interpretacao:'mínimo'}
-      ]
-    };
-  }
-
-  /* ===== Renderização ===== */
-  function testesDoPaciente(id){
-    return dados.testes.filter(t=>t.pacienteId===id).sort((a,b)=>new Date(a.data)-new Date(b.data));
-  }
-  function classificarPaciente(testes){
-    if(!testes.length) return {cls:'warn',txt:'Sem dados'};
-    const ultimo=testes[testes.length-1];
-    const interp=(ultimo.interpretacao||'').toLowerCase();
-    if(/severo|moderado-severo/.test(interp)) return {cls:'risk',txt:'Alerta'};
-    if(/moderado|leve-moderado/.test(interp)) return {cls:'warn',txt:'Acompanhar'};
-    return {cls:'ok',txt:'Estável'};
-  }
-
-  function renderizar(){
-    const lista=$('#patientList');
-    const filtro=($('#searchInput').value||'').toLowerCase();
-    const pacientes=dados.pacientes.filter(p=>p.nome.toLowerCase().includes(filtro));
-
-    $('#pillCount').textContent = dados.pacientes.length+' cadastrados';
-    $('#stPatients').textContent = dados.pacientes.length;
-    $('#stTests').textContent = dados.testes.length;
-    $('#stFollow').textContent = pacientes.filter(p=>{
-      const c=classificarPaciente(testesDoPaciente(p.id)); return c.cls==='warn';
-    }).length;
-    $('#stRisk').textContent = pacientes.filter(p=>{
-      const c=classificarPaciente(testesDoPaciente(p.id)); return c.cls==='risk';
-    }).length;
-
-    if(!pacientes.length){
-      lista.innerHTML='<div class="empty"><div class="ic">∅</div>Nenhum paciente encontrado.</div>';
-      return;
-    }
-
-    lista.innerHTML = pacientes.map(p=>{
-      const ts=testesDoPaciente(p.id);
-      const c=classificarPaciente(ts);
-      const active = pacienteSelecionado && pacienteSelecionado.id===p.id ? 'active':'';
-      return `<div class="patient ${active}" onclick="selecionarPaciente('${p.id}')">
-        <div class="p-av">${initials(p.nome)}</div>
-        <div><div class="p-name">${p.nome}</div><div class="p-meta">${p.idade||'—'} anos · desde ${fmtData(p.inicio)}</div></div>
-        <span class="badge ${c.cls}">${c.txt}</span>
-        <div class="p-tests">${ts.length} testes</div>
-      </div>`;
-    }).join('');
-  }
-
-  function selecionarPaciente(id){
-    pacienteSelecionado = dados.pacientes.find(p=>p.id===id) || null;
-    renderizar();
-    renderDetalhe();
-    $('#btnResenha').disabled=!pacienteSelecionado;
-    $('#btnTendencia').disabled=!pacienteSelecionado;
-    $('#btnSugestao').disabled=!pacienteSelecionado;
-    if(pacienteSelecionado){
-      $('#liwBody').innerHTML = `<div class="liw-msg muted">Paciente <b>${pacienteSelecionado.nome}</b> selecionado. Clique em <b>Gerar resenha</b> para que a Liw analise os resultados.</div>`;
-    }
-    if(window.innerWidth<=820) toggleMenu();
-  }
-
-  function renderDetalhe(){
-    if(!pacienteSelecionado){
-      $('#detailTitle').textContent='Selecione um paciente';
-      $('#historyList').innerHTML='<div class="empty"><div class="ic">📋</div>Nenhum histórico para exibir.</div>';
-      if(chart){chart.destroy();chart=null;}
-      return;
-    }
-    const p=pacienteSelecionado;
-    const ts=testesDoPaciente(p.id);
-    $('#detailTitle').textContent = p.nome + (p.idade?` · ${p.idade} anos`:'');
-
-    // Histórico
-    $('#historyList').innerHTML = ts.length ? ts.slice().reverse().map(t=>`
-      <div class="h-item">
-        <div class="h-date">${fmtData(t.data)}</div>
-        <div style="flex:1">
-          <div class="h-test">${t.tipo}</div>
-          <div class="h-score">Score <b>${t.score}</b> / ${t.escala||'—'} · <span style="color:var(--purple-2)">${t.interpretacao||'—'}</span></div>
-        </div>
-      </div>`).join('') : '<div class="empty"><div class="ic">📋</div>Sem testes registrados.</div>';
-
-    renderGrafico(ts);
-  }
-
-  function renderGrafico(testes){
-    const ctx=$('#evolutionChart').getContext('2d');
-    if(chart) chart.destroy();
-    if(!testes.length){
-      chart=null; return;
-    }
-    // Agrupar por tipo de teste para múltiplas séries
-    const tipos=[...new Set(testes.map(t=>t.tipo))];
-    const labels=testes.map(t=>fmtData(t.data));
-    const datasets=tipos.map((tipo,i)=>{
-      const cores=['#7c3aed','#22c55e','#3b82f6','#f59e0b','#ef4444'];
-      return {
-        label:tipo,
-        data:testes.map(t=>t.tipo===tipo?t.score:null),
-        borderColor:cores[i%cores.length],
-        backgroundColor:cores[i%cores.length]+'33',
-        tension:.35, spanGaps:true, pointRadius:4, pointHoverRadius:6, borderWidth:2, fill:true
-      };
-    });
-    chart=new Chart(ctx,{
-      type:'line',
-      data:{labels,datasets},
-      options:{
-        responsive:true,maintainAspectRatio:false,
-        plugins:{
-          legend:{labels:{color:'#9aa6d6',font:{size:11},boxWidth:12}},
-          tooltip:{backgroundColor:'#0e1a47',borderColor:'#22307a',borderWidth:1,titleColor:'#fff',bodyColor:'#c7d0f5',padding:10}
-        },
-        scales:{
-          x:{ticks:{color:'#9aa6d6',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}},
-          y:{ticks:{color:'#9aa6d6',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'},beginAtZero:true}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psicotest26 | Dashboard Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0b1437;
+            --card-bg: #111c44;
+            --accent-purple: #7c3aed;
+            --text-main: #ffffff;
+            --text-muted: #a3b1cc;
         }
-      }
-    });
-  }
 
-  /* ===== Liw Insights — geração de resenhas ===== */
-  function liwAppend(html,cls='ai'){
-    const body=$('#liwBody');
-    const div=document.createElement('div');
-    div.className='liw-msg '+cls;
-    div.innerHTML=html;
-    body.appendChild(div);
-    body.scrollTop=body.scrollHeight;
-  }
-  function liwTyping(){
-    const body=$('#liwBody');
-    const div=document.createElement('div');
-    div.className='liw-msg ai';
-    div.id='typingBox';
-    div.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-    body.appendChild(div);
-    body.scrollTop=body.scrollHeight;
-  }
-  function liwClearTyping(){ const t=$('#typingBox'); if(t) t.remove(); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
 
-  function interpretar(tipo,score){
-    tipo=(tipo||'').toUpperCase();
-    if(tipo==='PHQ-9'){
-      if(score<=4) return 'sintomas depressivos mínimos';
-      if(score<=9) return 'sintomas depressivos leves';
-      if(score<=14) return 'sintomas depressivos moderados';
-      if(score<=19) return 'sintomas depressivos moderados a severos';
-      return 'sintomas depressivos severos';
-    }
-    if(tipo==='GAD-7'){
-      if(score<=4) return 'ansiedade mínima';
-      if(score<=9) return 'ansiedade leve';
-      if(score<=14) return 'ansiedade moderada';
-      return 'ansiedade severa';
-    }
-    return 'resultado '+score;
-  }
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
 
-  function gerarResenha(){
-    if(!pacienteSelecionado) return;
-    const p=pacienteSelecionado;
-    const ts=testesDoPaciente(p.id);
-    if(!ts.length){ toast('Paciente sem testes para analisar.'); return; }
-    liwAppend(`<b>Liw</b> · Analisando ${ts.length} registros de ${p.nome}...`,'muted');
-    liwTyping();
-    setTimeout(()=>{
-      liwClearTyping();
-      const ultimo=ts[ts.length-1];
-      const primeiro=ts[0];
-      const delta=ultimo.score-primeiro.score;
-      const tendencia=delta<0?'redução':delta>0?'aumento':'estabilidade';
-      const pct=primeiro.score?Math.round(Math.abs(delta)/primeiro.score*100):0;
-      const resumo = `Resenha clínica automática — ${p.nome}
+        .neon-border {
+            border: 1px solid var(--accent-purple);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+        }
 
-A paciente apresenta ${interpretar(ultimo.tipo,ultimo.score)} no instrumento ${ultimo.tipo} (score ${ultimo.score}${ultimo.escala?' / '+ultimo.escala:''}), registrado em ${fmtData(ultimo.data)}.
+        .liw-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 3s ease-in-out infinite;
+        }
 
-Análise longitudinal: comparando o primeiro (${fmtData(primeiro.data)}, score ${primeiro.score}) e o último (${fmtData(ultimo.data)}, score ${ultimo.score}), observa-se ${tendencia} de ${pct}% nos escores. ${delta<0?'Há indicativos de resposta positiva à intervenção.':delta>0?'Recomenda-se atenção à elevação dos escores.':'Os escores mantêm-se estáveis no período.'}
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
-Considerando o histórico, sugere-se manter o plano terapêutico atual e reavaliar em 4 semanas. Esta resenha é um apoio decisório e não substitui o julgamento clínico do profissional.`;
-      liwAppend(resumo.replace(/\n/g,'<br>'));
-    },1100);
-  }
+        .sidebar-link:hover {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--accent-purple);
+        }
 
-  function gerarTendencia(){
-    if(!pacienteSelecionado) return;
-    const ts=testesDoPaciente(pacienteSelecionado.id);
-    if(ts.length<2){ toast('São necessários ao menos 2 testes.'); return; }
-    liwTyping();
-    setTimeout(()=>{
-      liwClearTyping();
-      const tipos=[...new Set(ts.map(t=>t.tipo))];
-      let html=`<b>Análise de tendência — ${pacienteSelecionado.nome}</b><br><br>`;
-      tipos.forEach(tipo=>{
-        const serie=ts.filter(t=>t.tipo===tipo);
-        const ini=serie[0].score, fim=serie[serie.length-1].score;
-        const d=fim-ini;
-        const seta=d<0?'↓':d>0?'↑':'→';
-        html+=`<b>${tipo}</b>: ${ini} → ${fim} ${seta} (${d<0?'redução':d>0?'aumento':'estável'} de ${Math.abs(d)} pontos)<br>`;
-      });
-      html+='<br><i>Projeção: mantendo a taxa atual de variação, projeta-se continuidade da tendência observada nas próximas 4–6 semanas.</i>';
-      liwAppend(html);
-    },900);
-  }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2d3748;
+            border-radius: 10px;
+        }
 
-  function gerarSugestoes(){
-    if(!pacienteSelecionado) return;
-    const ts=testesDoPaciente(pacienteSelecionado.id);
-    if(!ts.length){ toast('Sem dados suficientes.'); return; }
-    liwTyping();
-    setTimeout(()=>{
-      liwClearTyping();
-      const ultimo=ts[ts.length-1];
-      const interp=(ultimo.interpretacao||'').toLowerCase();
-      let sug=[];
-      if(/severo|moderado-severo/.test(interp)){
-        sug=['Considerar intensificação do acompanhamento (frequência semanal).','Avaliar rede de apoio e fatores de risco com atenção redobrada.','Discutir possíveis encaminhamentos multidisciplinares.'];
-      } else if(/moderado|leve-moderado/.test(interp)){
-        sug=['Manter sessões regulares e monitorar evolução.','Introduzir registros de pensamento e estratégias de regulação emocional.','Reaplicar instrumento em 4 semanas.'];
-      } else {
-        sug=['Reforçar ganhos terapêuticos e habilidades adquiridas.','Avaliar espaçamento gradual das sessões.','Manter acompanhamento preventivo.'];
-      }
-      let html=`<b>Sugestões da Liw — ${pacienteSelecionado.nome}</b><br><br>`;
-      html+='<ul style="margin:0 0 0 18px;padding:0">'+sug.map(s=>`<li style="margin-bottom:6px">${s}</li>`).join('')+'</ul>';
-      html+='<br><i>Recomendações geradas a partir dos padrões observados em testes.json.</i>';
-      liwAppend(html);
-    },900);
-  }
+        #nickname-modal {
+            backdrop-filter: blur(8px);
+            background: rgba(11, 20, 55, 0.8);
+        }
+    </style>
+</head>
+<body class="flex h-screen">
 
-  /* ===== Init ===== */
-  document.addEventListener('DOMContentLoaded',()=>{
-    $('#searchInput').addEventListener('input',renderizar);
-    carregarDados();
-  });
-</script>
+    <!-- Sidebar -->
+    <aside class="w-64 hidden lg:flex flex-col border-r border-gray-800 p-6">
+        <div class="flex items-center gap-3 mb-10">
+            <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-brain text-white"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tight">Psicotest26</span>
+        </div>
+
+        <nav class="flex-1 space-y-2">
+            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-purple-500 bg-purple-500/10">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
+                <i class="fas fa-users"></i> Pacientes
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
+                <i class="fas fa-calendar-alt"></i> Agenda
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
+                <i class="fas fa-file-medical-alt"></i> Prontuários
+            </a>
+            <a href="#" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-gray-400">
+                <i class="fas fa-chart-line"></i> Relatórios
+            </a>
+        </nav>
+
+        <div class="mt-auto">
+            <div class="glass-card p-4 text-center">
+                <p class="text-xs text-gray-400 mb-2">Plano Premium</p>
+                <button class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-sm font-medium transition">Upgrade</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-8">
+        
+        <!-- Header & Liw Greeting -->
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <div class="liw-avatar">
+                    <i class="fas fa-robot text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold" id="greeting-text">Olá, Psicólogo(a)!</h1>
+                    <p class="text-gray-400 text-sm" id="liw-message">Carregando sua dose de empatia...</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="p-2 rounded-full bg-gray-800 text-gray-400 hover:text-white">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="flex items-center gap-3 bg-gray-800/50 p-1 pr-4 rounded-full">
+                    <img src="https://ui-avatars.com/api/?name=Psicologo&background=7c3aed&color=fff" class="w-8 h-8 rounded-full" alt="User">
+                    <span class="text-sm font-medium">Meu Perfil</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-card p-6">
+                <p class="text-gray-400 text-sm mb-1">Pacientes Ativos</p>
+                <h3 class="text-3xl font-bold">24</h3>
+                <span class="text-green-400 text-xs"><i class="fas fa-arrow-up"></i> +12% este mês</span>
+            </div>
+            <div class="glass-card p-6">
+                <p class="text-gray-400 text-sm mb-1">Sessões Hoje</p>
+                <h3 class="text-3xl font-bold">6</h3>
+                <span class="text-purple-400 text-xs">Próxima às 14:00</span>
+            </div>
+            <div class="glass-card p-6">
+                <p class="text-gray-400 text-sm mb-1">Taxa de Retenção</p>
+                <h3 class="text-3xl font-bold">92%</h3>
+                <span class="text-blue-400 text-xs">Excelente performance</span>
+            </div>
+            <div class="glass-card p-6">
+                <p class="text-gray-400 text-sm mb-1">Faturamento (Mês)</p>
+                <h3 class="text-3xl font-bold">R$ 8.4k</h3>
+                <span class="text-gray-400 text-xs">Meta: R$ 10k</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Evolution Chart -->
+            <div class="xl:col-span-2 glass-card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold">Evolução Cruzada: Paciente vs. Técnico</h2>
+                    <select class="bg-gray-800 border-none text-sm rounded-lg px-3 py-1 focus:ring-2 ring-purple-500">
+                        <option>Paciente: João Silva</option>
+                        <option>Paciente: Maria Oliveira</option>
+                    </select>
+                </div>
+                <div class="h-[350px] w-full">
+                    <canvas id="evolutionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Liw News -->
+            <div class="glass-card p-6 flex flex-col">
+                <div class="flex items-center gap-2 mb-6">
+                    <i class="fas fa-newspaper text-purple-500"></i>
+                    <h2 class="text-xl font-bold">Liw News</h2>
+                </div>
+                <div class="space-y-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar" id="news-feed">
+                    <!-- News items will be injected here -->
+                </div>
+                <button class="mt-6 w-full py-2 border border-purple-500/30 rounded-xl text-purple-400 hover:bg-purple-500/10 transition">
+                    Ver todas as notícias
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div class="mt-8 glass-card p-6">
+            <h2 class="text-xl font-bold mb-6">Próximas Sessões</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-gray-400 border-b border-gray-800">
+                            <th class="pb-4 font-medium">Paciente</th>
+                            <th class="pb-4 font-medium">Horário</th>
+                            <th class="pb-4 font-medium">Tipo</th>
+                            <th class="pb-4 font-medium">Status</th>
+                            <th class="pb-4 font-medium text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="py-4 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 text-xs">JS</div>
+                                João Silva
+                            </td>
+                            <td class="py-4">14:00 - 15:00</td>
+                            <td class="py-4 text-gray-400">TCC Individual</td>
+                            <td class="py-4"><span class="px-2 py-1 bg-green-500/10 text-green-500 rounded text-xs">Confirmado</span></td>
+                            <td class="py-4 text-right">
+                                <button class="text-purple-500 hover:underline text-sm">Abrir Prontuário</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="py-4 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-500 text-xs">MO</div>
+                                Maria Oliveira
+                            </td>
+                            <td class="py-4">15:30 - 16:30</td>
+                            <td class="py-4 text-gray-400">Análise</td>
+                            <td class="py-4"><span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 rounded text-xs">Aguardando</span></td>
+                            <td class="py-4 text-right">
+                                <button class="text-purple-500 hover:underline text-sm">Abrir Prontuário</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Nickname Modal -->
+    <div id="nickname-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card neon-border p-8 max-w-md w-full text-center">
+            <div class="liw-avatar mx-auto mb-6">
+                <i class="fas fa-robot text-2xl text-white"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Olá! Eu sou o Liw.</h2>
+            <p class="text-gray-400 mb-6">Como você prefere que eu te chame hoje?</p>
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <button onclick="setNickname('Ju')" class="p-3 rounded-xl bg-gray-800 hover:bg-purple-600 transition">Ju</button>
+                <button onclick="setNickname('Wil')" class="p-3 rounded-xl bg-gray-800 hover:bg-purple-600 transition">Wil</button>
+                <button onclick="setNickname('Deb')" class="p-3 rounded-xl bg-gray-800 hover:bg-purple-600 transition">Deb</button>
+            </div>
+            <input type="text" id="custom-name" placeholder="Ou digite outro nome..." class="w-full bg-gray-800 border-none rounded-xl p-3 mb-4 focus:ring-2 ring-purple-500">
+            <button onclick="setNickname(document.getElementById('custom-name').value)" class="w-full bg-purple-600 py-3 rounded-xl font-bold">Começar Jornada</button>
+        </div>
+    </div>
+
+    <script>
+        // Liw Empathetic Phrases (Duolingo Style)
+        const liwPhrases = [
+            "Você está fazendo um trabalho incrível hoje! 🌟",
+            "Lembre-se de respirar fundo entre as sessões. 🧘‍♂️",
+            "Sua dedicação transforma vidas, sabia? ✨",
+            "Que tal uma pausa para um café ou água? Você merece! ☕",
+            "Cada evolução de paciente é uma vitória sua também. 🏆",
+            "O mundo precisa da sua escuta empática hoje. ❤️"
+        ];
+
+        // News Data
+        const newsData = [
+            {
+                title: "Novas abordagens na TCC para 2024",
+                category: "Pesquisa",
+                time: "2h atrás"
+            },
+            {
+                title: "O impacto das redes sociais na ansiedade juvenil",
+                category: "Artigo",
+                time: "5h atrás"
+            },
+            {
+                title: "Burnout em profissionais de saúde: como prevenir?",
+                category: "Saúde Mental",
+                time: "1 dia atrás"
+            }
+        ];
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('psicoNickname');
+            if (!savedName) {
+                document.getElementById('nickname-modal').classList.remove('hidden');
+            } else {
+                updateGreeting(savedName);
+            }
+
+            renderNews();
+            initChart();
+        });
+
+        function setNickname(name) {
+            if (!name) return;
+            localStorage.setItem('psicoNickname', name);
+            document.getElementById('nickname-modal').classList.add('hidden');
+            updateGreeting(name);
+        }
+
+        function updateGreeting(name) {
+            document.getElementById('greeting-text').innerText = `Olá, ${name}!`;
+            const randomPhrase = liwPhrases[Math.floor(Math.random() * liwPhrases.length)];
+            document.getElementById('liw-message').innerText = randomPhrase;
+        }
+
+        function renderNews() {
+            const container = document.getElementById('news-feed');
+            container.innerHTML = newsData.map(news => `
+                <div class="group cursor-pointer">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-[10px] uppercase tracking-wider text-purple-400 font-bold">${news.category}</span>
+                        <span class="text-[10px] text-gray-500">${news.time}</span>
+                    </div>
+                    <h3 class="text-sm font-medium group-hover:text-purple-400 transition">${news.title}</h3>
+                </div>
+            `).join('');
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('evolutionChart').getContext('2d');
+            
+            // Gradient for lines
+            const purpleGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            purpleGradient.addColorStop(0, 'rgba(124, 58, 237, 0.5)');
+            purpleGradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [
+                        {
+                            label: 'Percepção do Paciente (Auto-relato)',
+                            data: [3, 4, 3, 6, 7, 8],
+                            borderColor: '#7c3aed',
+                            backgroundColor: purpleGradient,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#7c3aed'
+                        },
+                        {
+                            label: 'Nota Técnica (Psicólogo)',
+                            data: [4, 4, 5, 5, 6, 7],
+                            borderColor: '#10b981',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#10b981'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#a3b1cc',
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: '#a3b1cc'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#a3b1cc'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
