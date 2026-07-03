@@ -3,366 +3,395 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Psicoteste - Vitrine de Testes</title>
+<title>PsicoTeste Pro — Painel Premium</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-  :root {
-    --bg: #0b1437;
-    --bg-2: #0f1b4d;
-    --neon: #7c3aed;
-    --neon-2: #a855f7;
-    --glass: rgba(255,255,255,0.06);
-    --glass-border: rgba(255,255,255,0.12);
-    --text: #e8ecff;
-    --muted: #9aa3c7;
-    --green: #22c55e;
-    --red: #ef4444;
+  :root{
+    --bg:#0b1437;
+    --bg2:#0e1a4a;
+    --neon:#7c3aed;
+    --neon2:#a855f7;
+    --blue:#3b82f6;
+    --glass:rgba(255,255,255,0.06);
+    --glass-border:rgba(255,255,255,0.12);
+    --text:#e8ecff;
+    --muted:#9aa3c7;
+    --green:#22c55e;
+    --gold:#fbbf24;
   }
-  body {
-    background: radial-gradient(1200px 600px at 20% -10%, #1a2a6b 0%, transparent 60%),
-                radial-gradient(900px 500px at 100% 10%, #2a1a6b 0%, transparent 55%),
-                var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px;
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+  body{
+    background:radial-gradient(1200px 800px at 10% -10%,#1e1b4b 0%,transparent 50%),
+               radial-gradient(1000px 700px at 110% 10%,#3b0764 0%,transparent 45%),
+               linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+    color:var(--text);min-height:100vh;padding:24px;
   }
-  header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 18px 24px; margin-bottom: 24px;
-    background: var(--glass); backdrop-filter: blur(14px);
-    border: 1px solid var(--glass-border); border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  .wrap{max-width:1280px;margin:0 auto}
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 22px;border-radius:18px;
+    background:var(--glass);backdrop-filter:blur(14px);
+    border:1px solid var(--glass-border);margin-bottom:22px;
   }
-  .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; }
-  .logo .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 16px var(--neon); }
-  .user-box { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
-  .badge {
-    padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
-    background: linear-gradient(135deg, var(--neon), var(--neon-2));
-    box-shadow: 0 0 18px rgba(124,58,237,0.6); color: white;
+  .logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px}
+  .logo .dot{width:14px;height:14px;border-radius:50%;background:var(--neon);box-shadow:0 0 16px var(--neon)}
+  .user-box{display:flex;align-items:center;gap:14px}
+  .badge{
+    padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;
+    background:linear-gradient(135deg,var(--neon),var(--blue));color:#fff;
   }
-  .section-title {
-    font-size: 22px; font-weight: 700; margin: 8px 4px 16px;
-    display: flex; align-items: center; gap: 10px;
+  .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--neon2),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800}
+  .hero{
+    display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:22px;
   }
-  .section-title::before {
-    content: ''; width: 6px; height: 24px; border-radius: 4px;
-    background: linear-gradient(var(--neon), var(--neon-2));
-    box-shadow: 0 0 12px var(--neon);
+  .card{
+    background:var(--glass);backdrop-filter:blur(14px);
+    border:1px solid var(--glass-border);border-radius:18px;padding:20px;
   }
-  .grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 18px;
+  .chart-card h2{font-size:16px;margin-bottom:6px;color:#fff}
+  .chart-card p{color:var(--muted);font-size:13px;margin-bottom:14px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .stat{padding:16px;border-radius:14px;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(59,130,246,.15));border:1px solid var(--glass-border)}
+  .stat .num{font-size:26px;font-weight:800}
+  .stat .lbl{color:var(--muted);font-size:12px;margin-top:4px}
+  .section-title{display:flex;justify-content:space-between;align-items:center;margin:10px 0 16px}
+  .section-title h3{font-size:18px}
+  .section-title .count{color:var(--muted);font-size:13px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{padding:7px 14px;border-radius:999px;font-size:12px;cursor:pointer;border:1px solid var(--glass-border);background:var(--glass);color:var(--muted);transition:.2s}
+  .chip.active,.chip:hover{background:linear-gradient(135deg,var(--neon),var(--blue));color:#fff;border-color:transparent}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .test{
+    position:relative;padding:18px;border-radius:16px;
+    background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    border:1px solid var(--glass-border);transition:.25s;overflow:hidden;
   }
-  .card {
-    background: var(--glass); backdrop-filter: blur(14px);
-    border: 1px solid var(--glass-border); border-radius: 18px;
-    padding: 18px; transition: transform .2s, box-shadow .2s, border-color .2s;
-    position: relative; overflow: hidden;
+  .test:hover{transform:translateY(-4px);border-color:var(--neon);box-shadow:0 10px 30px rgba(124,58,237,.35)}
+  .test .num{font-size:11px;color:var(--neon2);font-weight:800;letter-spacing:1px}
+  .test h4{font-size:15px;margin:6px 0 4px;color:#fff}
+  .test .cat{display:inline-block;font-size:10px;padding:3px 8px;border-radius:999px;background:rgba(124,58,237,.25);color:var(--neon2);margin-bottom:8px}
+  .test .desc{font-size:12px;color:var(--muted);min-height:48px;line-height:1.45}
+  .test .footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .status{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px}
+  .status.free{background:rgba(34,197,94,.18);color:#86efac}
+  .status.locked{background:rgba(251,191,36,.18);color:var(--gold)}
+  .btn{
+    border:none;cursor:pointer;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;transition:.2s;
   }
-  .card:hover { transform: translateY(-4px); border-color: var(--neon); box-shadow: 0 12px 36px rgba(124,58,237,0.35); }
-  .card.locked { opacity: 0.92; }
-  .card .num {
-    position: absolute; top: 12px; right: 14px; font-size: 12px; color: var(--muted);
-    background: rgba(255,255,255,0.08); padding: 3px 8px; border-radius: 8px;
-  }
-  .card h3 { font-size: 16px; margin-bottom: 6px; padding-right: 50px; }
-  .card p { font-size: 13px; color: var(--muted); min-height: 38px; margin-bottom: 14px; }
-  .btn {
-    width: 100%; padding: 11px; border: none; border-radius: 12px;
-    font-weight: 600; cursor: pointer; font-size: 14px; transition: .2s;
-  }
-  .btn-free {
-    background: linear-gradient(135deg, var(--neon), var(--neon-2));
-    color: white; box-shadow: 0 6px 20px rgba(124,58,237,0.45);
-  }
-  .btn-free:hover { filter: brightness(1.15); transform: translateY(-2px); }
-  .btn-lock {
-    background: rgba(255,255,255,0.06); color: var(--text);
-    border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-lock:hover { border-color: var(--neon); color: var(--neon-2); box-shadow: 0 6px 20px rgba(124,58,237,0.3); }
-  .lock-icon { font-size: 16px; }
-  .chart-box {
-    background: var(--glass); backdrop-filter: blur(14px);
-    border: 1px solid var(--glass-border); border-radius: 18px;
-    padding: 22px; margin-bottom: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-  }
-  .chart-box h2 { font-size: 18px; margin-bottom: 4px; }
-  .chart-box .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
-  .chart-wrap { position: relative; height: 320px; }
-  .modal-bg {
-    position: fixed; inset: 0; background: rgba(5,8,25,0.75); backdrop-filter: blur(6px);
-    display: none; align-items: center; justify-content: center; z-index: 100;
-  }
-  .modal-bg.show { display: flex; }
-  .modal {
-    background: linear-gradient(160deg, #142257, #0b1437);
-    border: 1px solid var(--neon); border-radius: 20px;
-    padding: 28px; max-width: 420px; width: 90%; text-align: center;
-    box-shadow: 0 0 40px rgba(124,58,237,0.5);
-  }
-  .modal h3 { font-size: 20px; margin-bottom: 10px; }
-  .modal p { color: var(--muted); margin-bottom: 20px; font-size: 14px; }
-  .modal .actions { display: flex; gap: 12px; }
-  .modal .btn { flex: 1; }
-  .btn-yes { background: linear-gradient(135deg, var(--neon), var(--neon-2)); color: white; }
-  .btn-no { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--glass-border); }
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: #142257; border: 1px solid var(--neon); color: white;
-    padding: 14px 22px; border-radius: 14px; font-size: 14px; z-index: 200;
-    transition: transform .3s; box-shadow: 0 0 24px rgba(124,58,237,0.5);
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 30px; padding: 16px; }
-  @media (max-width: 600px) { header { flex-direction: column; gap: 12px; } }
+  .btn-primary{background:linear-gradient(135deg,var(--neon),var(--blue));color:#fff}
+  .btn-primary:hover{filter:brightness(1.15);box-shadow:0 6px 18px rgba(124,58,237,.5)}
+  .btn-ghost{background:var(--glass);color:var(--text);border:1px solid var(--glass-border)}
+  .btn-ghost:hover{border-color:var(--neon)}
+  .locked-overlay{position:absolute;inset:0;background:rgba(11,20,55,.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;opacity:0;transition:.25s}
+  .test.locked:hover .locked-overlay{opacity:1}
+  .modal-bg{position:fixed;inset:0;background:rgba(5,8,25,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50}
+  .modal-bg.show{display:flex}
+  .modal{width:min(440px,92vw);background:linear-gradient(160deg,#16204d,#0e1a4a);border:1px solid var(--glass-border);border-radius:20px;padding:26px}
+  .modal h3{font-size:18px;margin-bottom:6px}
+  .modal p{color:var(--muted);font-size:13px;margin-bottom:18px}
+  .pay-opt{display:flex;flex-direction:column;gap:12px}
+  .pay{padding:16px;border-radius:14px;border:1px solid var(--glass-border);background:var(--glass);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px}
+  .pay:hover{border-color:var(--neon);background:rgba(124,58,237,.15)}
+  .pay .ic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:linear-gradient(135deg,var(--neon),var(--blue))}
+  .pay .t{font-weight:700;font-size:14px}
+  .pay .s{font-size:11px;color:var(--muted)}
+  .close-x{float:right;cursor:pointer;color:var(--muted);font-size:20px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--neon),var(--blue));color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;transition:.3s;z-index:60}
+  .toast.show{opacity:1;bottom:40px}
+  @media(max-width:860px){.hero{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="wrap">
+  <header>
+    <div class="logo"><span class="dot"></span> PsicoTeste <span style="color:var(--neon2)">PRO</span></div>
+    <div class="user-box">
+      <span class="badge" id="roleBadge">Carregando…</span>
+      <div class="avatar" id="avatar">U</div>
+      <button class="btn btn-ghost" onclick="logout()">Sair</button>
+    </div>
+  </header>
 
-<header>
-  <div class="logo"><span class="dot"></span> Psicoteste • Painel Premium</div>
-  <div class="user-box">
-    <span id="userEmail">Carregando...</span>
-    <span class="badge">Plano Top</span>
+  <section class="hero">
+    <div class="card chart-card">
+      <h2>Gráfico de Evolução Cruzada</h2>
+      <p>Desempenho do Paciente vs. Técnico ao longo das sessões</p>
+      <canvas id="evolutionChart" height="120"></canvas>
+    </div>
+    <div class="card">
+      <h2 style="font-size:16px;margin-bottom:14px">Resumo da Conta</h2>
+      <div class="stats">
+        <div class="stat"><div class="num" id="stFree">26</div><div class="lbl">Testes Liberados</div></div>
+        <div class="stat"><div class="num" id="stLocked">24</div><div class="lbl">Testes Premium</div></div>
+        <div class="stat"><div class="num" id="stDone">0</div><div class="lbl">Aplicados</div></div>
+        <div class="stat"><div class="num" id="stPlan">Free</div><div class="lbl">Plano Atual</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h3>Vitrine de Testes — 50 Avaliações</h3>
+    <span class="count" id="counter">0 de 50</span>
   </div>
-</header>
 
-<div class="chart-box">
-  <h2>Gráfico de Evolução Cruzada</h2>
-  <div class="sub">Desempenho do Paciente vs. Avaliação do Técnico ao longo das sessões</div>
-  <div class="chart-wrap"><canvas id="evolutionChart"></canvas></div>
+  <div class="filters" id="filters">
+    <div class="chip active" data-cat="all">Todos</div>
+    <div class="chip" data-cat="Personalidade">Personalidade</div>
+    <div class="chip" data-cat="Inteligência">Inteligência</div>
+    <div class="chip" data-cat="Ansiedade">Ansiedade</div>
+    <div class="chip" data-cat="Depressão">Depressão</div>
+    <div class="chip" data-cat="Infantil">Infantil</div>
+    <div class="chip" data-cat="Organizacional">Organizacional</div>
+    <div class="chip" data-cat="Neuropsicológico">Neuropsicológico</div>
+  </div>
+
+  <div class="grid" id="grid"></div>
 </div>
 
-<div class="section-title">Vitrine de Testes • 50 Avaliações</div>
-<div class="grid" id="testsGrid"></div>
-
+<!-- Modal Upgrade -->
 <div class="modal-bg" id="upgradeModal">
   <div class="modal">
-    <h3>🔒 Plano Top</h3>
-    <p id="modalText">Este teste faz parte do Plano Top. Deseja destravar agora?</p>
-    <div class="actions">
-    <button class="btn btn-no" onclick="closeModal()">Agora não</button>
-    <button class="btn btn-yes" onclick="confirmUpgrade()">Destravar agora</button>
+    <span class="close-x" onclick="closeModal()">&times;</span>
+    <h3>Upgrade Imediato 🔓</h3>
+    <p id="modalDesc">Desbloqueie este teste premium agora mesmo — sem falar com ninguém. Liberação instantânea.</p>
+    <div class="pay-opt">
+      <div class="pay" onclick="processUpgrade('pix')">
+        <div class="ic">⚡</div>
+        <div><div class="t">Pagar com PIX</div><div class="s">Liberação imediata após confirmação</div></div>
+      </div>
+      <div class="pay" onclick="processUpgrade('card')">
+        <div class="ic">💳</div>
+        <div><div class="t">Cartão de Crédito</div><div class="s">Visa, Master, Elo, Amex</div></div>
+      </div>
+      <div class="pay" id="askProOpt" style="display:none" onclick="askPro()">
+        <div class="ic">🧑‍⚕️</div>
+        <div><div class="t">Pedir ao Psicólogo</div><div class="s">Solicitar liberação ao profissional responsável</div></div>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<div class="footer">© Psicoteste26 • Wilson • Vitrine de Vendas Premium</div>
-
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxthRLebW6-CR92Tfvi1f-9Soi_wYEyqQ",
-    authDomain: "psicoteste26.firebaseapp.com",
-    projectId: "psicoteste26",
-    storageBucket: "psicoteste26.firebasestorage.app",
-    messagingSenderId: "346801843137",
-    appId: "1:346801843137:web:ba924eb27680ffa78edd40"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDxthRLebW6-CR92Tfvi1f-9Soi_wYEyqQ",
+  authDomain: "psicoteste26.firebaseapp.com",
+  projectId: "psicoteste26",
+  storageBucket: "psicoteste26.firebasestorage.app",
+  messagingSenderId: "346801843137",
+  appId: "1:346801843137:web:ba924eb27680ffa78edd40"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+const TESTS = [
+  {t:"Big Five - Cinco Grandes Fatores",c:"Personalidade",d:"Avalia abertura, consciência, extroversão, amabilidade e neuroticismo."},
+  {t:"PFQ-16 - Questionário de Fatores de Personalidade",c:"Personalidade",d:"Versão reduzida dos 16PF para traços de personalidade."},
+  {t:"Bateria Fatorial de Personalidade (BFP)",c:"Personalidade",d:"Instrumento brasileiro baseado no modelo dos cinco fatores."},
+  {t:"Escala de Acessibilidade (A)",c:"Personalidade",d:"Mede traço de acessibilidade social e interpessoal."},
+  {t:"Inventário de Temperamento de Cloninger",c:"Personalidade",d:"Avalia temperamento e caráter em quatro dimensões."},
+  {t:"Teste de Rorschach",c:"Personalidade",d:"Método projetivo de manchas de tinta para análise psíquica."},
+  {t:"TAT - Teste de Apercepção Temática",c:"Personalidade",d:"Teste projetivo com pranchas para análise de narrativas."},
+  {t:"HTP - Casa-Árvore-Pessoa",c:"Personalidade",d:"Teste projetivo gráfico de personalidade e autoimagem."},
+  {t:"Teste do Desenho da Figura Humana",c:"Personalidade",d:"Avalia maturidade cognitiva e aspectos emocionais."},
+  {t:"Inventário Myers-Briggs (MBTI)",c:"Personalidade",d:"Identifica 16 tipos psicológicos baseados em Jung."},
+  {t:"Escala de Autoestima de Rosenberg",c:"Personalidade",d:"Mede o nível global de autoestima do indivíduo."},
+  {t:"Inventário de Estilos Interpessoais (IGT-2)",c:"Personalidade",d:"Avalia padrões de relacionamento interpessoal."},
+  {t:"Teste das Pirâmides Coloridas de Pfister",c:"Personalidade",d:"Teste projetivo com cores para análise emocional."},
+  {t:"Questionário de Expressão Facial",c:"Personalidade",d:"Identifica emoções por expressões faciais padronizadas."},
+  {t:"Escala de Locus de Controle",c:"Personalidade",d:"Avalia crença de controle interno vs. externo."},
+  {t:"Teste de Associação de Palavras",c:"Personalidade",d:"Método projetivo verbal de Jung para investigação psíquica."},
+  {t:"Inventário de Interesses Profissionais (IIP)",c:"Organizacional",d:"Mapeia áreas de interesse vocacional e profissional."},
+  {t:"Teste de Atenção Concentrada (TEACO-FF)",c:"Neuropsicológico",d:"Avalia capacidade de concentração e atenção sustentada."},
+  {t:"Teste de Atenção Alternada",c:"Neuropsicológico",d:"Mede flexibilidade da atenção entre diferentes estímulos."},
+  {t:"Teste de Atenção Dividida",c:"Neuropsicológico",d:"Avalia desempenho em tarefas simultâneas."},
+  {t:"Teste de Stroop",c:"Neuropsicológico",d:"Mede controle inibitório e atenção seletiva."},
+  {t:"Teste Wisconsin de Classificação de Cartas (WCST)",c:"Neuropsicológico",d:"Avalia função executiva e flexibilidade cognitiva."},
+  {t:"Teste de Trilhas (Trail Making A e B)",c:"Neuropsicológico",d:"Avalia atenção, sequenciamento e função executiva."},
+  {t:"Teste de Memória de Trabalho (Digit Span)",c:"Neuropsicológico",d:"Mede amplitude de memória operacional verbal."},
+  {t:"Teste de Fluência Verbal",c:"Neuropsicológico",d:"Avalia produção lexical e função executiva."},
+  {t:"Teste de Memória de Reconhecimento",c:"Neuropsicológico",d:"Mede capacidade de reconhecimento de estímulos."},
+  {t:"WAIS-IV - Escala de Inteligência Wechsler",c:"Inteligência",d:"Avaliação completa do QI em adultos (verbais e executivas)."},
+  {t:"WISC-V - Escala Wechsler para Crianças",c:"Inteligência",d:"Avalia inteligência de crianças de 6 a 16 anos."},
+  {t:"WPPSI-IV - Escala Wechsler Pré-Escolar",c:"Inteligência",d:"Avaliação cognitiva para crianças de 2 a 7 anos."},
+  {t:"Matrizes Progressivas de Raven",c:"Inteligência",d:"Teste não verbal de inteligência fluida e raciocínio."},
+  {t:"Teste de Inteligência Emocional (MSCEIT)",c:"Inteligência",d:"Mede habilidades de inteligência emocional baseadas em Mayer."},
+  {t:"Teste de Quociente Emocional (EQ)",c:"Inteligência",d:"Avalia competências emocionais em 5 dimensões."},
+  {t:"Teste de Habilidade Numérica",c:"Inteligência",d:"Mede raciocínio matemático e processamento numérico."},
+  {t:"Teste de Raciocínio Abstrato",c:"Inteligência",d:"Avalia capacidade de identificação de padrões lógicos."},
+  {t:"Teste de Raciocínio Verbal",c:"Inteligência",d:"Mede compreensão e relação entre conceitos verbais."},
+  {t:"Teste de Raciocínio Espacial",c:"Inteligência",d:"Avalia manipulação mental de figuras e espaços."},
+  {t:"Teste de Aptidão Mecânica",c:"Inteligência",d:"Mede compreensão de princípios mecânicos básicos."},
+  {t:"Teste de Habilidade Verbal",c:"Inteligência",d:"Avalia vocabulário e fluência verbal do avaliado."},
+  {t:"Teste de Velocidade de Processamento",c:"Inteligência",d:"Mede rapidez na execução de tarefas cognitivas simples."},
+  {t:"BDI - Inventário de Depressão de Beck",c:"Depressão",d:"Avalia intensidade de sintomas depressivos em adultos."},
+  {t:"Escala de Depressão Geriátrica (GDS)",c:"Depressão",d:"Rastreio de depressão em idosos de forma simplificada."},
+  {t:"Escala de Hamilton para Depressão",c:"Depressão",d:"Avaliação clínica da gravidade do quadro depressivo."},
+  {t:"Inventário de Depressão de Zung",c:"Depressão",d:"Autoavaliação do nível de depressão do paciente."},
+  {t:"IDATE - Inventário de Ansiedade Traço-Estado",c:"Ansiedade",d:"Diferencia ansiedade como traço e como estado atual."},
+  {t:"BAI - Inventário de Ansiedade de Beck",c:"Ansiedade",d:"Mede gravidade dos sintomas de ansiedade em adultos."},
+  {t:"Escala de Ansiedade de Hamilton",c:"Ansiedade",d:"Avaliação clínica da ansiedade em pacientes adultos."},
+  {t:"PSIQ-20 - Escala de Sintomas Psicológicos",c:"Ansiedade",d:"Rastreio de sintomas psicológicos gerais e estresse."},
+  {t:"CDI - Inventário de Depressão Infantil",c:"Infantil",d:"Avalia sintomas depressivos em crianças e adolescentes."},
+  {t:"Escala de Comportamento Infantil (CBCL)",c:"Infantil",d:"Avalia problemas de comportamento e emocionais infantis."},
+  {t:"Teste do Desenho Infantil - Bom Desenho",c:"Infantil",d:"Avalia desenvolvimento gráfico e cognitivo infantil."}
+];
 
-  const TESTES = [
-    "Teste de Inteligência Geral (QI)",
-    "Inventário de Personalidade Big Five",
-    "Escala de Ansiedade de Hamilton",
-    "Escala de Depressão de Beck (BDI)",
-    "Teste de Atenção Concentrada (TEACO)",
-    "Teste de Rorschach",
-    "Teste Zulliger (Z-Test)",
-    "Bateria de Provas Mentais (BPM-III)",
-    "Teste de Aptidão Verbal",
-    "Teste de Aptidão Numérica",
-    "Teste de Aptidão Espacial",
-    "Teste de Raciocínio Lógico",
-    "Teste de Raciocínio Abstrato",
-    "Escala de Stress no Trabalho",
-    "Inventário de Interesses Profissionais",
-    "Teste de Habilidades Sociais (IHS)",
-    "Escala de Autoestima de Rosenberg",
-    "Teste de Resiliência (CD-RISC)",
-    "Avaliação Neuropsicológica Breve",
-    "Teste de Memória de Trabalho",
-    "Teste de Funções Executivas",
-    "Escala de Motivação Profissional",
-    "Teste de Liderança 360°",
-    "Inventário de Valores (IV)",
-    "Teste de Inteligência Emocional (MSCEIT)",
-    "Escala de Bem-Estar Subjetivo",
-    "Teste WISC-V (Adultos)",
-    "Teste WAIS-IV Completo",
-    "Avaliação Psicopatológica Completa",
-    "Teste de Personalidade MMPI-2",
-    "Bateria Neuropsicológica NEUPSILIN",
-    "Teste de Inteligência Fluida (Gf)",
-    "Avaliação de TDAH em Adultos",
-    "Teste de Disfunção Executiva (BDEFS)",
-    "Escala de Transtorno Bipolar",
-    "Avaliação de Trauma Psicológico",
-    "Teste de Apego Adulto (AAS)",
-    "Inventário de Esquemas de Young",
-    "Teste de Orientação Vocacional Avançado",
-    "Avaliação de Competências Liderança",
-    "Teste de Perfil Disc Avançado",
-    "Avaliação de Risco Suicida (C-SSRS)",
-    "Teste de Inteligência Triárquica",
-    "Bateria de Avaliação Cognitiva CANTAB",
-    "Teste de Personalidade 16PF Completo",
-    "Avaliação Psicodinâmica Profunda",
-    "Teste de Habilidade Numérica Avançada",
-    "Avaliação de Burnout (MBI-HSS)",
-    "Teste de Inteligência Multifatorial",
-    "Bateria Completa de Avaliação Psicológica"
-  ];
+let currentUser = null;
+let userRole = "paciente"; // ou "psicologo"
+let unlocked = new Set(); // testes premium desbloqueados
+let currentFilter = "all";
+let currentUpgradeTest = null;
 
-  const DESCRICOES = [
-    "Avalia capacidade cognitiva geral e raciocínio.",
-    "Mapeia os 5 grandes fatores da personalidade.",
-    "Mede gravidade dos sintomas ansiosos.",
-    "Identifica sinais e intensidade da depressão.",
-    "Avalia foco, concentração e atenção sustentada.",
-    "Teste projetivo de análise psicológica profunda.",
-    "Versão moderna e ágil do teste de Rorschach.",
-    "Avaliação ampla de inteligência e aptidão.",
-    "Mede compreensão e fluência verbal.",
-    "Avalia raciocínio matemático e numérico.",
-    "Testa visualização e manipulação mental espacial.",
-    "Avalia dedução lógica e resolução de problemas.",
-    "Mede identificação de padrões abstratos.",
-    "Avalia nível de estresse ocupacional.",
-    "Identifica áreas de interesse profissional.",
-    "Avalia competências sociais e assertividade.",
-    "Mede grau de autoestima do indivíduo.",
-    "Avalia capacidade de superação e resiliência.",
-    "Avaliação rápida de funções cognitivas.",
-    "Testa memória operacional e retenção curta.",
-    "Avalia planejamento, controle e flexibilidade.",
-    "Mede engajamento e motivação no trabalho.",
-    "Avaliação 360° de competências de líder.",
-    "Mapeia valores pessoais e prioridades.",
-    "Avalia percepção e regulação emocional.",
-    "Mede satisfação e bem-estar geral.",
-    "Avaliação completa de inteligência adulta.",
-    "Teste de QI completo para adultos.",
-    "Avaliação ampla de psicopatologias.",
-    "Inventário clínico de personalidade.",
-    "Bateria neuropsicológica detalhada.",
-    "Avalia inteligência não-verbal fluida.",
-    "Diagnóstico de TDAH em adultos.",
-    "Avalia disfunções executivas.",
-    "Identifica ciclos e gravidade bipolar.",
-    "Avalia impacto de traumas psicológicos.",
-    "Classifica estilo de apego do adulto.",
-    "Identifica esquemas disfuncionais precoces.",
-    "Orientação vocacional detalhada.",
-    "Avalia competências avançadas de liderança.",
-    "Perfil comportamental Disc completo.",
-    "Avalia risco e proteção suicida.",
-    "Avalia inteligência analítica, criativa e prática.",
-    "Bateria cognitiva computadorizada.",
-    "Teste de personalidade com 16 fatores.",
-    "Análise psicodinâmica profunda.",
-    "Avaliação numérica de nível avançado.",
-    "Avalia síndrome de burnout ocupacional.",
-    "Teste multifatorial de inteligência.",
-    "Bateria psicológica completa e integrada."
-  ];
+auth.onAuthStateChanged(async user => {
+  if(!user){ window.location.href = "login.html"; return; }
+  currentUser = user;
+  document.getElementById("avatar").textContent = (user.displayName||user.email||"U").charAt(0).toUpperCase();
+  try{
+    const doc = await db.collection("users").doc(user.uid).get();
+    if(doc.exists){
+      userRole = doc.data().role || "paciente";
+      unlocked = new Set(doc.data().unlocked || []);
+    }
+  }catch(e){ console.warn("Firestore offline:",e); }
+  applyRole();
+  renderTests();
+  renderChart();
+});
 
-  function renderTests() {
-    const grid = document.getElementById('testsGrid');
-    grid.innerHTML = '';
-    TESTES.forEach((nome, i) => {
-      const idx = i + 1;
-      const locked = idx > 26;
-      const card = document.createElement('div');
-      card.className = 'card' + (locked ? ' locked' : '');
-      card.innerHTML = `
-        <span class="num">#${String(idx).padStart(2,'0')}</span>
-        <h3>${nome}</h3>
-        <p>${DESCRICOES[i] || 'Avaliação psicológica profissional.'}</p>
-        ${locked
-          ? `<button class="btn btn-lock" onclick="openUpgrade(${idx})"><span class="lock-icon">🔒</span> Upgrade para Plano Top</button>`
-          : `<button class="btn btn-free" onclick="startTest(${idx})">Iniciar Teste</button>`}
-      `;
-      grid.appendChild(card);
-    });
+function applyRole(){
+  const badge = document.getElementById("roleBadge");
+  if(userRole === "psicologo"){
+    badge.textContent = "Psicólogo";
+    document.getElementById("askProOpt").style.display = "none";
+  }else{
+    badge.textContent = "Paciente";
+    document.getElementById("askProOpt").style.display = "flex";
   }
+  document.getElementById("stPlan").textContent = unlocked.size>0?"Premium":"Free";
+}
 
-  function startTest(idx) {
-    showToast(`✅ Iniciando Teste #${idx}...`);
-  }
+function renderTests(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  let shown = 0;
+  TESTS.forEach((test,i)=>{
+    const idx = i+1;
+    if(currentFilter!=="all" && test.c!==currentFilter) return;
+    shown++;
+    const isFree = idx<=26;
+    const isUnlocked = isFree || unlocked.has(idx);
+    const card = document.createElement("div");
+    card.className = "test" + (isUnlocked?"":" locked");
+    card.innerHTML = `
+      <div class="num">#${String(idx).padStart(2,"0")}</div>
+      <h4>${test.t}</h4>
+      <span class="cat">${test.c}</span>
+      <div class="desc">${test.d}</div>
+      <div class="footer">
+        <span class="status ${isUnlocked?"free":"locked"}">${isUnlocked?"Liberado ✓":"Premium 🔒"}</span>
+        ${isUnlocked
+          ? `<button class="btn btn-primary" onclick="openTest(${idx})">Aplicar</button>`
+          : `<button class="btn btn-primary" onclick="openUpgrade(${idx})">${userRole==="psicologo"?"Desbloquear Agora":"Pedir ao Psicólogo"}</button>`}
+      </div>
+      ${!isUnlocked?`<div class="locked-overlay"><button class="btn btn-primary" onclick="openUpgrade(${idx})">${userRole==="psicologo"?"Desbloquear Agora":"Pedir ao Psicólogo"}</button></div>`:""}
+    `;
+    grid.appendChild(card);
+  });
+  document.getElementById("counter").textContent = `${shown} de 50`;
+  document.getElementById("stFree").textContent = 26 + unlocked.size;
+  document.getElementById("stLocked").textContent = 24 - unlocked.size;
+}
 
-  let currentLocked = null;
-  function openUpgrade(idx) {
-    currentLocked = idx;
-    document.getElementById('modalText').textContent =
-      `Este teste (#${idx}) faz parte do Plano Top. Deseja destravar agora?`;
-    document.getElementById('upgradeModal').classList.add('show');
-  }
-  function closeModal() {
-    document.getElementById('upgradeModal').classList.remove('show');
-    currentLocked = null;
-  }
-  function confirmUpgrade() {
-    closeModal();
-    showToast('🚀 Redirecionando para o upgrade do Plano Top...');
-  }
+document.getElementById("filters").addEventListener("click",e=>{
+  if(!e.target.classList.contains("chip")) return;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+  e.target.classList.add("active");
+  currentFilter = e.target.dataset.cat;
+  renderTests();
+});
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-  }
+function openTest(idx){
+  showToast(`Abrindo Teste #${String(idx).padStart(2,"0")}...`);
+  setTimeout(()=>window.location.href=`teste.html?id=${idx}`,800);
+}
 
-  function initChart() {
-    const ctx = document.getElementById('evolutionChart').getContext('2d');
-    const labels = ['S1','S2','S3','S4','S5','S6','S7','S8'];
-    const paciente = [55, 58, 62, 65, 70, 73, 78, 82];
-    const tecnico  = [50, 54, 60, 63, 68, 72, 75, 80];
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          { label: 'Paciente', data: paciente, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.18)', tension: 0.4, fill: true, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#a855f7' },
-          { label: 'Técnico', data: tecnico, borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.12)', tension: 0.4, fill: true, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#22c55e' }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#e8ecff', font: { size: 13 } } },
-          tooltip: { backgroundColor: '#142257', borderColor: '#7c3aed', borderWidth: 1 }
-        },
-        scales: {
-          x: { ticks: { color: '#9aa3c7' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: { min: 0, max: 100, ticks: { color: '#9aa3c7' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-        }
+function openUpgrade(idx){
+  currentUpgradeTest = idx;
+  const t = TESTS[idx-1];
+  document.getElementById("modalDesc").textContent =
+    userRole==="psicologo"
+      ? `Desbloqueie "${t.t}" agora — liberação instantânea via Firebase, sem falar com o Wilson.`
+      : `Solicite "${t.t}" ao seu psicólogo ou faça upgrade para acesso imediato.`;
+  document.getElementById("upgradeModal").classList.add("show");
+}
+
+function closeModal(){ document.getElementById("upgradeModal").classList.remove("show"); }
+
+async function processUpgrade(method){
+  if(!currentUpgradeTest) return;
+  showToast(method==="pix"?"Processando PIX... 🔐":"Processando Cartão... 🔐");
+  unlocked.add(currentUpgradeTest);
+  try{
+    if(currentUser){
+      await db.collection("users").doc(currentUser.uid).set({
+        unlocked:Array.from(unlocked),plan:"premium"
+      },{merge:true});
+    }
+  }catch(e){ console.warn("Salvar offline:",e); }
+  closeModal();
+  showToast("✅ Teste desbloqueado com sucesso!");
+  applyRole();
+  renderTests();
+}
+
+function askPro(){
+  if(!currentUpgradeTest) return;
+  showToast("📨 Pedido enviado ao seu Psicólogo!");
+  try{
+    if(currentUser){
+      db.collection("upgrade_requests").add({
+        user:currentUser.uid,email:currentUser.email,testId:currentUpgradeTest,status:"pendente",createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  }catch(e){}
+  closeModal();
+}
+
+function logout(){ auth.signOut(); }
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+function renderChart(){
+  const ctx = document.getElementById("evolutionChart").getContext("2d");
+  new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:["S1","S2","S3","S4","S5","S6","S7","S8"],
+      datasets:[
+        {label:"Paciente",data:[42,48,55,60,66,71,78,84],borderColor:"#a855f7",backgroundColor:"rgba(168,85,247,.15)",tension:.4,fill:true,borderWidth:3,pointRadius:4,pointBackgroundColor:"#a855f7"},
+        {label:"Técnico",data:[50,52,58,63,68,72,76,80],borderColor:"#3b82f6",backgroundColor:"rgba(59,130,246,.12)",tension:.4,fill:true,borderWidth:3,pointRadius:4,pointBackgroundColor:"#3b82f6"}
+      ]
+    },
+    options:{
+      responsive:true,plugins:{legend:{labels:{color:"#e8ecff"}}},
+      scales:{
+        x:{ticks:{color:"#9aa3c7"},grid:{color:"rgba(255,255,255,.05)"}},
+        y:{ticks:{color:"#9aa3c7"},grid:{color:"rgba(255,255,255,.05)"},beginAtZero:true,max:100}
       }
-    });
-  }
-
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById('userEmail').textContent = user.email || 'Usuário';
-    } else {
-      document.getElementById('userEmail').textContent = 'Visitante';
     }
   });
-
-  renderTests();
-  initChart();
+}
 </script>
 </body>
 </html>
