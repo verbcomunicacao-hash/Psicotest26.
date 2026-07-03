@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Psicotest26 · Dashboard Administrativo</title>
+  <style>
+    :root {
+      --bg: #0b1437;
+      --bg-soft: #111c4a;
+      --bg-card: #15225a;
+      --bg-card-hover: #1a2b6b;
+      --border: #243069;
+      --primary: #7c3aed;
+      --primary-soft: #8b5cf6;
+      --primary-dark: #6d28d9;
+      --accent: #a78bfa;
+      --text: #e8ecff;
+      --text-muted: #9aa6d4;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #38bdf8;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --shadow-primary: 0 8px 24px rgba(124,58,237,0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(124,58,237,0.18), transparent 60%),
+                  radial-gradient(900px 500px at -10% 20%, rgba(56,189,248,0.10), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--primary-soft); }
+
+    /* Layout */
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, var(--bg-soft), var(--bg));
+      border-right: 1px solid var(--border);
+      padding: 22px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .brand .logo {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: grid; place-items: center;
+      font-weight: 800; color: #fff; box-shadow: var(--shadow-primary);
+    }
+    .brand .name { font-weight: 700; font-size: 16px; letter-spacing: .3px; }
+    .brand .sub { font-size: 11px; color: var(--text-muted); }
+
+    .nav { display: flex; flex-direction: column; gap: 4px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px; border-radius: 10px;
+      color: var(--text-muted); cursor: pointer; font-size: 14px;
+      transition: all .18s ease; border: 1px solid transparent;
+    }
+    .nav-item:hover { background: var(--bg-card); color: var(--text); }
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(124,58,237,0.08));
+      color: #fff; border-color: rgba(124,58,237,0.4);
+    }
+    .nav-item .ico { width: 20px; text-align: center; }
+
+    .sidebar-footer { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); }
+    .sidebar-footer .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+
+    .main { flex: 1; min-width: 0; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(11,20,55,0.78);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 26px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .topbar h1 { font-size: 18px; font-weight: 700; }
+    .topbar .sub { font-size: 12px; color: var(--text-muted); }
+    .topbar .right { display: flex; align-items: center; gap: 14px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 12px; border-radius: 999px; font-size: 12px;
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 4px rgba(34,197,94,0.15); }
+    .dot.warn { background: var(--warning); box-shadow: 0 0 0 4px rgba(245,158,11,0.15); }
+    .dot.err { background: var(--danger); box-shadow: 0 0 0 4px rgba(239,68,68,0.15); }
+
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: grid; place-items: center; font-weight: 700; color: #fff; font-size: 13px;
+    }
+
+    .content { padding: 26px; }
+
+    /* Cards */
+    .grid { display: grid; gap: 18px; }
+    .grid.metrics { grid-template-columns: repeat(4, 1fr); }
+    .grid.two { grid-template-columns: 1.4fr 1fr; }
+    .grid.three { grid-template-columns: repeat(3, 1fr); }
+
+    .card {
+      background: linear-gradient(180deg, var(--bg-card), var(--bg-soft));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    .card:hover { border-color: rgba(124,58,237,0.45); }
+
+    .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .card-title { font-size: 14px; color: var(--text-muted); font-weight: 600; letter-spacing: .3px; text-transform: uppercase; }
+    .card-badge { font-size: 11px; padding: 4px 10px; border-radius: 999px; background: rgba(124,58,237,0.15); color: var(--accent); border: 1px solid rgba(124,58,237,0.3); }
+
+    .metric .value { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+    .metric .delta { font-size: 12px; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; }
+    .delta.up { color: var(--success); }
+    .delta.down { color: var(--danger); }
+    .metric .icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(124,58,237,0.05));
+      display: grid; place-items: center; font-size: 20px; color: var(--accent);
+      border: 1px solid rgba(124,58,237,0.3);
+    }
+    .metric .top { display: flex; justify-content: space-between; align-items: flex-start; }
+
+    .spark { height: 46px; margin-top: 14px; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px; }
+    thead th {
+      text-align: left; padding: 12px 14px; color: var(--text-muted);
+      font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+      background: rgba(124,58,237,0.06); border-bottom: 1px solid var(--border); position: sticky; top: 0;
+    }
+    tbody td { padding: 12px 14px; border-bottom: 1px solid rgba(36,48,105,0.5); }
+    tbody tr:hover { background: rgba(124,58,237,0.06); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .status.active { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .status.maint { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+    .bar { height: 6px; border-radius: 999px; background: rgba(124,58,237,0.15); overflow: hidden; width: 120px; }
+    .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-soft)); border-radius: 999px; }
+
+    .search { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .search input, .search select {
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none;
+    }
+    .search input:focus, .search select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+    .search input { flex: 1; min-width: 220px; }
+
+    /* AI Monitor */
+    .ai-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+    .ai-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+    .ai-stat .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+    .ai-stat .val { font-size: 20px; font-weight: 700; margin-top: 4px; }
+    .ai-stat .val.ok { color: var(--success); }
+    .ai-stat .val.warn { color: var(--warning); }
+    .ai-stat .val.err { color: var(--danger); }
+
+    .log { max-height: 220px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 12px; }
+    .log .line { padding: 6px 0; border-bottom: 1px dashed rgba(36,48,105,0.5); color: var(--text-muted); }
+    .log .line .t { color: var(--accent); margin-right: 8px; }
+    .log .line.ok .t { color: var(--success); }
+    .log .line.warn .t { color: var(--warning); }
+    .log .line.err .t { color: var(--danger); }
+
+    .section-title { font-size: 16px; font-weight: 700; margin: 26px 0 14px; display: flex; align-items: center; gap: 10px; }
+    .section-title::before { content: ''; width: 4px; height: 18px; background: var(--primary); border-radius: 4px; }
+
+    .footer { text-align: center; color: var(--text-muted); font-size: 12px; padding: 24px; border-top: 1px solid var(--border); margin-top: 30px; }
+
+    .menu-toggle { display: none; background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+
+    @media (max-width: 1100px) {
+      .grid.metrics { grid-template-columns: repeat(2, 1fr); }
+      .grid.two, .grid.three { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 820px) {
+      .sidebar { position: fixed; left: -280px; transition: left .25s ease; z-index: 50; }
+      .sidebar.open { left: 0; }
+      .menu-toggle { display: inline-flex; }
+      .content { padding: 18px; }
+    }
+    @media (max-width: 560px) {
+      .grid.metrics { grid-template-columns: 1fr; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .topbar h1 { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">P26</div>
+        <div>
+          <div class="name">Psicotest26</div>
+          <div class="sub">Painel Administrativo</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-item active"><span class="ico">▣</span> Visão Geral</div>
+        <div class="nav-item"><span class="ico">📈</span> Métricas de Escala</div>
+        <div class="nav-item"><span class="ico">🧪</span> Gestão de Testes</div>
+        <div class="nav-item"><span class="ico">🤖</span> Monitoramento IA Liw</div>
+        <div class="nav-item"><span class="ico">🏥</span> Clínicas Parceiras</div>
+        <div class="nav-item"><span class="ico">👥</span> Usuários</div>
+        <div class="nav-item"><span class="ico">💰</span> Faturamento</div>
+        <div class="nav-item"><span class="ico">⚙️</span> Configurações</div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="row"><span>Versão</span><span>v26.4.1</span></div>
+        <div class="row"><span>Ambiente</span><span style="color:var(--success)">Produção</span></div>
+        <div class="row"><span>Uptime</span><span>99.98%</span></div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+          <div>
+            <h1>Dashboard Administrativo</h1>
+            <div class="sub">Visão Geral da Operação · Psicotest26</div>
+          </div>
+        </div>
+        <div class="right">
+          <span class="pill"><span class="dot"></span> Operação Online</span>
+          <span class="pill" id="clock">--:--:--</span>
+          <div class="avatar">AD</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- Métricas de Escala -->
+        <div class="section-title">Métricas de Escala</div>
+        <div class="grid metrics">
+          <div class="card metric">
+            <div class="top">
+              <div>
+                <div class="card-title">Faturamento</div>
+                <div class="value">R$ 487.320</div>
+                <div class="delta up">▲ 12,4% vs mês anterior</div>
+              </div>
+              <div class="icon">💰</div>
+            </div>
+            <svg class="spark" viewBox="0 0 200 46" preserveAspectRatio="none">
+              <polyline fill="none" stroke="#7c3aed" stroke-width="2" points="0,38 25,32 50,34 75,22 100,26 125,14 150,18 175,8 200,10"/>
+              <polyline fill="rgba(124,58,237,0.12)" stroke="none" points="0,46 0,38 25,32 50,34 75,22 100,26 125,14 150,18 175,8 200,10 200,46"/>
+            </svg>
+          </div>
+
+          <div class="card metric">
+            <div class="top">
+              <div>
+                <div class="card-title">Usuários Ativos</div>
+                <div class="value">12.847</div>
+                <div class="delta up">▲ 8,1% vs mês anterior</div>
+              </div>
+              <div class="icon">👥</div>
+            </div>
+            <svg class="spark" viewBox="0 0 200 46" preserveAspectRatio="none">
+              <polyline fill="none" stroke="#38bdf8" stroke-width="2" points="0,34 25,30 50,28 75,24 100,22 125,18 150,16 175,12 200,8"/>
+              <polyline fill="rgba(56,189,248,0.12)" stroke="none" points="0,46 0,34 25,30 50,28 75,24 100,22 125,18 150,16 175,12 200,8 200,46"/>
+            </svg>
+          </div>
+
+          <div class="card metric">
+            <div class="top">
+              <div>
+                <div class="card-title">Clínicas Parceiras</div>
+                <div class="value">186</div>
+                <div class="delta up">▲ 4 novas este mês</div>
+              </div>
+              <div class="icon">🏥</div>
+            </div>
+            <svg class="spark" viewBox="0 0 200 46" preserveAspectRatio="none">
+              <polyline fill="none" stroke="#22c55e" stroke-width="2" points="0,40 25,36 50,34 75,30 100,28 125,24 150,20 175,18 200,14"/>
+              <polyline fill="rgba(34,197,94,0.12)" stroke="none" points="0,46 0,40 25,36 50,34 75,30 100,28 125,24 150,20 175,18 200,14 200,46"/>
+            </svg>
+          </div>
+
+          <div class="card metric">
+            <div class="top">
+              <div>
+                <div class="card-title">Volume de Testes</div>
+                <div class="value">34.912</div>
+                <div class="delta up">▲ 15,7% vs mês anterior</div>
+              </div>
+              <div class="icon">🧪</div>
+            </div>
+            <svg class="spark" viewBox="0 0 200 46" preserveAspectRatio="none">
+              <polyline fill="none" stroke="#f59e0b" stroke-width="2" points="0,36 25,30 50,32 75,20 100,28 125,12 150,22 175,6 200,16"/>
+              <polyline fill="rgba(245,158,11,0.12)" stroke="none" points="0,46 0,36 25,30 50,32 75,20 100,28 125,12 150,22 175,6 200,16 200,46"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- IA + Integridade -->
+        <div class="section-title">Monitoramento de IA Liw</div>
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Status do Processamento</div>
+              <span class="card-badge">IA Liw v3.2</span>
+            </div>
+            <div class="ai-grid">
+              <div class="ai-stat">
+                <div class="label">Status Geral</div>
+                <div class="val ok">Operacional</div>
+              </div>
+              <div class="ai-stat">
+                <div class="label">Fila de Processamento</div>
+                <div class="val">128 testes</div>
+              </div>
+              <div class="ai-stat">
+                <div class="label">Tempo Médio (laudo)</div>
+                <div class="val">2,4 min</div>
+              </div>
+              <div class="ai-stat">
+                <div class="label">Precisão do Modelo</div>
+                <div class="val ok">96,8%</div>
+              </div>
+              <div class="ai-stat">
+                <div class="label">Integridade testes.json</div>
+                <div class="val ok">100% · 50/50</div>
+              </div>
+              <div class="ai-stat">
+                <div class="label">Última Sincronização</div>
+                <div class="val">há 3 min</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Log de Eventos</div>
+              <span class="card-badge">Tempo Real</span>
+            </div>
+            <div class="log" id="logBox">
+              <div class="line ok"><span class="t">[OK]</span> testes.json validado · 50 instrumentos</div>
+              <div class="line ok"><span class="t">[OK]</span> IA Liw processou lote #4821 (32 laudos)</div>
+              <div class="line"><span class="t">[INFO]</span> Backup automático concluído</div>
+              <div class="line warn"><span class="t">[WARN]</span> Instrumento BDI-II em manutenção programada</div>
+              <div class="line ok"><span class="t">[OK]</span> Sincronização com clínicas parceiras OK</div>
+              <div class="line"><span class="t">[INFO]</span> Métricas de escala atualizadas</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gestão de Testes -->
+        <div class="section-title">Gestão de Testes · 50 Instrumentos</div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Catálogo de Instrumentos</div>
+            <span class="card-badge" id="testCount">50 instrumentos</span>
+          </div>
+          <div class="search">
+            <input type="text" id="searchInput" placeholder="Buscar instrumento por nome ou categoria..." />
+            <select id="statusFilter">
+              <option value="all">Todos os status</option>
+              <option value="active">Ativo</option>
+              <option value="maint">Manutenção</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Instrumento</th>
+                  <th>Categoria</th>
+                  <th>Status</th>
+                  <th>Popularidade</th>
+                  <th>Aplicações (mês)</th>
+                </tr>
+              </thead>
+              <tbody id="testsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="footer">
+          Psicotest26 · Dashboard Administrativo &copy; 2025 — Dados demonstrativos para fins operacionais.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Relógio
+    function tick() {
+      const d = new Date();
+      const p = n => String(n).padStart(2, '0');
+      document.getElementById('clock').textContent =
+        p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    }
+    setInterval(tick, 1000); tick();
+
+    // Catálogo base (50 instrumentos)
+    const baseTests = [
+      ['BDI-II','Inventário de Depressão de Beck','Depressão','maint',92],
+      ['BAI','Inventário de Ansiedade de Beck','Ansiedade','active',88],
+      ['STAXI-2','Expressão da Raiva como Estado e Traço','Emoções','active',64],
+      ['HAD','Escala de Ansiedade e Depressão em Hospital','Ansiedade','active',81],
+      ['PHQ-9','Módulo de Saúde do Paciente','Depressão','active',95],
+      ['GAD-7','Transtorno de Ansiedade Generalizada','Ansiedade','active',90],
+      ['MINI','Entrevista Neuropsiquiátrica Internacional','Diagnóstico','active',72],
+      ['WAIS-IV','Escala de Inteligência para Adultos','Cognitivo','active',86],
+      ['WISC-V','Escala de Inteligência para Crianças','Cognitivo','active',84],
+      ['WPPSI-IV','Escala de Inteligência para Pré-escolar','Cognitivo','active',58],
+      ['Bender','Sistema de Pontuação Gradual','Neuropsicológico','active',61],
+      ['TDE','Teste de Desempenho Escolar','Educacional','active',70],
+      ['TDE-II','Teste de Desempenho Escolar II','Educacional','active',66],
+      ['EDADI','Escalas de Avaliação do Desenvolvimento','Desenvolvimento','active',52],
+      ['EDAC','Escala de Desenvolvimento da Criança','Desenvolvimento','active',48],
+      ['DENVER II','Teste de Triagem do Desenvolvimento','Desenvolvimento','active',63],
+      ['BAS-3','Bateria de Avaliação Social','Social','active',45],
+      ['BFQ','Big Five Questionnaire','Personalidade','active',77],
+      ['IFP','Inventário Fatorial de Personalidade','Personalidade','active',74],
+      ['IGFP-5','Inventário dos Cinco Grandes Fatores','Personalidade','active',69],
+      ['16PF','Inventário de 16 Fatores de Personalidade','Personalidade','active',71],
+      ['MMPI-2','Inventário Multifásico de Personalidade','Personalidade','active',83],
+      ['PAL','Teste de Aptidões de Lisboa','Aptidão','active',55],
+      ['BPR-5','Bateria de Provas de Raciocínio','Aptidão','active',67],
+      ['G36','Teste de Inteligência Geral','Cognitivo','active',60],
+      ['G38','Teste de Inteligência Geral 38','Cognitivo','active',57],
+      ['R-1','Teste Não Verbal de Raciocínio','Aptidão','active',50],
+      ['R-2','Teste Verbal de Raciocínio','Aptidão','active',49],
+      ['V-1','Teste de Vocabulário','Aptidão','active',46],
+      ['E-1','Teste de Atenção Concentrada','Aptidão','active',54],
+      ['AC','Teste de Atenção Concentrada','Neuropsicológico','active',62],
+      ['BVRT','Teste Visual de Retenção','Neuropsicológico','active',44],
+      ['TMT','Teste de Trilhas','Neuropsicológico','active',68],
+      ['Stroop','Teste de Cores e Palavras','Neuropsicológico','active',65],
+      ['Figura Complexa de Rey','Memória Visual','Neuropsicológico','active',59],
+      ['Fluência Verbal','Teste de Fluência','Neuropsicológico','active',53],
+      ['Wisconsin','Classificação de Cartas','Neuropsicológico','active',64],
+      ['Cubos de Kohs','Raciocínio Lógico','Cognitivo','active',47],
+      ['Raven','Matrizes Progressivas','Cognitivo','active',79],
+      ['PMK','Teste de Personalidade','Personalidade','maint',38],
+      ['HTP','Casa-Árvore-Pessoa','Projetivo','active',73],
+      ['TAT','Teste de Apercepção Temática','Projetivo','active',66],
+      ['Rorschach','Teste das Manchas de Tinta','Projetivo','active',70],
+      ['Pfister','Teste das Pirâmides Coloridas','Projetivo','active',41],
+      ['Desenho da Figura Humana','Avaliação Projetiva','Projetivo','active',58],
+      ['CAT','Teste de Apercepção Infantil','Projetivo','active',43],
+      ['QSC','Questionário de Saúde da Criança','Saúde','active',51],
+      ['QSA','Questionário de Saúde do Adulto','Saúde','active',56],
+      ['ESCS','Escala de Satisfação com a Vida','Bem-estar','active',62],
+      ['WHOQOL','Qualidade de Vida (OMS)','Bem-estar','active',75]
+    ];
+
+    const tests = baseTests.map((t, i) => ({
+      id: i + 1,
+      code: t[0],
+      name: t[1],
+      category: t[2],
+      status: t[3],
+      popularity: t[4],
+      applications: Math.round(t[4] * 18 + Math.random() * 120)
+    }));
+
+    function renderTests() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const sf = document.getElementById('statusFilter').value;
+      const body = document.getElementById('testsBody');
+      const filtered = tests.filter(t => {
+        const matchQ = (t.name + ' ' + t.code + ' ' + t.category).toLowerCase().includes(q);
+        const matchS = sf === 'all' || t.status === sf;
+        return matchQ && matchS;
+      });
+      body.innerHTML = filtered.map(t => `
+        <tr>
+          <td style="color:var(--text-muted)">${t.id}</td>
+          <td><strong>${t.code}</strong> — ${t.name}</td>
+          <td style="color:var(--text-muted)">${t.category}</td>
+          <td><span class="status ${t.status === 'active' ? 'active' : 'maint'}">
+            <span class="dot ${t.status === 'active' ? '' : 'warn'}" style="width:6px;height:6px;box-shadow:none"></span>
+            ${t.status === 'active' ? 'Ativo' : 'Manutenção'}
+          </span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="bar"><span style="width:${t.popularity}%"></span></div>
+              <span style="font-size:12px;color:var(--text-muted)">${t.popularity}%</span>
+            </div>
+          </td>
+          <td><strong>${t.applications.toLocaleString('pt-BR')}</strong></td>
+        </tr>
+      `).join('');
+      document.getElementById('testCount').textContent = filtered.length + ' instrumentos';
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderTests);
+    document.getElementById('statusFilter').addEventListener('change', renderTests);
+    renderTests();
+
+    // Log simulado em tempo real
+    const logEvents = [
+      ['ok','[OK]','IA Liw processou novo lote de laudos'],
+      ['','[INFO]','Métricas de escala recalculadas'],
+      ['ok','[OK]','Integridade testes.json confirmada (50/50)'],
+      ['warn','[WARN]','Fila de processamento acima da média'],
+      ['','[INFO]','Nova clínica parceira sincronizada'],
+      ['ok','[OK]','Backup incremental concluído']
+    ];
+    let logIdx = 0;
+    setInterval(() => {
+      const box = document.getElementById('logBox');
+      const e = logEvents[logIdx % logEvents.length];
+      const time = new Date().toLocaleTimeString('pt-BR');
+      const line = document.createElement('div');
+      line.className = 'line ' + e[0];
+      line.innerHTML = `<span class="t">${e[1]}</span> ${time} · ${e[2]}`;
+      box.prepend(line);
+      while (box.children.length > 12) box.removeChild(box.lastChild);
+      logIdx++;
+    }, 5000);
+  </script>
+</body>
+</html>
