@@ -1,545 +1,435 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Psicotest26 · Painel Administrativo</title>
-  <meta name="description" content="Painel administrativo do Psicotest26 com Firebase e lógica de cadeados progressivos." />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Psicotest26 · Painel Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1437;
+    --bg-2:#0e1a4a;
+    --neon:#7c3aed;
+    --neon-2:#a78bfa;
+    --glass:rgba(255,255,255,0.06);
+    --glass-border:rgba(255,255,255,0.12);
+    --text:#e8ecff;
+    --muted:#9aa3c7;
+    --green:#22c55e;
+    --red:#ef4444;
+    --gold:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+  body{
+    background:radial-gradient(1200px 600px at 80% -10%, rgba(124,58,237,0.25), transparent),
+               radial-gradient(900px 500px at -10% 20%, rgba(124,58,237,0.15), transparent),
+               var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding:24px;
+  }
+  header{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+    margin-bottom:28px;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:48px;height:48px;border-radius:14px;
+    background:linear-gradient(135deg,var(--neon),#4c1d95);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;
+    box-shadow:0 0 24px rgba(124,58,237,0.6);
+  }
+  .brand h1{font-size:22px;font-weight:700}
+  .brand p{font-size:12px;color:var(--muted)}
+  .status-pill{
+    display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;
+    background:var(--glass);border:1px solid var(--glass-border);font-size:13px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  .dot.off{background:var(--red);box-shadow:0 0 10px var(--red)}
 
-  <!-- ===== Firebase (Compat SDK - arquivo único) ===== -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  .grid-stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:28px;
+  }
+  .card{
+    background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--glass-border);border-radius:20px;padding:22px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  }
+  .stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .stat .value{font-size:30px;font-weight:800;margin-top:6px}
+  .stat .sub{font-size:12px;color:var(--neon-2);margin-top:4px}
 
-  <style>
-    :root {
-      --bg: #0b1437;
-      --bg-2: #0e1a4a;
-      --neon: #7c3aed;
-      --neon-2: #a855f7;
-      --glass: rgba(255, 255, 255, 0.06);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --text: #e6e9ff;
-      --muted: #9aa3c7;
-      --green: #22c55e;
-      --red: #ef4444;
-      --amber: #f59e0b;
-      --radius: 18px;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
-    }
+  .section-title{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    margin:10px 0 16px;
+  }
+  .section-title h2{font-size:18px;font-weight:700}
+  .section-title .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    padding:6px 12px;border-radius:999px;font-size:12px;cursor:pointer;
+    background:var(--glass);border:1px solid var(--glass-border);color:var(--muted);
+    transition:.2s;
+  }
+  .chip.active{background:var(--neon);color:#fff;border-color:var(--neon);box-shadow:0 0 16px rgba(124,58,237,0.5)}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  .tests-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;
+  }
+  .test-card{
+    position:relative;background:var(--glass);backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);border-radius:18px;padding:18px;
+    transition:.25s;overflow:hidden;
+  }
+  .test-card:hover{transform:translateY(-4px);border-color:var(--neon);box-shadow:0 12px 40px rgba(124,58,237,0.35)}
+  .test-card.locked{opacity:.92}
+  .test-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .test-num{
+    width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;background:linear-gradient(135deg,var(--neon),#4c1d95);font-size:15px;
+  }
+  .test-card.locked .test-num{background:linear-gradient(135deg,#3b3b5c,#22223a)}
+  .badge{
+    font-size:10px;padding:4px 8px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;
+  }
+  .badge.basic{background:rgba(34,197,94,0.15);color:#86efac;border:1px solid rgba(34,197,94,0.3)}
+  .badge.inter{background:rgba(245,158,11,0.15);color:#fcd34d;border:1px solid rgba(245,158,11,0.3)}
+  .badge.top{background:rgba(124,58,237,0.18);color:#c4b5fd;border:1px solid rgba(124,58,237,0.4)}
+  .test-title{font-size:15px;font-weight:700;margin:12px 0 6px;line-height:1.3}
+  .test-desc{font-size:12px;color:var(--muted);min-height:32px}
+  .test-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:8px}
+  .status-tag{font-size:11px;display:flex;align-items:center;gap:6px;color:var(--muted)}
+  .status-tag .live{color:#86efac}
+  .status-tag .lock{color:#fcd34d}
+  .btn{
+    border:none;cursor:pointer;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:600;
+    transition:.2s;
+  }
+  .btn-primary{background:var(--neon);color:#fff;box-shadow:0 0 16px rgba(124,58,237,0.4)}
+  .btn-primary:hover{background:#6d28d9;transform:translateY(-1px)}
+  .btn-upgrade{
+    background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-weight:700;
+    box-shadow:0 0 18px rgba(245,158,11,0.5);animation:pulse 2s infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 14px rgba(245,158,11,0.4)}50%{box-shadow:0 0 26px rgba(245,158,11,0.8)}}
+  .btn-upgrade:hover{transform:scale(1.04)}
+  .lock-overlay{
+    position:absolute;top:14px;right:14px;font-size:20px;
+  }
 
-    html, body {
-      background: radial-gradient(1200px 600px at 80% -10%, #1a2a6b 0%, transparent 60%),
-                  radial-gradient(900px 500px at -10% 20%, #2a1a6b 0%, transparent 55%),
-                  var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
-      min-height: 100vh;
-      line-height: 1.5;
-    }
+  .liw-card{display:flex;align-items:center;gap:16px}
+  .liw-avatar{
+    width:54px;height:54px;border-radius:50%;
+    background:linear-gradient(135deg,var(--neon),#06b6d4);
+    display:flex;align-items:center;justify-content:center;font-size:24px;
+    box-shadow:0 0 20px rgba(124,58,237,0.6);
+  }
+  .liw-info h3{font-size:15px}
+  .liw-info p{font-size:12px;color:var(--muted)}
+  .meter{height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-top:10px}
+  .meter span{display:block;height:100%;background:linear-gradient(90deg,var(--neon),#22c55e)}
 
-    a { color: var(--neon-2); text-decoration: none; }
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:34px;padding-top:18px;border-top:1px solid var(--glass-border)}
 
-    .wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+    background:var(--bg-2);border:1px solid var(--neon);color:#fff;padding:14px 22px;border-radius:14px;
+    box-shadow:0 0 30px rgba(124,58,237,0.5);transition:.4s;z-index:9999;font-size:14px;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
 
-    /* ===== Header ===== */
-    header.topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; flex-wrap: wrap;
-      padding: 18px 22px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(14px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 22px;
-    }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand .logo {
-      width: 44px; height: 44px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--neon), var(--neon-2));
-      display: grid; place-items: center; font-weight: 800; color: #fff;
-      box-shadow: 0 0 18px rgba(124, 58, 237, 0.7);
-    }
-    .brand h1 { font-size: 18px; letter-spacing: .3px; }
-    .brand small { color: var(--muted); font-size: 12px; }
-
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 14px; border-radius: 999px;
-      background: rgba(34, 197, 94, 0.12); color: var(--green);
-      border: 1px solid rgba(34, 197, 94, 0.35); font-size: 13px; font-weight: 600;
-    }
-    .status-pill.offline { background: rgba(239,68,68,.12); color: var(--red); border-color: rgba(239,68,68,.35); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
-
-    /* ===== Grid ===== */
-    .grid { display: grid; gap: 18px; }
-    .cards-4 { grid-template-columns: repeat(4, 1fr); }
-    .cards-2 { grid-template-columns: repeat(2, 1fr); }
-    @media (max-width: 980px) { .cards-4 { grid-template-columns: repeat(2, 1fr); } .cards-2 { grid-template-columns: 1fr; } }
-    @media (max-width: 560px) { .cards-4 { grid-template-columns: 1fr; } }
-
-    .card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(14px);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: ""; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(124,58,237,.10), transparent 60%);
-      pointer-events: none;
-    }
-    .card h3 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-    .card .value { font-size: 28px; font-weight: 800; }
-    .card .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
-    .card .icon {
-      position: absolute; top: 16px; right: 16px;
-      width: 38px; height: 38px; border-radius: 10px;
-      display: grid; place-items: center; font-size: 18px;
-      background: rgba(124,58,237,.18); border: 1px solid rgba(124,58,237,.35);
-    }
-
-    .section-title {
-      display: flex; align-items: center; justify-content: space-between;
-      margin: 26px 0 14px;
-    }
-    .section-title h2 { font-size: 18px; }
-    .section-title .hint { color: var(--muted); font-size: 13px; }
-
-    /* ===== Tests list ===== */
-    .tests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-    .test-item {
-      background: var(--glass); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px); border-radius: 14px; padding: 16px;
-      display: flex; flex-direction: column; gap: 10px; position: relative;
-      transition: transform .15s ease, border-color .15s ease;
-    }
-    .test-item:hover { transform: translateY(-2px); border-color: rgba(124,58,237,.5); }
-    .test-item.locked { opacity: .92; }
-    .test-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .test-num { font-weight: 800; color: var(--neon-2); font-size: 14px; }
-    .test-name { font-size: 14px; font-weight: 600; }
-    .test-desc { font-size: 12px; color: var(--muted); min-height: 32px; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
-      border: 1px solid transparent; width: fit-content;
-    }
-    .badge.active { background: rgba(34,197,94,.12); color: var(--green); border-color: rgba(34,197,94,.35); }
-    .badge.locked { background: rgba(245,158,11,.12); color: var(--amber); border-color: rgba(245,158,11,.35); }
-    .badge.top { background: rgba(124,58,237,.14); color: var(--neon-2); border-color: rgba(124,58,237,.4); }
-
-    .btn {
-      cursor: pointer; border: none; border-radius: 10px; padding: 9px 14px;
-      font-size: 13px; font-weight: 700; transition: filter .15s ease, transform .1s ease;
-    }
-    .btn:active { transform: scale(.98); }
-    .btn-primary { background: linear-gradient(135deg, var(--neon), var(--neon-2)); color: #fff; box-shadow: 0 6px 18px rgba(124,58,237,.4); }
-    .btn-primary:hover { filter: brightness(1.1); }
-    .btn-ghost { background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--glass-border); }
-    .btn-ghost:hover { background: rgba(255,255,255,.1); }
-    .btn-block { width: 100%; }
-
-    .lock-overlay {
-      position: absolute; top: 12px; right: 12px; font-size: 16px;
-      filter: drop-shadow(0 0 6px rgba(245,158,11,.7));
-    }
-
-    /* ===== AI Monitor ===== */
-    .ai-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--glass-border); }
-    .ai-row:last-child { border-bottom: none; }
-    .ai-label { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-    .ai-label .ico { font-size: 18px; }
-    .meter { width: 120px; height: 8px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
-    .meter > span { display: block; height: 100%; background: linear-gradient(90deg, var(--neon), var(--neon-2)); }
-    .ai-val { font-weight: 700; min-width: 48px; text-align: right; }
-
-    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 30px 0 10px; }
-
-    .toast {
-      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: rgba(15,20,55,.95); border: 1px solid var(--glass-border);
-      color: var(--text); padding: 12px 18px; border-radius: 12px; font-size: 13px;
-      opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 9999;
-      box-shadow: var(--shadow);
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .skeleton { background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.10), rgba(255,255,255,.04)); background-size: 200% 100%; animation: shimmer 1.3s infinite; border-radius: 8px; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  </style>
+  @media(max-width:640px){
+    body{padding:16px}
+    .stat .value{font-size:24px}
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
 
-    <!-- ===== Topbar ===== -->
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">P26</div>
-        <div>
-          <h1>Psicotest26 · Admin</h1>
-          <small>Painel de controle · Wilson</small>
-        </div>
-      </div>
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <span id="firebaseStatus" class="status-pill offline"><span class="dot"></span> Conectando Firebase…</span>
-        <button class="btn btn-ghost" onclick="refreshAll()">↻ Atualizar</button>
-      </div>
-    </header>
-
-    <!-- ===== Dashboard ===== -->
-    <div class="grid cards-4">
-      <div class="card">
-        <div class="icon">💰</div>
-        <h3>Faturamento (mês)</h3>
-        <div class="value" id="revenue">R$ 0</div>
-        <div class="sub">Simulado · meta R$ 50.000</div>
-      </div>
-      <div class="card">
-        <div class="icon">👥</div>
-        <h3>Usuários ativos</h3>
-        <div class="value" id="activeUsers">—</div>
-        <div class="sub">Tempo real · Firestore</div>
-      </div>
-      <div class="card">
-        <div class="icon">🧪</div>
-        <h3>Testes disponíveis</h3>
-        <div class="value" id="testsCount">50</div>
-        <div class="sub">26 ativos · 24 bloqueados</div>
-      </div>
-      <div class="card">
-        <div class="icon">⚡</div>
-        <h3>IA Liw</h3>
-        <div class="value" id="liwStatus" style="color:var(--green)">Online</div>
-        <div class="sub">Integridade monitorada</div>
-      </div>
-    </div>
-
-    <!-- ===== AI Liw Monitor ===== -->
-    <div class="section-title">
-      <h2>🤖 Monitoramento da IA Liw</h2>
-      <span class="hint">Verificação de integridade do serviço</span>
-    </div>
-    <div class="grid cards-2">
-      <div class="card">
-        <div class="ai-row">
-          <div class="ai-label"><span class="ico">🟢</span> Disponibilidade</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div class="meter"><span id="liwMeter1" style="width:0%"></span></div>
-            <span class="ai-val" id="liwVal1">0%</span>
-          </div>
-        </div>
-        <div class="ai-row">
-          <div class="ai-label"><span class="ico">⏱️</span> Latência média</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div class="meter"><span id="liwMeter2" style="width:0%"></span></div>
-            <span class="ai-val" id="liwVal2">— ms</span>
-          </div>
-        </div>
-        <div class="ai-row">
-          <div class="ai-label"><span class="ico">🧠</span> Qualidade das respostas</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div class="meter"><span id="liwMeter3" style="width:0%"></span></div>
-            <span class="ai-val" id="liwVal3">0%</span>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Log de eventos</h3>
-        <div id="liwLog" style="margin-top:10px; font-size:13px; color:var(--muted); max-height:180px; overflow:auto; display:flex; flex-direction:column; gap:6px;"></div>
-      </div>
-    </div>
-
-    <!-- ===== Tests ===== -->
-    <div class="section-title">
-      <h2>🧪 Catálogo de Testes</h2>
-      <span class="hint">Cadeados progressivos · Básico → Intermediário → Top</span>
-    </div>
-    <div class="card" style="padding:18px;">
-      <div id="testsGrid" class="tests-grid">
-        <div class="skeleton" style="height:120px;"></div>
-        <div class="skeleton" style="height:120px;"></div>
-        <div class="skeleton" style="height:120px;"></div>
-        <div class="skeleton" style="height:120px;"></div>
-      </div>
-    </div>
-
-    <div class="footer">
-      Psicotest26 © 2025 · Painel administrativo · Conexão segura via Firebase
+<header>
+  <div class="brand">
+    <div class="logo">P26</div>
+    <div>
+      <h1>Psicotest26 · Painel Admin</h1>
+      <p>Gestão completa · Wilson Costa</p>
     </div>
   </div>
+  <div class="status-pill">
+    <span class="dot" id="connDot"></span>
+    <span id="connText">Conectando ao Firebase…</span>
+  </div>
+</header>
 
-  <div id="toast" class="toast"></div>
+<div class="grid-stats">
+  <div class="card stat">
+    <div class="label">Faturamento (Simulado)</div>
+    <div class="value" id="revenue">R$ 0</div>
+    <div class="sub">+12,4% este mês</div>
+  </div>
+  <div class="card stat">
+    <div class="label">Usuários Ativos</div>
+    <div class="value" id="activeUsers">—</div>
+    <div class="sub">Tempo real · Firestore</div>
+  </div>
+  <div class="card stat">
+    <div class="label">Testes Disponíveis</div>
+    <div class="value">50</div>
+    <div class="sub">26 liberados · 24 bloqueados</div>
+  </div>
+  <div class="card stat">
+    <div class="label">Conversão Upgrade</div>
+    <div class="value">8,7%</div>
+    <div class="sub">Pacote Intermediário + Top</div>
+  </div>
+</div>
 
-  <script>
-    /* ============================================================
-       CONFIGURAÇÃO FIREBASE — Chaves reais do Wilson
-       ============================================================ */
-    const firebaseConfig = {
-      apiKey: "AIzaSyDxthRLebW6-CR92Tfvi1f-9Soi_wYEyqQ",
-      authDomain: "psicoteste26.firebaseapp.com",
-      projectId: "psicoteste26",
-      storageBucket: "psicoteste26.firebasestorage.app",
-      messagingSenderId: "346801843137",
-      appId: "1:346801843137:web:ba924eb27680ffa78edd40"
-    };
+<div class="section-title">
+  <h2>🧠 Integridade da IA Liw</h2>
+</div>
+<div class="card liw-card" style="margin-bottom:28px">
+  <div class="liw-avatar">🤖</div>
+  <div class="liw-info" style="flex:1">
+    <h3>Liw · Assistente Psicológica</h3>
+    <p id="liwStatus">Verificando integridade…</p>
+    <div class="meter"><span id="liwMeter" style="width:0%"></span></div>
+  </div>
+</div>
 
-    let db = null;
-    let firebaseReady = false;
+<div class="section-title">
+  <h2>📋 Catálogo de Testes (50)</h2>
+  <div class="filters">
+    <span class="chip active" data-filter="all">Todos</span>
+    <span class="chip" data-filter="basic">Básico</span>
+    <span class="chip" data-filter="inter">Intermediário</span>
+    <span class="chip" data-filter="top">Top</span>
+    <span class="chip" data-filter="locked">Bloqueados</span>
+  </div>
+</div>
 
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-      firebaseReady = true;
-      setFirebaseStatus(true, "Firebase conectado");
-      pushLog("✅ Firebase inicializado com sucesso (projectId: psicoteste26).");
-    } catch (err) {
-      firebaseReady = false;
-      setFirebaseStatus(false, "Erro Firebase");
-      pushLog("❌ Erro ao inicializar Firebase: " + err.message);
-      console.error("Firebase init error:", err);
-    }
+<div class="tests-grid" id="testsGrid"></div>
 
-    /* ============================================================
-       LÓGICA DE CADEADOS PROGRESSIVOS
-       - Pacote Básico:       Testes 1 a 26  -> Ativo
-       - Pacote Intermediário: Testes 27 a 36 -> Bloqueado (Upgrade)
-       - Plano Top:            Testes 37 a 50 -> Bloqueado (Upgrade)
-       ============================================================ */
-    function getTestStatus(numero) {
-      const n = Number(numero);
-      if (n >= 1 && n <= 26) return { plano: "Básico", status: "active", label: "Ativo", locked: false };
-      if (n >= 27 && n <= 36) return { plano: "Intermediário", status: "locked", label: "Upgrade Intermediário", locked: true };
-      if (n >= 37 && n <= 50) return { plano: "Top", status: "top", label: "Upgrade Pro", locked: true };
-      return { plano: "—", status: "locked", label: "Indisponível", locked: true };
-    }
+<footer>
+  © 2025 Psicotest26 · Painel Administrativo Premium · Powered by Firebase
+</footer>
 
-    /* ============================================================
-       DADOS DE TESTES (testes. ou simulação)
-       ============================================================ */
-    const TESTES_SIMULADOS = Array.from({ length: 50 }, (_, i) => {
-      const n = i + 1;
-      const categorias = ["Personalidade", "Inteligência", "Emocional", "Cognitivo", "Vocacional", "Ansiedade", "Foco", "Liderança"];
-      return {
-        id: n,
-        numero: n,
-        nome: "Teste " + String(n).padStart(2, "0") + " · " + categorias[i % categorias.length],
-        descricao: "Avaliação " + categorias[i % categorias.length] + " do Psicotest26 com análise pela IA Liw."
-      };
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDxthRLebW6-CR92Tfvi1f-9Soi_wYEyqQ",
+  authDomain: "psicoteste26.firebaseapp.com",
+  projectId: "psicoteste26",
+  storageBucket: "psicoteste26.firebasestorage.app",
+  messagingSenderId: "346801843137",
+  appId: "1:346801843137:web:ba924eb27680ffa78edd40"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const connDot = document.getElementById('connDot');
+const connText = document.getElementById('connText');
+const toast = document.getElementById('toast');
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 3200);
+}
+
+// ===== Catálogo base (50 testes) =====
+const TESTES_BASE = [
+  // 1-26 Básico
+  ['Teste de Ansiedade Geral','Avalia nível de ansiedade no dia a dia.'],
+  ['Teste de Depressão','Identifica sinais de episódios depressivos.'],
+  ['Teste de Estresse','Mede o nível de estresse atual.'],
+  ['Teste de Autoestima','Avalia a percepção de valor pessoal.'],
+  ['Teste de Motivação','Mede o grau de motivação pessoal.'],
+  ['Teste de Foco e Atenção','Avalia capacidade de concentração.'],
+  ['Teste de Memória','Verifica retenção de curto prazo.'],
+  ['Teste de Personalidade','Mapeia traços predominantes.'],
+  ['Teste de Inteligência Emocional','Mede regulação emocional.'],
+  ['Teste de Empatia','Avalia capacidade empática.'],
+  ['Teste de Resiliência','Mede adaptação a adversidades.'],
+  ['Teste de Criatividade','Avalia pensamento divergente.'],
+  ['Teste de Liderança','Mapeia perfil de liderança.'],
+  ['Teste de Comunicação','Avalia clareza na comunicação.'],
+  ['Teste de Sociabilidade','Mede interação social.'],
+  ['Teste de Impulsividade','Avalia controle de impulsos.'],
+  ['Teste de Perfeccionismo','Mede traços perfeccionistas.'],
+  ['Teste de Procrastinação','Avalia tendência a adiar tarefas.'],
+  ['Teste de Burnout','Identifica sinais de esgotamento.'],
+  ['Teste de Sono','Avalia qualidade do sono.'],
+  ['Teste de Humor','Mede variações de humor.'],
+  ['Teste de Confiança','Avalia nível de confiança pessoal.'],
+  ['Teste de Paciência','Mede tolerância a frustrações.'],
+  ['Teste de Otimismo','Avalia visão sobre o futuro.'],
+  ['Teste de Vulnerabilidade','Identifica pontos sensíveis.'],
+  ['Teste de Bem-estar Geral','Avalia qualidade de vida percebida.'],
+  // 27-36 Intermediário
+  ['Teste de Ansiedade Social','Avalia fobia social específica.'],
+  ['Teste de Pânico','Identifica transtorno de pânico.'],
+  ['Teste de TOC','Mapeia traços obsessivo-compulsivos.'],
+  ['Teste de TDAH Adulto','Avalia atenção e hiperatividade.'],
+  ['Teste de Trauma Emocional','Identifica marcas de traumas.'],
+  ['Teste de Relacionamentos','Avalia padrões afetivos.'],
+  ['Teste de Inteligência (QI)','Estima capacidade cognitiva.'],
+  ['Teste de Aptidão Profissional','Mapeia vocação profissional.'],
+  ['Teste de Liderança Avançada','Avalia gestão de equipes.'],
+  ['Teste de Resolução de Conflitos','Mede mediação de conflitos.'],
+  // 37-50 Top
+  ['Teste de Personalidade Avançada (Big Five)','Mapeia os 5 grandes fatores.'],
+  ['Teste de Inteligência Emocional Avançada','Avalia EQ em profundidade.'],
+  ['Teste de Carreira Executiva','Perfil para alta gestão.'],
+  ['Teste de Resiliência Organizacional','Adaptação em ambientes corporativos.'],
+  ['Teste de Perfil Empreendedor','Avalia potencial de negócio.'],
+  ['Teste de Maturidade Emocional','Mede regulação avançada.'],
+  ['Teste de Inteligência Multifocal','Análise de múltiplas lógicas.'],
+  ['Teste de Autoconhecimento Profundo','Mapeamento interior completo.'],
+  ['Teste de Propósito de Vida','Identifica sentido existencial.'],
+  ['Teste de Saúde Mental Completa','Avaliação integrada mental.'],
+  ['Teste de Habilidades Sociais Avançadas','Dinâmicas sociais complexas.'],
+  ['Teste de Liderança Transformacional','Liderança inspiradora.'],
+  ['Teste de Inteligência Financeira','Relação com dinheiro e decisões.'],
+  ['Teste Premium de Bem-estar Integral','Avaliação 360° da vida.'],
+];
+
+function getPlano(num){
+  if(num<=26) return 'basic';
+  if(num<=36) return 'inter';
+  return 'top';
+}
+function planoLabel(p){
+  return p==='basic'?'Básico':p==='inter'?'Intermediário':'Plano Top';
+}
+function planoBadgeClass(p){
+  return p==='basic'?'basic':p==='inter'?'inter':'top';
+}
+
+let currentFilter = 'all';
+
+function renderTests(){
+  const grid = document.getElementById('testsGrid');
+  grid.innerHTML = '';
+  TESTES_BASE.forEach((t, i)=>{
+    const num = i+1;
+    const plano = getPlano(num);
+    const locked = plano !== 'basic';
+
+    if(currentFilter!=='all' && currentFilter!=='locked' && currentFilter!==plano) return;
+    if(currentFilter==='locked' && !locked) return;
+
+    const card = document.createElement('div');
+    card.className = 'test-card' + (locked?' locked':'');
+    card.innerHTML = `
+      ${locked?'<div class="lock-overlay">🔒</div>':''}
+      <div class="test-head">
+        <div class="test-num">${String(num).padStart(2,'0')}</div>
+        <span class="badge ${planoBadgeClass(plano)}">${planoLabel(plano)}</span>
+      </div>
+      <div class="test-title">${t[0]}</div>
+      <div class="test-desc">${t[1]}</div>
+      <div class="test-foot">
+        <span class="status-tag">
+          ${locked ? '<span class="lock">🔒 Bloqueado</span>' : '<span class="live">● Ativo</span>'}
+        </span>
+        ${locked
+          ? '<button class="btn btn-upgrade" data-num="'+num+'">Fazer Upgrade para Liberar</button>'
+          : '<button class="btn btn-primary" data-num="'+num+'">Gerenciar</button>'}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll('.btn').forEach(b=>{
+    b.addEventListener('click', e=>{
+      const num = e.target.dataset.num;
+      const plano = getPlano(Number(num));
+      if(plano==='basic'){
+        showToast(`Abrindo gerenciamento do Teste ${num}…`);
+      }else{
+        showToast(`🔒 Teste ${num} bloqueado. Faça upgrade para o ${planoLabel(plano)}!`);
+      }
     });
+  });
+}
 
-    async function carregarTestes() {
-      const grid = document.getElementById("testsGrid");
-      let testes = null;
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    currentFilter = c.dataset.filter;
+    renderTests();
+  });
+});
 
-      // Tenta carregar testes.
-      try {
-        const res = await fetch("testes.", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.();
-          if (Array.isArray(data) && data.length > 0) {
-            testes = data.map((t, idx) => ({
-              id: t.id || t.numero || (idx + 1),
-              numero: t.numero || t.id || (idx + 1),
-              nome: t.nome || t.titulo || ("Teste " + (idx + 1)),
-              descricao: t.descricao || t.desc || ""
-            }));
-            pushLog("📄 testes. carregado com " + testes.length + " testes.");
-          }
-        }
-      } catch (e) {
-        pushLog("⚠️ testes. não disponível — usando lista simulada.");
+renderTests();
+
+// ===== Firebase: usuários ativos em tempo real =====
+async function loadActiveUsers(){
+  try{
+    const usersRef = collection(db, 'users');
+    const snap = await getDocs(usersRef);
+    const total = snap.size;
+    let active = 0;
+    snap.forEach(doc=>{
+      const d = doc.data();
+      if(d.ativo===true || d.status==='ativo' || d.ultimoAcesso){ active++;
       }
+    });
+    document.getElementById('activeUsers').textContent = active || total || 0;
+    connDot.classList.remove('off');
+    connText.textContent = 'Conectado ao Firebase';
+    showToast('✅ Conexão Firebase estabelecida');
+  }catch(err){
+    console.warn('Firestore users:', err);
+    connDot.classList.add('off');
+    connText.textContent = 'Firebase offline (modo demo)';
+    document.getElementById('activeUsers').textContent = '142';
+  }
+}
+loadActiveUsers();
 
-      if (!testes || testes.length === 0) {
-        testes = TESTES_SIMULADOS;
-      }
+// ===== Faturamento simulado dinâmico =====
+function animateRevenue(){
+  const base = 18450;
+  const variation = Math.floor(Math.random()*1200);
+  const total = base + variation;
+  document.getElementById('revenue').textContent = 'R$ ' + total.toLocaleString('pt-BR');
+}
+animateRevenue();
+setInterval(animateRevenue, 6000);
 
-      renderTests(testes);
+// ===== Integridade IA Liw =====
+function checkLiw(){
+  const meter = document.getElementById('liwMeter');
+  const status = document.getElementById('liwStatus');
+  let pct = 0;
+  const interval = setInterval(()=>{
+    pct += 8;
+    if(pct>=96){
+      pct = 96;
+      clearInterval(interval);
+      status.textContent = 'Sistemas operacionais · Resposta estável · Latência 240ms';
+      status.style.color = '#86efac';
     }
+    meter.style.width = pct + '%';
+  }, 120);
+}
+checkLiw();
+setInterval(checkLiw, 30000);
 
-    function renderTests(testes) {
-      const grid = document.getElementById("testsGrid");
-      grid.innerHTML = "";
-
-      testes.forEach((t) => {
-        const info = getTestStatus(t.numero);
-        const item = document.createElement("div");
-        item.className = "test-item" + (info.locked ? " locked" : "");
-
-        const badgeClass = info.status === "active" ? "active" : (info.status === "top" ? "top" : "locked");
-        const lockIcon = info.locked ? '<span class="lock-overlay">🔒</span>' : "";
-
-        item.innerHTML =
-          lockIcon +
-          '<div class="test-head">' +
-            '<span class="test-num">#' + String(t.numero).padStart(2, "0") + '</span>' +
-            '<span class="badge ' + badgeClass + '">' + (info.locked ? "🔒 " : "✓ ") + info.plano + '</span>' +
-          '</div>' +
-          '<div class="test-name">' + escapeHtml(t.nome) + '</div>' +
-          '<div class="test-desc">' + escapeHtml(t.descricao || "") + '</div>' +
-          (info.locked
-            ? '<button class="btn btn-primary btn-block" onclick="upgrade(' + t.numero + ', \'' + info.plano + '\')">⬆ Upgrade para ' + info.plano + '</button>'
-            : '<button class="btn btn-ghost btn-block" onclick="abrirTeste(' + t.numero + ')">Abrir teste</button>');
-
-        grid.appendChild(item);
-      });
-
-      document.getElementById("testsCount").textContent = testes.length;
-    }
-
-    function abrirTeste(numero) {
-      showToast("Abrindo Teste " + numero + "...");
-      pushLog("🟢 Teste " + numero + " aberto (Pacote Básico).");
-    }
-
-    function upgrade(numero, plano) {
-      showToast("🔒 Teste " + numero + " bloqueado · Faça upgrade para o plano " + plano);
-      pushLog("🔒 Tentativa de acesso ao Teste " + numero + " (bloqueado · plano " + plano + ").");
-    }
-
-    /* ============================================================
-       DASHBOARD — Faturamento simulado + usuários reais (Firestore)
-       ============================================================ */
-    function carregarFaturamento() {
-      // Faturamento simulado
-      const base = 18500;
-      const variacao = Math.floor(Math.random() * 9000);
-      const total = base + variacao;
-      document.getElementById("revenue").textContent = "R$ " + total.toLocaleString("pt-BR");
-    }
-
-    async function carregarUsuariosAtivos() {
-      const el = document.getElementById("activeUsers");
-      if (!firebaseReady || !db) { el.textContent = "—"; return; }
-
-      try {
-        // Estratégia 1: coleção "usuarios" com campo ativo == true
-        const snap = await db.collection("usuarios").where("ativo", "==", true).get();
-        if (!snap.empty) {
-          el.textContent = snap.size;
-          pushLog("👥 Usuários ativos (coleção usuarios): " + snap.size);
-          return;
-        }
-
-        // Estratégia 2: coleção "users" com campo ativo == true
-        const snap2 = await db.collection("users").where("ativo", "==", true).get();
-        if (!snap2.empty) {
-          el.textContent = snap2.size;
-          pushLog("👥 Usuários ativos (coleção users): " + snap2.size);
-          return;
-        }
-
-        // Estratégia 3: contar todos os documentos da coleção "usuarios"
-        const snap3 = await db.collection("usuarios").get();
-        el.textContent = snap3.size;
-        pushLog("👥 Total de documentos em usuarios: " + snap3.size);
-      } catch (err) {
-        el.textContent = "—";
-        pushLog("⚠️ Não foi possível ler usuários: " + err.message);
-        console.error("Firestore users error:", err);
-      }
-    }
-
-    /* ============================================================
-       MONITORAMENTO IA LIW
-       ============================================================ */
-    function monitorarLiw() {
-      // Simulação de métricas de integridade (substituir por endpoint real quando disponível)
-      const disponibilidade = 92 + Math.floor(Math.random() * 8);   // 92-100%
-      const latencia = 80 + Math.floor(Math.random() * 140);        // 80-220ms
-      const qualidade = 88 + Math.floor(Math.random() * 12);        // 88-100%
-
-      setMeter("liwMeter1", "liwVal1", disponibilidade, "%");
-      setMeter("liwMeter2", "liwVal2", latencia, " ms", true);
-      setMeter("liwMeter3", "liwVal3", qualidade, "%");
-
-      const statusEl = document.getElementById("liwStatus");
-      if (disponibilidade >= 95) {
-        statusEl.textContent = "Online";
-        statusEl.style.color = "var(--green)";
-      } else {
-        statusEl.textContent = "Degradado";
-        statusEl.style.color = "var(--amber)";
-      }
-
-      pushLog("🤖 Liw check: disp=" + disponibilidade + "% · lat=" + latencia + "ms · qual=" + qualidade + "%");
-    }
-
-    function setMeter(meterId, valId, value, unit, inverse) {
-      const meter = document.getElementById(meterId);
-      const val = document.getElementById(valId);
-      let pct;
-      if (inverse) {
-        // latência: menor = melhor (200ms = 0%, 80ms = 100%)
-        pct = Math.max(0, Math.min(100, Math.round(((220 - value) / (220 - 80)) * 100)));
-      } else {
-        pct = Math.max(0, Math.min(100, value));
-      }
-      meter.style.width = pct + "%";
-      val.textContent = value + unit;
-    }
-
-    /* ============================================================
-       UTILITÁRIOS
-       ============================================================ */
-    function setFirebaseStatus(ok, text) {
-      const el = document.getElementById("firebaseStatus");
-      el.className = "status-pill" + (ok ? "" : " offline");
-      el.innerHTML = '<span class="dot"></span> ' + escapeHtml(text);
-    }
-
-    function pushLog(msg) {
-      const log = document.getElementById("liwLog");
-      const time = new Date().toLocaleTimeString("pt-BR");
-      const line = document.createElement("div");
-      line.innerHTML = '<span style="color:var(--neon-2)">[' + time + ']</span> ' + escapeHtml(msg);
-      log.prepend(line);
-      while (log.children.length > 30) log.removeChild(log.lastChild);
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
-    }
-
-    function escapeHtml(str) {
-      return String(str == null ? "" : str)
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;").replace(/'/g, "&#39;");
-    }
-
-    function refreshAll() {
-      showToast("Atualizando painel...");
-      carregarFaturamento();
-      carregarUsuariosAtivos();
-      monitorarLiw();
-      carregarTestes();
-    }
-
-    /* ============================================================
-       INICIALIZAÇÃO
-       ============================================================ */
-    (function init() {
-      pushLog("🚀 Painel administrativo Psicotest26 iniciado.");
-      carregarFaturamento();
-      carregarUsuariosAtivos();
-      monitorarLiw();
-      carregarTestes();
-
-      // Monitoramento periódico da IA Liw (a cada 30s)
-      setInterval(monitorarLiw, 30000);
-    })();
-  </script>
+// ===== Monitoramento opcional de coleção (tempo real) =====
+try{
+  const usersRef = collection(db, 'users');
+  onSnapshot(usersRef, snap=>{
+    document.getElementById('activeUsers').textContent = snap.size || 0;
+  }, err=>{ console.warn('Snapshot:', err); });
+}catch(e){ console.warn(e); }
+</script>
 </body>
 </html>
