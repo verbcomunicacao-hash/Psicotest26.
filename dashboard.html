@@ -1,1337 +1,451 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>PsicoTeste | Painel Liw</title>
-<style>
-  :root{
-    --bg:#0b1437;
-    --bg2:#0f1b47;
-    --neon:#7c3aed;
-    --neon2:#a78bfa;
-    --glass:rgba(255,255,255,0.06);
-    --glass-bd:rgba(255,255,255,0.12);
-    --txt:#e8ecff;
-    --muted:#9aa3c7;
-    --ok:#22c55e;
-    --warn:#f59e0b;
-    --err:#ef4444;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
-  body{
-    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
-    background:radial-gradient(1200px 700px at 80% -10%,#1a2a6b 0%,transparent 60%),radial-gradient(900px 600px at -10% 110%,#3b1d6e 0%,transparent 55%),var(--bg);
-    color:var(--txt);min-height:100vh;line-height:1.5;
-  }
-  .wrap{max-width:1180px;margin:0 auto;padding:14px}
-  .glass{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--glass-bd);border-radius:18px}
-  /* Header / Mascote */
-  header.top{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:14px}
-  .mascot{width:74px;height:74px;flex:0 0 auto;filter:drop-shadow(0 0 10px rgba(124,58,237,.6))}
-  .top h1{font-size:18px;font-weight:800;letter-spacing:.3px}
-  .top p{font-size:12px;color:var(--muted)}
-  .spacer{flex:1}
-  .role-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(124,58,237,.18);border:1px solid rgba(124,58,237,.5);font-size:12px;font-weight:700;cursor:pointer}
-  .role-pill select{background:transparent;color:var(--neon2);border:none;font-weight:700;outline:none;cursor:pointer}
-  .role-pill select option{color:#000}
-  /* Tabs */
-  .tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
-  .tab{padding:10px 16px;border-radius:12px;background:var(--glass);border:1px solid var(--glass-bd);cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;color:var(--muted)}
-  .tab.active{background:linear-gradient(135deg,var(--neon),#5b21b6);color:#fff;border-color:transparent;box-shadow:0 6px 20px rgba(124,58,237,.45)}
-  /* Search */
-  .search{padding:12px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:center}
-  .search input{flex:1;background:rgba(0,0,0,.25);border:1px solid var(--glass-bd);border-radius:12px;padding:12px 14px;color:#fff;font-size:14px;outline:none}
-  .search input:focus{border-color:var(--neon)}
-  .count{font-size:12px;color:var(--muted);white-space:nowrap}
-  /* Grid */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-  .card{padding:16px;display:flex;flex-direction:column;gap:10px;transition:.2s}
-  .card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.6)}
-  .card .tag{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700}
-  .card h3{font-size:15px;font-weight:800}
-  .card p{font-size:12px;color:var(--muted);flex:1}
-  .badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;padding:4px 8px;border-radius:999px}
-  .badge.free{background:rgba(34,197,94,.18);color:#86efac;border:1px solid rgba(34,197,94,.4)}
-  .badge.premium{background:rgba(245,158,11,.18);color:#fcd34d;border:1px solid rgba(245,158,11,.4)}
-  .btn{border:none;cursor:pointer;border-radius:12px;padding:12px 16px;font-size:13px;font-weight:800;transition:.15s;width:100%}
-  .btn-primary{background:linear-gradient(135deg,var(--neon),#5b21b6);color:#fff;box-shadow:0 6px 18px rgba(124,58,237,.4)}
-  .btn-primary:active{transform:scale(.97)}
-  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--glass-bd)}
-  .btn-warn{background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  /* Test runner */
-  .runner{padding:18px}
-  .runner .prog{height:8px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin-bottom:14px}
-  .runner .prog>div{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));width:0;transition:.3s}
-  .qnum{font-size:12px;color:var(--muted);margin-bottom:6px}
-  .qtext{font-size:17px;font-weight:700;margin-bottom:16px}
-  .opts{display:grid;gap:10px}
-  .opt{padding:16px;border-radius:14px;background:rgba(255,255,255,.06);border:2px solid var(--glass-bd);cursor:pointer;font-size:15px;font-weight:600;text-align:left;transition:.15s}
-  .opt:active{transform:scale(.98)}
-  .opt.sel{border-color:var(--neon);background:rgba(124,58,237,.22)}
-  .scale5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-  .scale5 .opt{text-align:center;padding:14px 6px;font-size:13px}
-  .runner-nav{display:flex;gap:10px;margin-top:16px}
-  .result{padding:18px;text-align:center}
-  .result .score{font-size:42px;font-weight:900;background:linear-gradient(135deg,var(--neon2),var(--neon));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .result .label{font-size:14px;color:var(--muted);margin-bottom:10px}
-  .result .interp{padding:14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--glass-bd);font-size:13px;text-align:left;margin:12px 0}
-  /* Modal */
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
-  .modal-bg.show{display:flex}
-  .modal{max-width:420px;width:100%;padding:22px}
-  .modal h2{font-size:18px;margin-bottom:6px}
-  .modal p{font-size:13px;color:var(--muted);margin-bottom:16px}
-  .pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-  .pay-methods .m{padding:14px;border-radius:12px;background:rgba(255,255,255,.06);border:2px solid var(--glass-bd);cursor:pointer;text-align:center;font-size:13px;font-weight:700}
-  .pay-methods .m.sel{border-color:var(--neon);background:rgba(124,58,237,.2)}
-  .pix-box{background:rgba(0,0,0,.3);border:1px dashed var(--neon);border-radius:12px;padding:12px;font-size:11px;word-break:break-all;margin-bottom:12px;color:var(--neon2)}
-  /* Toast */
-  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(120px);background:#1e293b;border:1px solid var(--neon);color:#fff;padding:12px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:99;transition:.3s;max-width:90vw;text-align:center}
-  .toast.show{transform:translateX(-50%) translateY(0)}
-  .hidden{display:none!important}
-  .lock{font-size:18px}
-  @media(max-width:640px){
-    .top h1{font-size:16px}
-    .grid{grid-template-columns:1fr}
-    .qtext{font-size:16px}
-    .opt{padding:18px;font-size:16px}
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Liw — Autoconhecimento Premium</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --roxo-neon: #b14bff;
+            --roxo-claro: #d9a6ff;
+            --roxo-escuro: #6a2bcf;
+            --fundo: #0a0514;
+            --fundo-card: rgba(26, 17, 48, 0.7);
+            --glass: rgba(255, 255, 255, 0.03);
+            --texto: #f0e6ff;
+            --texto-suave: #b9a8d6;
+            --premium: #ffd700;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+
+        body {
+            background: var(--fundo);
+            color: var(--texto);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(177, 75, 255, 0.15), transparent 30%),
+                radial-gradient(circle at 90% 90%, rgba(106, 43, 207, 0.2), transparent 40%);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            animation: fadeIn 1s ease;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #fff, var(--roxo-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        /* Grid de Testes */
+        .grid-testes {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card-teste {
+            background: var(--fundo-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(177, 75, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .card-teste:hover {
+            transform: scale(1.02);
+            border-color: var(--roxo-neon);
+            box-shadow: 0 10px 30px rgba(177, 75, 255, 0.15);
+        }
+
+        .card-teste.premium {
+            border-color: rgba(255, 215, 0, 0.3);
+            opacity: 0.85;
+        }
+
+        .info-teste h3 {
+            color: var(--roxo-claro);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .info-teste p {
+            font-size: 0.85rem;
+            color: var(--texto-suave);
+        }
+
+        .status-icon { font-size: 1.2rem; }
+
+        /* Motor de Teste */
+        #tela-teste, #tela-resultado { display: none; }
+
+        .pergunta-box {
+            background: var(--fundo-card);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid var(--roxo-neon);
+            margin-top: 20px;
+        }
+
+        .opcao-btn {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: var(--glass);
+            border: 1px solid rgba(177, 75, 255, 0.3);
+            border-radius: 12px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .opcao-btn:hover { background: rgba(177, 75, 255, 0.2); border-color: var(--roxo-neon); }
+
+        /* Mascote Formiga Liw */
+        .liw-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .liw-balao {
+            background: white;
+            color: #1a1130;
+            padding: 12px 18px;
+            border-radius: 15px 15px 0 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            max-width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .formiga-liw {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 10px var(--roxo-neon));
+        }
+
+        /* Modal Wilson */
+        .modal-wilson {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--fundo-card);
+            border: 2px solid var(--roxo-neon);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 500px;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .modal-content h2 { color: var(--roxo-neon); margin-bottom: 20px; }
+
+        .btn-premium {
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            color: #000;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .progresso-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progresso-fill {
+            height: 100%;
+            background: var(--roxo-neon);
+            width: 0%;
+            transition: 0.3s;
+        }
+
+        .devolutiva-ouro {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #e0d5ff;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- HEADER + MASCOTE -->
-  <header class="top glass">
-    <svg class="mascot" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="50" cy="78" rx="22" ry="14" fill="#7c3aed"/>
-      <ellipse cx="50" cy="55" rx="17" ry="13" fill="#8b5cf6"/>
-      <circle cx="50" cy="32" r="15" fill="#a78bfa"/>
-      <circle cx="44" cy="30" r="5" fill="#fff"/>
-      <circle cx="56" cy="30" r="5" fill="#fff"/>
-      <circle cx="45" cy="31" r="2.4" fill="#0b1437"/>
-      <circle cx="55" cy="31" r="2.4" fill="#0b1437"/>
-      <path d="M40 24 Q35 18 30 20" stroke="#7c3aed" stroke-width="2" fill="none"/>
-      <path d="M60 24 Q65 18 70 20" stroke="#7c3aed" stroke-width="2" fill="none"/>
-      <rect x="38" y="60" width="24" height="12" rx="3" fill="#fff"/>
-      <text x="50" y="69" font-size="7" font-weight="900" fill="#7c3aed" text-anchor="middle" font-family="Arial">LIW</text>
-      <line x1="30" y1="52" x2="18" y2="48" stroke="#7c3aed" stroke-width="2.5"/>
-      <line x1="70" y1="52" x2="82" y2="48" stroke="#7c3aed" stroke-width="2.5"/>
+
+<div class="container">
+    <!-- TELA 1: LISTA -->
+    <section id="tela-lista">
+        <header>
+            <h1>✦ Universo Liw ✦</h1>
+            <p>50 Testes de Elite para sua Evolução</p>
+        </header>
+        <div id="grid-testes" class="grid-testes"></div>
+    </section>
+
+    <!-- TELA 2: TESTE -->
+    <section id="tela-teste">
+        <div class="pergunta-box">
+            <div id="teste-info-topo" style="display:flex; justify-content: space-between; color: var(--roxo-claro); font-weight: bold;"></div>
+            <div class="progresso-bar"><div id="progresso-fill" class="progresso-fill"></div></div>
+            <h2 id="pergunta-texto" style="margin: 20px 0;"></h2>
+            <div id="opcoes-container"></div>
+        </div>
+    </section>
+
+    <!-- TELA 3: RESULTADO -->
+    <section id="tela-resultado">
+        <div class="pergunta-box" style="text-align: center;">
+            <h1 id="res-titulo" style="color: var(--roxo-neon);"></h1>
+            <div id="res-conteudo" class="devolutiva-ouro" style="margin: 30px 0; text-align: left;"></div>
+            <button onclick="location.reload()" class="opcao-btn" style="text-align: center; background: var(--roxo-escuro);">Voltar ao Início</button>
+        </div>
+    </section>
+</div>
+
+<!-- MASCOTE FORMIGA LIW -->
+<div class="liw-container">
+    <div id="liw-balao" class="liw-balao"></div>
+    <svg class="formiga-liw" viewBox="0 0 100 100" onclick="falarLiw()">
+        <!-- Corpo Formiga -->
+        <ellipse cx="50" cy="75" rx="15" ry="12" fill="#6a2bcf" />
+        <ellipse cx="50" cy="55" rx="12" ry="10" fill="#b14bff" />
+        <ellipse cx="50" cy="35" rx="14" ry="14" fill="#b14bff" />
+        <!-- Camiseta -->
+        <path d="M38 35 Q50 25 62 35 L60 50 Q50 55 40 50 Z" fill="#6a2bcf" />
+        <text x="50" y="45" font-size="6" fill="white" text-anchor="middle" font-weight="bold">Liw</text>
+        <!-- Olhos Grandes Castanhos -->
+        <circle cx="43" cy="32" r="4" fill="#5d3a1a" />
+        <circle cx="57" cy="32" r="4" fill="#5d3a1a" />
+        <circle cx="44" cy="31" r="1.5" fill="white" />
+        <circle cx="58" cy="31" r="1.5" fill="white" />
+        <!-- Antenas -->
+        <path d="M45 22 Q40 10 35 15" stroke="#b14bff" fill="none" stroke-width="2" />
+        <path d="M55 22 Q60 10 65 15" stroke="#b14bff" fill="none" stroke-width="2" />
     </svg>
-    <div>
-      <h1>Painel PsicoTeste</h1>
-      <p id="welcome">Oi! Eu sou a Formiga Liw. Bem-vindo(a)! 🐜</p>
-    </div>
-    <div class="spacer"></div>
-    <div class="role-pill">
-      <span id="roleIcon">👤</span>
-      <select id="roleSelect">
-        <option value="paciente">Paciente</option>
-        <option value="psicologo">Psicólogo</option>
-      </select>
-    </div>
-  </header>
-
-  <!-- TABS -->
-  <div class="tabs">
-    <div class="tab active" data-filter="all">Todos</div>
-    <div class="tab" data-filter="free">Inclusos (26)</div>
-    <div class="tab" data-filter="premium">Premium (24)</div>
-    <div class="tab" data-filter="resultados">Meus Resultados</div>
-  </div>
-
-  <!-- SEARCH -->
-  <div class="search glass">
-    <input id="searchInput" placeholder="Buscar teste... (ex: PNL, Narcisismo, Ansiedade)">
-    <span class="count" id="count"></span>
-  </div>
-
-  <!-- LISTA -->
-  <div id="listView">
-    <div class="grid" id="grid"></div>
-  </div>
-
-  <!-- RESULTADOS -->
-  <div id="resultsView" class="hidden">
-    <div class="glass" style="padding:18px" id="resultsBox">
-      <p style="color:var(--muted);font-size:13px">Nenhum resultado salvo ainda.</p>
-    </div>
-  </div>
-
-  <!-- RUNNER -->
-  <div id="runnerView" class="hidden">
-    <div class="glass runner">
-      <div class="prog"><div id="progBar"></div></div>
-      <div class="qnum" id="qNum"></div>
-      <div class="qtext" id="qText"></div>
-      <div class="opts" id="opts"></div>
-      <div class="runner-nav">
-        <button class="btn btn-ghost" id="btnPrev">Voltar</button>
-        <button class="btn btn-primary" id="btnNext" disabled>Próximo</button>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- MODAL PAGAMENTO -->
-<div class="modal-bg" id="payModal">
-  <div class="modal glass">
-    <h2 id="payTitle">Desbloquear Teste</h2>
-    <p id="payDesc">Libere este teste premium agora e aplique com seus pacientes.</p>
-    <div class="pay-methods">
-      <div class="m sel" data-m="pix">PIX</div>
-      <div class="m" data-m="cartao">Cartão</div>
+<!-- MODAL WILSON (7/7) -->
+<div id="modal-wilson" class="modal-wilson">
+    <div class="modal-content">
+        <h2 id="wilson-titulo">Wilson diz:</h2>
+        <p id="wilson-frase" style="font-style: italic; font-size: 1.2rem; line-height: 1.6;"></p>
+        <button onclick="fecharWilson()" class="opcao-btn" style="text-align: center; margin-top: 30px;">Continuar Jornada →</button>
     </div>
-    <div id="pixArea">
-      <div class="pix-box">00020126360014BR.GOV.BCB.PIX0114psicoteste@liw5204000053039865802BR5913PsicoTeste LIW6009SAO PAULO62070503***6304A1B2</div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Valor: <b style="color:var(--neon2)">R$ 19,90</b> — após pagar, clique abaixo.</p>
-    </div>
-    <div id="cardArea" class="hidden">
-      <input placeholder="Número do cartão" style="width:100%;background:rgba(0,0,0,.25);border:1px solid var(--glass-bd);border-radius:10px;padding:12px;color:#fff;margin-bottom:8px;outline:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <input placeholder="Validade" style="background:rgba(0,0,0,.25);border:1px solid var(--glass-bd);border-radius:10px;padding:12px;color:#fff;outline:none">
-        <input placeholder="CVV" style="background:rgba(0,0,0,.25);border:1px solid var(--glass-bd);border-radius:10px;padding:12px;color:#fff;outline:none">
-      </div>
-      <p style="font-size:12px;color:var(--muted);margin:10px 0">Valor: <b style="color:var(--neon2)">R$ 19,90</b></p>
-    </div>
-    <button class="btn btn-primary" id="btnConfirmPay">Já paguei — Liberar agora</button>
-    <button class="btn btn-ghost" id="btnCancelPay" style="margin-top:8px">Cancelar</button>
-  </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script>
+// CONFIGURAÇÃO FIREBASE (Substitua pelas suas chaves reais)
 const firebaseConfig = {
-  apiKey: "AIzaSyDxthRLebW6-CR92Tfvi1f-9Soi_wYEyqQ",
-  authDomain: "psicoteste26.firebaseapp.com",
-  projectId: "psicoteste26",
-  storageBucket: "psicoteste26.firebasestorage.app",
-  messagingSenderId: "346801843137",
-  appId: "1:346801843137:web:ba924eb27680ffa78edd40"
+    apiKey: "AIzaSy...",
+    authDomain: "seu-projeto.firebaseapp.com",
+    projectId: "seu-projeto",
+    storageBucket: "seu-projeto.appspot.com",
+    messagingSenderId: "...",
+    appId: "..."
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-auth.signInAnonymously().catch(e=>console.warn("Auth:",e));
 
-let USER = { role:"paciente", uid:null, unlocked:[] };
-auth.onAuthStateChanged(u=>{ if(u){ USER.uid=u.uid; loadUnlocked(); loadResults(); } });
-
-/* ============ BANCO DE TESTES (50) ============ */
-const TESTS = [
-  // 26 INCLUSOS
-  {id:"pnl_vac",name:"PNL VAC — Sistemas Representacionais",cat:"PNL",free:true,desc:"Descubra se você é Visual, Auditivo ou Cinestésico.",type:"letter",scale:["V","A","C"]},
-  {id:"est_aprend",name:"Estilos de Aprendizagem",cat:"Educação",free:true,desc:"Identifique como você aprende melhor.",type:"letter",scale:["Visual","Auditivo","Cinestésico"]},
-  {id:"disc",name:"DISC — Perfil Comportamental",cat:"Comportamental",free:true,desc:"Dominância, Influência, Estabilidade, Conformidade.",type:"letter",scale:["D","I","S","C"]},
-  {id:"bigfive",name:"Big Five — 5 Fatores",cat:"Personalidade",free:true,desc:"Os 5 grandes fatores da personalidade.",type:"scale5"},
-  {id:"gad7",name:"GAD-7 — Ansiedade",cat:"Clínico",free:true,desc:"Escala de transtorno de ansiedade generalizada.",type:"scale4"},
-  {id:"phq9",name:"PHQ-9 — Depressão",cat:"Clínico",free:true,desc:"Escala de depressão validada.",type:"scale4"},
-  {id:"tdah",name:"TDAH Adulto (ASRS-5)",cat:"Clínico",free:true,desc:"Rastreamento de TDAH em adultos.",type:"scale5"},
-  {id:"burnout",name:"Burnout (MBI-SS)",cat:"Trabalho",free:true,desc:"Mede exaustão, cinismo e eficácia.",type:"scale5"},
-  {id:"ancoras",name:"Âncoras de Carreira (Schein)",cat:"Carreira",free:true,desc:"Identifique sua âncora de carreira.",type:"letter",scale:["TA","GE","AU","SE","TE","PV","SV","DE","ES"]},
-  {id:"autoestima",name:"Autoestima (Rosenberg)",cat:"Autoconhecimento",free:true,desc:"Mede o nível de autoestima.",type:"scale4"},
-  {id:"estresse",name:"Escala de Estresse (PSS-10)",cat:"Clínico",free:true,desc:"Percepção de estresse.",type:"scale5"},
-  {id:"sonolencia",name:"Sonolência (Epworth)",cat:"Saúde",free:true,desc:"Sonolência diurna excessiva.",type:"scale3"},
-  {id:"motivacao",name:"Motivação Profissional",cat:"Carreira",free:true,desc:"O que te move no trabalho.",type:"scale5"},
-  {id:"comunicacao",name:"Estilo de Comunicação",cat:"Relacional",free:true,desc:"Passivo, Agressivo, Assertivo.",type:"letter",scale:["Passivo","Agressivo","Assertivo"]},
-  {id:"resiliencia",name:"Resiliência (CD-RISC-10)",cat:"Autoconhecimento",free:true,desc:"Capacidade de superação.",type:"scale5"},
-  {id:"procrast",name:"Procrastinação",cat:"Produtividade",free:true,desc:"Tendência a adiar tarefas.",type:"scale5"},
-  {id:"empatia",name:"Empatia (IRI curto)",cat:"Relacional",free:true,desc:"Nível de empatia.",type:"scale5"},
-  {id:"mindful",name:"Mindfulness (MAAS-5)",cat:"Bem-estar",free:true,desc:"Atenção plena.",type:"scale6"},
-  {id:"optimismo",name:"Otimismo (LOT-R)",cat:"Bem-estar",free:true,desc:"Otimismo vs pessimismo.",type:"scale5"},
-  {id:"perfeccion",name:"Perfeccionismo",cat:"Personalidade",free:true,desc:"Padrões perfeccionistas.",type:"scale5"},
-  {id:"valores",name:"Valores Pessoais (Schwartz curto)",cat:"Autoconhecimento",free:true,desc:"Seus valores centrais.",type:"letter",scale:["Autodeterminação","Estímulo","Hedonismo","Conquista","Poder","Segurança","Conformidade","Tradição","Benevolência","Universalismo"]},
-  {id:"criatividade",name:"Criatividade",cat:"Cognitivo",free:true,desc:"Potencial criativo.",type:"scale5"},
-  {id:"lideranca",name:"Estilo de Liderança",cat:"Carreira",free:true,desc:"Autocrática, Democrática, Liberal.",type:"letter",scale:["Autocrática","Democrática","Liberal"]},
-  {id:"sono",name:"Higiene do Sono",cat:"Saúde",free:true,desc:"Qualidade dos hábitos de sono.",type:"scale3"},
-  {id:"alimentacao",name:"Comportamento Alimentar",cat:"Saúde",free:true,desc:"Relação com a comida.",type:"scale5"},
-  {id:"fobia_social",name:"Fobia Social (SPIN curto)",cat:"Clínico",free:true,desc:"Ansiedade social.",type:"scale4"},
-
-  // 24 PREMIUM
-  {id:"npi",name:"Narcisismo (NPI-16)",cat:"Personalidade",free:false,desc:"Inventário de narcisismo.",type:"yesno"},
-  {id:"msceit",name:"Inteligência Emocional (Mayer-Salovey)",cat:"Emocional",free:false,desc:"Modelo de habilidade de IE.",type:"scale5"},
-  {id:"ciumes",name:"Escala de Ciúmes",cat:"Relacional",free:false,desc:"Nível e tipo de ciúme.",type:"scale5"},
-  {id:"maus2",name:"MAUS-2 — Uso de Álcool",cat:"Clínico",free:false,desc:"Rastreamento de uso problemático.",type:"scale4"},
-  {id:"audit",name:"AUDIT — Álcool (OMS)",cat:"Clínico",free:false,desc:"Transtornos por uso de álcool.",type:"scale4"},
-  {id:"dast",name:"DAST-10 — Drogas",cat:"Clínico",free:false,desc:"Uso de substâncias.",type:"yesno"},
-  {id:"ipv",name:"Inventário de Personalidade VIP",cat:"Personalidade",free:false,desc:"Traços profundos de personalidade.",type:"scale5"},
-  {id:"rotter",name:"Locus de Controle (Rotter)",cat:"Autoconhecimento",free:false,desc:"Interno vs externo.",type:"yesno"},
-  {id:"buss",name:"Agressividade (Buss-Perry)",cat:"Comportamental",free:false,desc:"Agressão física, verbal, raiva, hostilidade.",type:"scale5"},
-  {id:"impulsiv",name:"Impulsividade (UPPS curto)",cat:"Comportamental",free:false,desc:"Componentes da impulsividade.",type:"scale4"},
-  {id:"apego",name:"Estilo de Apego (ECR curto)",cat:"Relacional",free:false,desc:"Ansioso, Evitativo, Seguro.",type:"scale7"},
-  {id:"amor",name:"Linguagens do Amor",cat:"Relacional",free:false,desc:"Como você expressa/recebe amor.",type:"letter",scale:["Palavras","Tempo","Presentes","Atos","Toque"]},
-  {id:"carreira_holland",name:"Holland (RIASEC)",cat:"Carreira",free:false,desc:"Interesses profissionais.",type:"letter",scale:["R","I","A","S","E","C"]},
-  {id:"estressores",name:"Inventário de Estressores",cat:"Clínico",free:false,desc:"Fontes de estresse.",type:"scale5"},
-  {id:"enfrentamento",name:"Estratégias de Enfrentamento",cat:"Clínico",free:false,desc:"Como você lida com problemas.",type:"scale4"},
-  {id:"satisfacao_vida",name:"Satisfação com a Vida (SWLS)",cat:"Bem-estar",free:false,desc:"Satisfação global.",type:"scale7"},
-  {id:"afetos",name:"Afetos Positivos e Negativos (PANAS)",cat:"Emocional",free:false,desc:"Estados afetivos.",type:"scale5"},
-  {id:"vocacional",name:"Teste Vocacional Completo",cat:"Carreira",free:false,desc:"Orientação profissional detalhada.",type:"letter",scale:["Exatas","Humanas","Biológicas","Artes","Tecnologia"]},
-  {id:"relacionamento",name:"Satisfação no Relacionamento",cat:"Relacional",free:false,desc:"Qualidade do vínculo.",type:"scale6"},
-  {id:"trauma",name:"Trauma (ITQ curto)",cat:"Clínico",free:false,desc:"Sintomas pós-traumáticos.",type:"yesno"},
-  {id:"esquizo",name:"Esquizotipia (SPQ-B curto)",cat:"Clínico",free:false,desc:"Traços esquizotípicos.",type:"yesno"},
-  {id:"borderline",name:"Borderline (MSI-BPD)",cat:"Clínico",free:false,desc:"Rastreamento de traços borderline.",type:"yesno"},
-  {id:"dependencia",name:"Dependência Emocional",cat:"Relacional",free:false,desc:"Padrões de dependência afetiva.",type:"scale5"},
-  {id:"inteligencia",name:"Inteligência (Raciocínio Lógico)",cat:"Cognitivo",free:false,desc:"Teste de raciocínio.",type:"scale5"}
+// 15 FRASES REAIS DO WILSON
+const FRASES_WILSON = [
+    "Você já respondeu 7 perguntas! Sabe o que isso significa? Que você é mais persistente do que 90% das pessoas que desistem no início. Continua!",
+    "Mais 7! Se o autoconhecimento fosse um esporte, você já estaria com a medalha brilhando. Não para agora!",
+    "7 perguntas a mais e você nem suou. Esse esforço é o que separa quem evolui de quem só finge. Vamo!",
+    "Parabéns por mais 7! Sabe quem também não desiste? O personagem de filme que todo mundo admira. Hoje esse personagem é você.",
+    "7 perguntas respondidas e zero desistência. Estou começando a achar que você é imbatível. Prove que estou certo!",
+    "Você passou de mais 7 perguntas! Se cada resposta fosse um degrau, você já estaria vendo a vista lá de cima.",
+    "Outras 7 conquistadas! Repara: ninguém ficou aqui respondendo por você. Essa coragem é toda sua.",
+    "7 perguntas e o Liw aqui já está orgulhoso. E olha que ele é uma formiga exigente. Não me decepcione!",
+    "Mais 7 feitas! Se autoconhecimento desse em Real, você já teria pago o almoço. O pagamento aqui é clareza mental.",
+    "7 perguntas vencidas! Desistir agora seria como largar a colher a uma colherada do fim do sorvete. Ninguém faz isso!",
+    "Outras 7 respondidas! Você está no modo 'não tem pra ninguém'. Mantenha essa energia, o final vale a pena.",
+    "7 perguntas e a pressão tá subindo? Ótimo. Pressão vira diamante, lembra? Você está brilhando.",
+    "Mais 7! Cada resposta sua é um espelho novo. E você tem coragem de se olhar em todos eles. Isso é raro.",
+    "7 perguntas respondidas e o relógio nem te assustou. Foco de quem leva a sério o próprio crescimento.",
+    "Outras 7 vencidas! Você desbloqueou o modo 'Pessoa que se conhece de verdade'. Spoiler: é o melhor modo do jogo!"
 ];
 
-/* ============ QUESTÕES REAIS ============ */
-const Q = {
-  pnl_vac:{
-    scale:["V","A","C"],
-    items:[
-      ["Eu lembro melhor das coisas quando as vejo (imagens, diagramas).","V"],
-      ["Eu lembro melhor quando ouço ou discuto.","A"],
-      ["Eu lembro melhor quando faço ou sinto fisicamente.","C"],
-      ["Falo rápido e uso expressões como 'veja bem', 'está claro'.","V"],
-      ["Falo com ritmo e tom variados; digo 'soe bem', 'me escuta'.","A"],
-      ["Falo devagar, gesticulo; digo 'sinto que', 'pegou pesado'.","C"],
-      ["Aprendo lendo ou observando demonstrações.","V"],
-      ["Aprendo ouvindo explicações e debatendo.","A"],
-      ["Aprendo praticando e mexendo nas coisas.","C"]
-    ]
-  },
-  est_aprend:{
-    scale:["Visual","Auditivo","Cinestésico"],
-    items:[
-      ["Prefiro mapas mentais e gráficos.","Visual"],
-      ["Prefiro podcasts e explicações orais.","Auditivo"],
-      ["Prefiro simulações e atividades práticas.","Cinestésico"],
-      ["Anoto com cores e desenhos.","Visual"],
-      ["Repito em voz alta para memorizar.","Auditivo"],
-      ["Preciso me mover para concentrar.","Cinestésico"]
-    ]
-  },
-  disc:{
-    scale:["D","I","S","C"],
-    items:[
-      ["Gosto de assumir o controle e decidir rápido.","D"],
-      ["Gosto de interagir e motivar pessoas.","I"],
-      ["Valorizo estabilidade e cooperação.","S"],
-      ["Gosto de regras, precisão e detalhes.","C"],
-      ["Sou direto e foco em resultados.","D"],
-      ["Sou entusiasmado e expressivo.","I"],
-      ["Sou paciente e leal.","S"],
-      ["Sou analítico e cuidadoso.","C"]
-    ]
-  },
-  bigfive:{
-    scale:["Abertura","Conscienciosidade","Extroversão","Amabilidade","Neuroticismo"],
-    items:[
-      ["Tenho imaginação vívida e ideias originais.","Abertura",1],
-      ["Sou organizado e cumpro tarefas.","Conscienciosidade",1],
-      ["Sou falante e sociável.","Extroversão",1],
-      ["Confio nas boas intenções das pessoas.","Amabilidade",1],
-      ["Fico tenso e preocupado com facilidade.","Neuroticismo",1],
-      ["Gosto de refletir e explorar ideias novas.","Abertura",1],
-      ["Sou detalhista e confiável.","Conscienciosidade",1],
-      ["Tenho energia e gosto de multidões.","Extroversão",1],
-      ["Sou gentil e prestativo.","Amabilidade",1],
-      ["Mudo de humor com frequência.","Neuroticismo",1]
-    ]
-  },
-  gad7:{
-    scale4:["Nenhuma (0)","Vários dias (1)","Mais da metade (2)","Quase todos (3)"],
-    items:[
-      "Sentir-se nervoso, ansioso ou muito tenso.",
-      "Não conseguir parar de se preocupar.",
-      "Preocupar-se demais com coisas diferentes.",
-      "Dificuldade para relaxar.",
-      "Inquietação (não conseguir ficar parado).",
-      "Ficar irritado com facilidade.",
-      "Sentir medo como se algo ruim fosse acontecer."
-    ]
-  },
-  phq9:{
-    scale4:["Nenhuma (0)","Vários dias (1)","Mais da metade (2)","Quase todos (3)"],
-    items:[
-      "Pouco interesse ou prazer em fazer as coisas.",
-      "Sentir-se desanimado, deprimido ou sem esperança.",
-      "Dificuldade para dormir ou dormir demais.",
-      "Cansaço ou falta de energia.",
-      "Falta de apetite ou comer demais.",
-      "Sentir-se um fracasso ou decepcionar a família.",
-      "Dificuldade para se concentrar.",
-      "Movimentos lentos ou agitação.",
-      "Pensamentos de se machucar ou estar melhor morto."
-    ]
-  },
-  tdah:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Muito frequentemente"],
-    items:[
-      "Tenho dificuldade de prestar atenção aos detalhes.",
-      "Dificuldade de manter a atenção em tarefas.",
-      "Não escuto quando falam diretamente comigo.",
-      "Esqueço compromissos e obrigações.",
-      "Evito tarefas que exigem esforço mental prolongado.",
-      "Perco coisas necessárias para atividades.",
-      "Me distraio facilmente.",
-      "Sou inquieto ou agitado.",
-      "Actuo antes de pensar.",
-      "Termino o que outras pessoas dizem nas conversas."
-    ]
-  },
-  burnout:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],
-    items:[
-      "Sinto-me esgotado no fim do dia.",
-      "Custo a me levantar para enfrentar o trabalho.",
-      "Sinto-me frustrado com meu trabalho.",
-      "Torno-me mais cínico e descrente.",
-      "Duvido da importância do meu trabalho.",
-      "Duvido que meu trabalho tenha sentido.",
-      "Realizo eficazmente as tarefas importantes.",
-      "Sinto-me cheio de energia.",
-      "Estou entusiasmado com meu trabalho.",
-      "No trabalho, resolvo bem os problemas."
-    ]
-  },
-  ancoras:{
-    scale:["TA","GE","AU","SE","TE","PV","SV","DE","ES"],
-    items:[
-      ["Gosto de aplicar competências técnicas específicas.","TA"],
-      ["Gosto de gerenciar e coordenar pessoas/projetos.","GE"],
-      ["Prefiro autonomia e definir meu próprio trabalho.","AU"],
-      ["Busco segurança e estabilidade na carreira.","SE"],
-      ["Quero criar algo próprio e empreender.","TE"],
-      ["Desejo poder e influência.","PV"],
-      ["Busco servir e ajudar pessoas.","SV"],
-      ["Gosto de desafios e competição.","DE"],
-      ["Busco equilíbrio entre vida e trabalho.","ES"]
-    ]
-  },
-  autoestima:{
-    scale4:["Concordo totalmente","Concordo","Discordo","Discordo totalmente"],
-    items:[
-      "Sinto que tenho valor pelo menos igual ao dos outros.",
-      "Sinto qualidades positivas.",
-      "Capaz de fazer as coisas tão bem quanto os outros.",
-      "Tenho atitude positiva sobre mim.",
-      "Satisfeito comigo mesmo.",
-      "Gostaria de ter mais respeito por mim.",
-      "Sinto-me inútil às vezes.",
-      "Sinto que não tenho muito de que me orgulhar.",
-      "Sinto-me fracassado.",
-      "Tenho atitude negativa sobre mim."
-    ]
-  },
-  estresse:{
-    scale5:["Nunca","Quase nunca","Às vezes","Frequentemente","Muito frequentemente"],
-    items:[
-      "Chateado por não controlar o importante?",
-      "Incapaz de controlar irritações na vida?",
-      "Sentindo-se nervoso e estressado?",
-      "Lidar com problemas cotidianos com sucesso?",
-      "Sentindo que enfrenta dificuldades acumuladas?",
-      "Não conseguia superar aborrecimentos?",
-      "Confiante na capacidade de lidar com problemas?",
-      "Sentindo que as coisas vão do seu jeito?",
-      "Irritado por coisas fora do seu controle?",
-      "Sentindo dificuldades impossíveis de superar?"
-    ]
-  },
-  sonolencia:{
-    scale3:["Nunca (0)","Chance leve (1)","Chance moderada/forte (2-3)"],
-    items:[
-      "Sentado lendo.",
-      "Assistindo TV.",
-      "Sentado em local público.",
-      "Como passageiro por 1h.",
-      "Deitado descansando à tarde.",
-      "Sentado conversando.",
-      "Sentado após almoço sem álcool.",
-      "No trânsito parado por minutos."
-    ]
-  },
-  motivacao:{
-    scale5:["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"],
-    items:[
-      "Sinto propósito no meu trabalho.",
-      "Reconhecimento me motiva.",
-      "Dinheiro é meu principal motor.",
-      "Gosto de desafios complexos.",
-      "Quero ajudar pessoas.",
-      "Busco autonomia.",
-      "Quero crescer profissionalmente.",
-      "Estabilidade é essencial."
-    ]
-  },
-  comunicacao:{
-    scale:["Passivo","Agressivo","Assertivo"],
-    items:[
-      ["Evito conflitos e cedo facilmente.","Passivo"],
-      ["Imponho minha opinião com firmeza excessiva.","Agressivo"],
-      ["Expresso opiniões respeitando o outro.","Assertivo"],
-      ["Dificuldade em dizer não.","Passivo"],
-      ["Interrumpo e critico os outros.","Agressivo"],
-      ["Escuto ativamente e nego com clareza.","Assertivo"]
-    ]
-  },
-  resiliencia:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Quase sempre"],
-    items:[
-      "Adapto-me a mudanças.",
-      "Lido bem com adversidades.",
-      "Mantenho foco sob pressão.",
-      "Recupero-me rápido de frustrações.",
-      "Vejo lado positivo das dificuldades.",
-      "Busco soluções ativas.",
-      "Mantenho-me calmo em crises.",
-      "Aprendo com os erros.",
-      "Tenho rede de apoio.",
-      "Confio em mim mesmo."
-    ]
-  },
-  procrast:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],
-    items:[
-      "Adio tarefas até o último minuto.",
-      "Espero motivação para começar.",
-      "Distraio-me com facilidade.",
-      "Deixo para depois o que é importante.",
-      "Sinto culpa por adiar.",
-      "Tenho dificuldade de iniciar projetos.",
-      "Planejo mas não executo.",
-      "Adio decisões."
-    ]
-  },
-  empatia:{
-    scale5:["Não me descreve","Pouco","Moderadamente","Bastante","Perfeitamente"],
-    items:[
-      "Imagino-me no lugar dos outros.",
-      "Sinto-me afetado pelo sofrimento alheio.",
-      "Percebo emoções não ditas.",
-      "Tento entender antes de julgar.",
-      "Fico tenso em situações tensas de outros.",
-      "Ajudo mesmo sem ser pedido."
-    ]
-  },
-  mindful:{
-    scale6:["Quase nunca","Raramente","Às vezes","Frequentemente","Muito frequentemente","Quase sempre"],
-    items:[
-      "Presto atenção ao presente.",
-      "Notou-me de sensações corporais.",
-      "Faço coisas no piloto automático.",
-      "Difícil manter foco no agora.",
-      "Penso no futuro/pastado em vez do agora.",
-      "Aceito meus pensamentos sem julgar."
-    ]
-  },
-  optimismo:{
-    scale5:["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"],
-    items:[
-      "Em tempos incertos, espero o melhor.",
-      "É fácil relaxar para mim.",
-      "Se algo pode dar errado, dará.",
-      "Sempre vejo o lado bom.",
-      "Estou ocupado com coisas que gosto.",
-      "Não conto com coisas darem certo.",
-      "Vejo padrões positivos no futuro.",
-      "Difícil me animar."
-    ]
-  },
-  perfeccion:{
-    scale5:["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"],
-    items:[
-      "Exijo perfeição de mim.",
-      "Exijo perfeição dos outros.",
-      "Tenho padrões altíssimos.",
-      "Detesto cometer erros.",
-      "Refaz tarefas até ficarem perfeitas.",
-      "Crítico-me severamente.",
-      "Adio por medo de não ficar perfeito.",
-      "Sinto fracasso com pequenos erros."
-    ]
-  },
-  valores:{
-    scale:["Autodeterminação","Estímulo","Hedonismo","Conquista","Poder","Segurança","Conformidade","Tradição","Benevolência","Universalismo"],
-    items:[
-      ["Liberdade de pensar e agir.","Autodeterminação"],
-      ["Novidade e desafios.","Estímulo"],
-      ["Prazer e gratificação.","Hedonismo"],
-      ["Sucesso e demonstração de competência.","Conquista"],
-      ["Status e controle sobre pessoas.","Poder"],
-      ["Estabilidade e segurança.","Segurança"],
-      ["Obedecer regras e normas.","Conformidade"],
-      ["Respeitar tradições.","Tradição"],
-      ["Cuidar de pessoas próximas.","Benevolência"],
-      ["Justiça e bem-estar de todos.","Universalismo"]
-    ]
-  },
-  criatividade:{
-    scale5:["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"],
-    items:[
-      "Tenho muitas ideias originais.",
-      "Gosto de pensar fora da caixa.",
-      "Conecto conceitos diferentes.",
-      "Busco soluções inusitadas.",
-      "Curiosidade por coisas novas.",
-      "Imagino cenários alternativos.",
-      "Expresso-me criativamente.",
-      "Desafio o status quo."
-    ]
-  },
-  lideranca:{
-    scale:["Autocrática","Democrática","Liberal"],
-    items:[
-      ["Decido sozinho e determino tarefas.","Autocrática"],
-      ["Consulto a equipe e decido junto.","Democrática"],
-      ["Deixo a equipe decidir livremente.","Liberal"],
-      ["Controlo de perto.","Autocrática"],
-      ["Compartilho responsabilidades.","Democrática"],
-      ["Intervenho pouco.","Liberal"]
-    ]
-  },
-  sono:{
-    scale3:["Nunca","Às vezes","Frequentemente"],
-    items:[
-      "Durmo em horário regular.",
-      "Uso celular na cama.",
-      "Ambiente escuro e silencioso.",
-      "Cafeína à noite.",
-      "Rotina relaxante antes de dormir.",
-      "Durmo 7-9h.",
-      "Tela até tarde.",
-      "Acordo no mesmo horário."
-    ]
-  },
-  alimentacao:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],
-    items:[
-      "Como por emoção.",
-      "Como rápido e sem prestar atenção.",
-      "Sinto culpa após comer.",
-      "Pulo refeições.",
-      "Como até ficar desconfortável.",
-      "Planejo refeições saudáveis.",
-      "Controlo porções.",
-      "Como distraído."
-    ]
-  },
-  fobia_social:{
-    scale4:["Nada","Leve","Moderado","Grave"],
-    items:[
-      "Medo de situações sociais.",
-      "Evito eventos sociais.",
-      "Sinto observado/julgado.",
-      "Ansiedade ao falar em público.",
-      "Evito contato visual.",
-      "Sudorese/tremor em sociais.",
-      "Difícil conhecer pessoas."
-    ]
-  },
-  // PREMIUM
-  npi:{
-    yesno:true,
-    items:[
-      ["Tenho talento natural para influenciar pessoas.",1],
-      ["Modesto(a) — NÃO.",1],
-      ["Gosto de ser centro das atenções.",1],
-      ["Sei fazer as coisas melhor que a maioria.",1],
-      ["Espero muito dos outros.",1],
-      ["Não me contento com o comum.",1],
-      ["Gosto de pensar no meu futuro.",1],
-      ["Reconheço facilmente o que as pessoas querem.",1],
-      ["Prefiro ser líder.",1],
-      ["Vantagem de ser eu mesmo.",1],
-      ["Vida é um jogo e quero vencer.",1],
-      ["Confio em conseguir o que quero.",1],
-      ["Sou especial.",1],
-      ["Pessoas me admiram.",1],
-      ["Gosto de ter autoridade.",1],
-      ["Mereço ser tratado(a) como especial.",1]
-    ]
-  },
-  msceit:{
-    scale5:["Muito baixa","Baixa","Média","Alta","Muito alta"],
-    items:[
-      ["Percebo emoções em expressões faciais.","percepcao"],
-      ["Identifico emoções em tons de voz.","percepcao"],
-      ["Entendo como emoções se combinam.","facilitacao"],
-      ["Emoções ajudam meu raciocínio.","facilitacao"],
-      ["Prevejo como emoções evoluem.","compreensao"],
-      ["Entendo causas de emoções complexas.","compreensao"],
-      ["Regulo emoções para manter bem-estar.","gestao"],
-      ["Lido bem com emoções fortes.","gestao"],
-      ["Mudança de humor não me domina.","gestao"],
-      ["Acalmo-me em situações tensas.","gestao"]
-    ]
-  },
-  ciumes:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],
-    items:[
-      "Fico incomodado(a) com atenção do(a) parceiro(a) a outros.",
-      "Monitoro redes sociais do(a) parceiro(a).",
-      "Questiono sobre onde esteve.",
-      "Sinto insegurança sem motivo claro.",
-      "Exijo provas de fidelidade.",
-      "Fico tenso(a) com elogios a outros.",
-      "Sinto posse sobre o(a) parceiro(a).",
-      "Já controlei amizades do(a) parceiro(a)."
-    ]
-  },
-  maus2:{
-    scale4:["Nunca","Mensalmente","Semanalmente","Diariamente"],
-    items:[
-      "Bebe mais que pretendia?",
-      "Difícil parar de beber?",
-      "Sentiu culpa após beber?",
-      "Outros criticaram seu uso?",
-      "Bebe de manhã?",
-      "Esquece coisas ao beber?",
-      "Bebe para enfrentar problemas?",
-      "Prejuízo em trabalho/estudo?",
-      "Desejo forte de beber?",
-      "Já tentou reduzir sem sucesso?"
-    ]
-  },
-  audit:{
-    scale4:["Nunca","Mensal ou menos","Semanal","Diário ou quase"],
-    items:[
-      "Com que frequência bebe álcool?",
-      "Quantas doses em um dia típico? (0/1-2/3-4/5+)",
-      "5+ doses em uma ocasião?",
-      "Difícil parar após começar?",
-      "Falhou no esperado por beber?",
-      "Bebe de manhã para curar?",
-      "Culpa/remorso após beber?",
-      "Esquece o que fez ao beber?",
-      "Outros se machucaram por seu beber?",
-      "Outro profissional sugeriu reduzir?"
-    ]
-  },
-  dast:{
-    yesno:true,
-    items:[
-      "Uso substâncias além do prescrito?",
-      "Uso mais de uma ao mesmo tempo?",
-      "Uso para ficar acordado/dormir?",
-      "Sinto que usa demais?",
-      "Esquece o que fez ao usar?",
-      "Problemas de saúde por uso?",
-      "Família reclama do uso?",
-      "Prejuízo em trabalho/estudo?",
-      "Detido por uso?",
-      "Tratamento por uso?"
-    ]
-  },
-  ipv:{
-    scale5:["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"],
-    items:[
-      "Sou estável emocionalmente.",
-      "Sou aberto a experiências.",
-      "Sou consciencioso.",
-      "Sou extrovertido.",
-      "Sou amável.",
-      "Controlo impulsos.",
-      "Busco novidades.",
-      "Cumpro compromissos.",
-      "Gosto de socializar.",
-      "Empatizo facilmente."
-    ]
-  },
-  rotter:{
-    yesno:true,
-    items:[
-      ["Tornar-se líder depende mais de sorte que habilidade.","E"],
-      ["A maioria das pessoas seria honesta se pudesse.","I"],
-      ["Planejamento leva ao sucesso.","I"],
-      ["Promoção é sorte/contato.","E"],
-      ["Esforço determina resultados.","I"],
-      ["O mundo é controlado por poucos.","E"],
-      ["Sou responsável pelo que me acontece.","I"],
-      ["Amizades acontecem por acaso.","E"],
-      ["Mérito é reconhecido.","I"],
-      ["Pouco posso fazer contra injustiças.","E"]
-    ]
-  },
-  buss:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],
-    items:[
-      ["Bato/soco quando bravo.","fisica"],
-      ["Xingo pessoas.","verbal"],
-      ["Explodo de raiva.","raiva"],
-      ["Desconfio das intenções dos outros.","hostilidade"],
-      ["Quebro coisas quando irritado.","fisica"],
-      ["Discuto com frequência.","verbal"],
-      ["Irrito-me facilmente.","raiva"],
-      ["Acho que pessoas falam mal de mim.","hostilidade"],
-      ["Ameaço fisicamente.","fisica"],
-      ["Grito quando bravo.","verbal"]
-    ]
-  },
-  impulsiv:{
-    scale4:["Nunca","Raramente","Frequentemente","Sempre"],
-    items:[
-      ["Ajo sem pensar.","urgencia"],
-      ["Busco sensações novas.","busca"],
-      ["Difícil focar em uma coisa.","falta"],
-      ["Planejo antes de agir — NÃO.","premeditacao"],
-      ["Compro por impulso.","urgencia"],
-      ["Fico entediado fácil.","busca"],
-      ["Mudo de ideia do nada.","falta"],
-      ["Penso nas consequências — NÃO.","premeditacao"]
-    ]
-  },
-  apego:{
-    scale7:["Discordo totalmente"..."Concordo totalmente"],
-    items:[
-      ["Preocupo-me que o parceiro não me queira.","ansioso"],
-      ["Sinto confortável em depender.","seguro"],
-      ["Difícil confiar totalmente.","evitativo"],
-      ["Quero muita proximidade.","ansioso"],
-      ["Abro-me facilmente.","seguro"],
-      ["Prefiro não depender.","evitativo"],
-      ["Medo de ser abandonado.","ansioso"],
-      ["Confio que o parceiro estará lá.","seguro"]
-    ]
-  },
-  amor:{
-    scale:["Palavras","Tempo","Presentes","Atos","Toque"],
-    items:[
-      ["Elogios me tocam.","Palavras"],
-      ["Tempo de qualidade é essencial.","Tempo"],
-      ["Presentes me fazem feliz.","Presentes"],
-      ["Atos de serviço me emocionam.","Atos"],
-      ["Toque físico me conecta.","Toque"],
-      ["Palavras de afirmação me motivam.","Palavras"],
-      ["Adoro passear juntos.","Tempo"],
-      ["Surpresas materiais me marcam.","Presentes"],
-      ["Ajuda nas tarefas é amor.","Atos"],
-      ["Abraços são fundamentais.","Toque"]
-    ]
-  },
-  carreira_holland:{
-    scale:["R","I","A","S","E","C"],
-    items:[
-      ["Gosto de trabalhar com mãos/ferramentas.","R"],
-      ["Investigo e analiso problemas.","I"],
-      ["Crio e me expresso artisticamente.","A"],
-      ["Ajudo e ensino pessoas.","S"],
-      ["Persuado e lidero negócios.","E"],
-      ["Organizo dados e processos.","C"],
-      ["Atividades ao ar livre e mecânicas.","R"],
-      ["Ciência e pesquisa.","I"],
-      ["Arte, música, escrita.","A"],
-      ["Serviço social e saúde.","S"],
-      ["Vendas e empreendedorismo.","E"],
-      ["Administração e finanças.","C"]
-    ]
-  },
-  estressores:{
-    scale5:["Nada","Leve","Moderado","Forte","Muito forte"],
-    items:[
-      "Sobrecarga de trabalho.",
-      "Conflitos familiares.",
-      "Problemas financeiros.",
-      "Prazos apertados.",
-      "Falta de reconhecimento.",
-      "Saúde própria.",
-      "Saúde de familiares.",
-      "Relacionamento amoroso.",
-      "Trânsito/deslocamento.",
-      "Futuro incerto."
-    ]
-  },
-  enfrentamento:{
-    scale4:["Nunca","Às vezes","Frequentemente","Sempre"],
-    items:[
-      ["Busco resolver o problema.","ativo"],
-      ["Reavalio positivamente.","ativo"],
-      ["Busco apoio social.","ativo"],
-      ["Evito pensar no problema.","evitativo"],
-      ["Bebo/como para aliviar.","evitativo"],
-      ["Culpo a mim mesmo.","evitativo"],
-      ["Rezo/medito.","ativo"],
-      ["Espero passar sozinho.","evitativo"]
-    ]
-  },
-  satisfacao_vida:{
-    scale7:["Discordo totalmente"..."Concordo totalmente"],
-    items:[
-      "Minha vida está próxima do ideal.",
-      "Minhas condições de vida são excelentes.",
-      "Estou satisfeito com minha vida.",
-      "Consegui o que quero até agora.",
-      "Se pudesse viver de novo, quase nada mudaria."
-    ]
-  },
-  afetos:{
-    scale5:["Muito pouco","Pouco","Moderado","Bastante","Muito"],
-    items:[
-      ["Interessado(a).","pos"],
-      ["Irritado(a).","neg"],
-      ["Entusiasmado(a).","pos"],
-      ["Envergonhado(a).","neg"],
-      ["Inspirado(a).","pos"],
-      ["Nervoso(a).","neg"],
-      ["Determinado(a).","pos"],
-      ["Assustado(a).","neg"],
-      ["Atento(a).","pos"],
-      ["Hostil.","neg"]
-    ]
-  },
-  vocacional:{
-    scale:["Exatas","Humanas","Biológicas","Artes","Tecnologia"],
-    items:[
-      ["Gosto de matemática e lógica.","Exatas"],
-      ["Interesso-me por sociedade e cultura.","Humanas"],
-      ["Fascinam-me seres vivos e saúde.","Biológicas"],
-      ["Expresso-me por arte e criação.","Artes"],
-      ["Apaixono-me por computadores e inovação.","Tecnologia"],
-      ["Resolver equações me anima.","Exatas"],
-      ["Entender comportamento humano me atrai.","Humanas"],
-      ["Laboratório e natureza me encantam.","Biológicas"],
-      ["Design e criatividade me movem.","Artes"],
-      ["Programar e criar sistemas me empolga.","Tecnologia"]
-    ]
-  },
-  relacionamento:{
-    scale6:["Discordo totalmente"..."Concordo totalmente"],
-    items:[
-      "Meu parceiro entende minhas necessidades.",
-      "Confio plenamente no meu parceiro.",
-      "Comunicamo-nos bem.",
-      "Sinto-me amado(a).",
-      "Resolvemos conflitos de forma saudável.",
-      "Tenho intimidade emocional.",
-      "Compartilhamos valores.",
-      "Sinto-me seguro(a) na relação."
-    ]
-  },
-  trauma:{
-    yesno:true,
-    items:[
-      "Tive experiência ameaçadora/horrível.",
-      "Lembranças intrusivas do evento.",
-      "Pesadelos relacionados.",
-      "Evito lembranças do evento.",
-      "Hiperalerta/hipervigilante.",
-      "Difícil sentir emoções positivas.",
-      "Irritabilidade/agressividade.",
-      "Difícil dormir/concentrar."
-    ]
-  },
-  esquizo:{
-    yesno:true,
-    items:[
-      "Preferência por ficar sozinho.",
-      "Sinto que outros me acham estranho.",
-      "Poucos amigos próximos.",
-      "Ansiedade social prolongada.",
-      "Não me encaixo em grupos.",
-      "Suspeito de intenções dos outros.",
-      "Creio em percepções incomuns.",
-      "Linguagem/circunstâncias peculiares.",
-      "Aparência/clothing incomuns.",
-      "Difícile expressar emoções."
-    ]
-  },
-  borderline:{
-    yesno:true,
-    items:[
-      "Relações intensas e instáveis.",
-      "Impulsividade (gastos, sexo, comida, etc).",
-      "Instabilidade emocional.",
-      "Raiva inapropriada/intensa.",
-      "Ameaças/comportamento suicida.",
-      "Sentimento crônico de vazio.",
-      "Mudança de identidade.",
-      "Medo de abandono.",
-      "Desrealização sob estresse."
-    ]
-  },
-  dependencia:{
-    scale5:["Nunca","Raramente","Às vezes","Frequentemente","Sempre"],
-    items:[
-      "Preciso do parceiro para me sentir bem.",
-      "Medo de ser abandonado.",
-      "Sacrifico-me para agradar.",
-      "Sinto incompleto(a) sem relação.",
-      "Tolero mau tratamento por medo de ficar só.",
-      "Difícil tomar decisões sozinho.",
-      "Ciúme excessivo.",
-      "Vida gira em torno do parceiro."
-    ]
-  },
-  inteligencia:{
-    scale5:["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"],
-    items:[
-      "Resolvo problemas lógicos com facilidade.",
-      "Identifico padrões rapidamente.",
-      "Penso em abstrações.",
-      "Aprendo conceitos complexos rápido.",
-      "Gosto de quebra-cabeças.",
-      "Conecto ideias distantes.",
-      "Planejo estratégias eficazes.",
-      "Raciocino bem sob pressão."
-    ]
-  }
-};
+// ESTADO GLOBAL
+let todosTestes = [];
+let testeAtual = null;
+let indicePergunta = 0;
+let contadorWilson = 0;
+let respostasUsuario = [];
 
-/* Corrige escalas literais com reticências */
-function fixScale(arr){
-  if(arr && arr.length && arr[0]==="Discordo totalmente" && arr[arr.length-1]==="Concordo totalmente"){
-    const n=arr.length;
-    const labels=[];
-    for(let i=0;i<n;i++){
-      if(i===0) labels.push("Discordo totalmente");
-      else if(i===n-1) labels.push("Concordo totalmente");
-      else if(n===7) labels.push(["Discordo","Parcialmente","Neutro","Parcialmente","Concordo"][i-1]||"Neutro");
-      else if(n===6) labels.push(["Discordo","Parcialmente","Concordo parcialmente","Concordo"][i-1]||"Neutro");
-      else labels.push(i< n/2?"Discordo":"Concordo");
+// CARREGAR DADOS
+async function carregarPainel() {
+    try {
+        const response = await fetch('testes.json');
+        const data = await response.json();
+        todosTestes = data.testes || data;
+        renderizarLista();
+    } catch (e) {
+        console.error("Erro ao carregar testes:", e);
+        document.getElementById('grid-testes').innerHTML = "<p>Erro ao carregar banco de dados.</p>";
     }
-    return labels;
-  }
-  return arr;
-}
-for(const k in Q){
-  if(Q[k].scale7) Q[k].scale7=fixScale(Q[k].scale7);
-  if(Q[k].scale6) Q[k].scale6=fixScale(Q[k].scale6);
 }
 
-/* ============ ESTADO ============ */
-let currentFilter="all";
-let currentTest=null;
-let qIndex=0;
-let answers=[];
-let pendingPayTest=null;
+function renderizarLista() {
+    const grid = document.getElementById('grid-testes');
+    grid.innerHTML = '';
 
-/* ============ UI ============ */
-const grid=document.getElementById("grid");
-const searchInput=document.getElementById("searchInput");
-const countEl=document.getElementById("count");
-const roleSelect=document.getElementById("roleSelect");
-const roleIcon=document.getElementById("roleIcon");
-const welcome=document.getElementById("welcome");
+    todosTestes.forEach((teste, index) => {
+        const isPremium = index >= 26;
+        const card = document.createElement('div');
+        card.className = `card-teste ${isPremium ? 'premium' : ''}`;
+        card.onclick = () => isPremium ? mostrarAvisoPremium() : iniciarTeste(index);
 
-roleSelect.addEventListener("change",()=>{
-  USER.role=roleSelect.value;
-  roleIcon.textContent=USER.role==="psicologo"?"🧠":"👤";
-  welcome.textContent=USER.role==="psicologo"
-    ?"Bem-vindo, Psicólogo! Gerencie e aplique testes. 🐜"
-    :"Oi! Eu sou a Formiga Liw. Vamos nos conhecer? 🐜";
-  renderList();
-});
+        card.innerHTML = `
+            <div class="info-teste">
+                <h3>${teste.titulo}</h3>
+                <p>${teste.perguntas.length} perguntas • ${teste.categoria || 'Geral'}</p>
+            </div>
+            <div class="status-icon">
+                ${isPremium ? '🔒' : '🔓'}
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
 
-document.querySelectorAll(".tab").forEach(t=>{
-  t.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    currentFilter=t.dataset.filter;
-    if(currentFilter==="resultados"){ showResults(); }
-    else{ document.getElementById("resultsView").classList.add("hidden"); document.getElementById("runnerView").classList.add("hidden"); document.getElementById("listView").classList.remove("hidden"); renderList(); }
-  });
-});
+function iniciarTeste(index) {
+    testeAtual = todosTestes[index];
+    indicePergunta = 0;
+    contadorWilson = 0;
+    respostasUsuario = [];
+    
+    document.getElementById('tela-lista').style.display = 'none';
+    document.getElementById('tela-teste').style.display = 'block';
+    
+    renderizarPergunta();
+}
 
-searchInput.addEventListener("input",renderList);
+function renderizarPergunta() {
+    const p = testeAtual.perguntas[indicePergunta];
+    const total = testeAtual.perguntas.length;
+    
+    document.getElementById('teste-info-topo').innerText = `${testeAtual.titulo} (${indicePergunta + 1}/${total})`;
+    document.getElementById('progresso-fill').style.width = `${((indicePergunta) / total) * 100}%`;
+    document.getElementById('pergunta-texto').innerText = p.texto;
+    
+    const container = document.getElementById('opcoes-container');
+    container.innerHTML = '';
+    
+    p.opcoes.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opcao-btn';
+        btn.innerText = opt.texto || opt;
+        btn.onclick = () => processarResposta(opt.valor || i);
+        container.appendChild(btn);
+    });
+}
 
-function isUnlocked(id){ return USER.unlocked.includes(id); }
+function processarResposta(valor) {
+    respostasUsuario.push(valor);
+    indicePergunta++;
+    contadorWilson++;
 
-function renderList(){
-  const term=searchInput.value.toLowerCase().trim();
-  let list=TESTS.filter(t=>{
-    if(currentFilter==="free"&&!t.free) return false;
-    if(currentFilter==="premium"&&t.free) return false;
-    if(term&&!(t.name.toLowerCase().includes(term)||t.cat.toLowerCase().includes(term)||t.desc.toLowerCase().includes(term))) return false;
-    return true;
-  });
-  countEl.textContent=`${list.length} teste(s)`;
-  grid.innerHTML=list.map(t=>{
-    const locked=!t.free&&!isUnlocked(t.id);
-    const badge=t.free?`<span class="badge free">Incluso</span>`:`<span class="badge premium">Premium 🔒</span>`;
-    let btnHtml="";
-    if(t.free||isUnlocked(t.id)){
-      btnHtml=`<button class="btn btn-primary" onclick="startTest('${t.id}')">Iniciar Teste</button>`;
-    }else if(USER.role==="psicologo"){
-      btnHtml=`<button class="btn btn-warn" onclick="openPay('${t.id}')">Desbloquear Agora</button>`;
-    }else{
-      btnHtml=`<button class="btn btn-ghost" onclick="askPsych('${t.id}')">Pedir ao Psicólogo</button>`;
+    if (contadorWilson === 7 && indicePergunta < testeAtual.perguntas.length) {
+        mostrarWilson();
+        return;
     }
-    return `<div class="card glass">
-      <div style="display:flex;justify-content:space-between;align-items:center"><span class="tag">${t.cat}</span>${badge}</div>
-      <h3>${t.name}</h3>
-      <p>${t.desc}</p>
-      ${btnHtml}
-    </div>`;
-  }).join("");
-}
 
-/* ============ MOTOR DE TESTE ============ */
-function startTest(id){
-  const t=TESTS.find(x=>x.id===id);
-  if(!t) return;
-  if(!t.free&&!isUnlocked(id)){
-    toast("Teste bloqueado. Desbloqueie para iniciar.");
-    return;
-  }
-  if(!Q[id]){ toast("Banco de perguntas em preparação."); return; }
-  currentTest=t;
-  qIndex=0;
-  answers=new Array(Q[id].items.length).fill(null);
-  document.getElementById("listView").classList.add("hidden");
-  document.getElementById("resultsView").classList.add("hidden");
-  document.getElementById("runnerView").classList.remove("hidden");
-  renderQuestion();
-}
-
-function renderQuestion(){
-  const bank=Q[currentTest.id];
-  const total=bank.items.length;
-  const item=bank.items[qIndex];
-  const prog=document.getElementById("progBar");
-  prog.style.width=((qIndex)/total*100)+"%";
-  document.getElementById("qNum").textContent=`Pergunta ${qIndex+1} de ${total}`;
-  const qText=Array.isArray(item)?item[0]:item;
-  document.getElementById("qText").textContent=qText;
-  const opts=document.getElementById("opts");
-  opts.innerHTML="";
-  let options=[];
-  let isScale=false;
-  if(bank.yesno){ options=["Sim","Não"]; }
-  else if(bank.scale4){ options=bank.scale4; isScale=true; }
-  else if(bank.scale5){ options=bank.scale5; isScale=true; }
-  else if(bank.scale6){ options=bank.scale6; isScale=true; }
-  else if(bank.scale7){ options=bank.scale7; isScale=true; }
-  else if(bank.scale3){ options=bank.scale3; isScale=true; }
-  else if(bank.scale){ options=bank.scale; }
-  else if(currentTest.type==="scale5"){ options=["Discordo totalmente","Discordo","Neutro","Concordo","Concordo totalmente"]; isScale=true; }
-
-  const container=opts;
-  container.className="opts"+(isScale&&options.length<=5?" scale5":"");
-  options.forEach((opt,i)=>{
-    const el=document.createElement("button");
-    el.className="opt"+(answers[qIndex]===i?" sel":"");
-    el.textContent=opt;
-    el.onclick=()=>{ answers[qIndex]=i; renderQuestion(); updateNext(); };
-    container.appendChild(el);
-  });
-  updateNext();
-}
-
-function updateNext(){
-  const btn=document.getElementById("btnNext");
-  btn.disabled=answers[qIndex]===null;
-  btn.textContent=qIndex<Q[currentTest.id].items.length-1?"Próximo":"Ver Resultado";
-  document.getElementById("btnPrev").disabled=qIndex===0;
-}
-
-document.getElementById("btnPrev").onclick=()=>{ if(qIndex>0){ qIndex--; renderQuestion(); } };
-document.getElementById("btnNext").onclick=()=>{
-  if(answers[qIndex]===null) return;
-  const total=Q[currentTest.id].items.length;
-  if(qIndex<total-1){ qIndex++; renderQuestion(); }
-  else{ document.getElementById("progBar").style.width="100%"; computeResult(); }
-};
-
-/* ============ CÁLCULO DE RESULTADO ============ */
-function computeResult(){
-  const bank=Q[currentTest.id];
-  const items=bank.items;
-  let result={score:0,label:"",interp:"",detail:{}};
-
-  if(bank.yesno){
-    let yes=0;
-    items.forEach((it,i)=>{ const ans=answers[i]===0; const w=Array.isArray(it)?(it[1]||1):1; if(ans) yes+=w; });
-    result.score=yes;
-    result.label=`${yes} de ${items.length} respostas afirmativas`;
-    const ratio=yes/items.length;
-    if(currentTest.id==="npi"){
-      result.interp=ratio>=0.5?"Indicativo de traços narcisistas elevados. Avaliação clínica recomendada.":ratio>=0.3?"Traços narcisistas moderados.":"Traços narcisistas baixos.";
-    }else if(currentTest.id==="dast"||currentTest.id==="trauma"||currentTest.id==="esquizo"||currentTest.id==="borderline"){
-      result.interp=yes>=3?"Resultado positivo — recomenda-se avaliação profissional.":yes>=1?"Sinais leves presentes. Acompanhe.":"Resultado negativo para os critérios avaliados.";
-    }else if(currentTest.id==="rotter"){
-      const ext=yes; result.interp=ext>=6?"Locus de controle externo predominante.":ext<=4?"Locus de controle interno predominante.":"Locus misto.";
-    }else{
-      result.interp=yes>=Math.ceil(items.length/2)?"Indicativo relevante — atenção recomendada.":"Indicativo baixo.";
+    if (indicePergunta >= testeAtual.perguntas.length) {
+        finalizarTeste();
+    } else {
+        renderizarPergunta();
     }
-  }
-  else if(bank.scale||bank.scale4||bank.scale5||bank.scale6||bank.scale7||bank.scale3||currentTest.type==="scale5"){
-    // letter-based (categorias)
-    if(bank.scale){
-      const counts={}; bank.scale.forEach(s=>counts[s]=0);
-      items.forEach((it,i)=>{
-        const cat=Array.isArray(it)?it[1]:null;
-        if(cat){ const idx=answers[i]; const opt=bank.scale[idx]; if(counts[opt]!==undefined) counts[opt]++; }
-      });
-      let best=null,bv=-1;
-      for(const k in counts){ if(counts[k]>bv){bv=counts[k];best=k;} }
-      result.detail=counts;
-      result.score=bv;
-      result.label=`Perfil predominante: ${best}`;
-      result.interp=`Sua categoria mais forte foi ${best} com ${bv} ponto(s). Detalhamento: ${Object.entries(counts).map(([k,v])=>`${k}=${v}`).join(", ")}.`;
+}
+
+function mostrarWilson() {
+    const frase = FRASES_WILSON[Math.floor(Math.random() * FRASES_WILSON.length)];
+    document.getElementById('wilson-frase').innerText = `"${frase}"`;
+    document.getElementById('modal-wilson').style.display = 'flex';
+    contadorWilson = 0;
+}
+
+function fecharWilson() {
+    document.getElementById('modal-wilson').style.display = 'none';
+    renderizarPergunta();
+}
+
+function finalizarTeste() {
+    document.getElementById('tela-teste').style.display = 'none';
+    document.getElementById('tela-resultado').style.display = 'block';
+    
+    document.getElementById('res-titulo').innerText = testeAtual.titulo;
+    
+    // Lógica de Devolutiva Ouro (Simplificada para o motor)
+    let feedback = "";
+    if (typeof testeAtual.devolutiva === 'string') {
+        feedback = testeAtual.devolutiva;
+    } else {
+        // Se for lógica de pontuação
+        const soma = respostasUsuario.reduce((a, b) => a + b, 0);
+        feedback = `Sua pontuação: ${soma}. \n\nWilson diz: Você completou o teste com sucesso! Analise seus padrões e use este conhecimento para sua próxima grande virada.`;
     }
-    // subdimensional (array com categoria no item)
-    else if(items[0]&&Array.isArray(items[0])&&items[0][1]&&typeof items[0][1]==="string"&&!bank.scale){
-      const dims={};
-      items.forEach((it,i)=>{
-        const dim=it[1]; const idx=answers[i]; const val=idx; dims[dim]=(dims[dim]||0)+val;
-      });
-      let best=null,bv=-1;
-      for(const k in dims){ if(dims[k]>bv){bv=dims[k];best=k;} }
-      result.detail=dims;
-      result.score=bv;
-      result.label=`Dimensão predominante: ${best}`;
-      result.interp=`Maior pontuação em ${best} (${bv}). Detalhamento: ${Object.entries(dims).map(([k,v])=>`${k}=${v}`).join(", ")}.`;
-    }
-    // escala simples (soma)
-    else{
-      let sum=0;
-      answers.forEach(a=>{ if(a!==null) sum+=a; });
-      const max=(bank.scale4?3:bank.scale5?4:bank.scale6?5:bank.scale7?6:bank.scale3?2:4)*items.length;
-      result.score=sum;
-      result.label=`Pontuação: ${sum} / ${max}`;
-      const pct=sum/max;
-      // interpretações específicas
-      if(currentTest.id==="gad7"){
-        result.interp=sum>=15?"Ansiedade grave — procure ajuda profissional.":sum>=10?"Ansiedade moderada.":sum>=5?"Ansiedade leve.":"Mínima/ausente.";
-      }else if(currentTest.id=="phq9"){
-        result.interp=sum>=20?"Depressão grave.":sum>=15?"Depressão moderadamente grave.":sum>=10?"Depressão moderada.":sum>=5?"Depressão leve.":"Mínima/ausente.";
-      }else if(currentTest.id=="fobia_social"){
-        result.interp=sum>=18?"Fobia social grave.":sum>=10?"Moderada.":sum>=4?"Leve.":"Mínima.";
-      }else if(currentTest.id=="maus2"||currentTest.id==="audit"){
-        result.interp=sum>=8?"Uso problemático — avaliação profissional recomendada.":sum>=4?"Uso de risco.":"Baixo risco.";
-      }else if(currentTest.id=="autoestima"){
-        result.interp=sum>=24?"Autoestima baixa.":sum>=15?"Autoestima média.":"Autoestima elevada.";
-      }else if(currentTest.id=="satisfacao_vida"||currentTest.id=="relacionamento"){
-        result.interp=pct>=0.7?"Elevada satisfação.":pct>=0.4?"Satisfação moderada.":"Satisfação reduzida — atenção recomendada.";
-      }else{
-        result.interp=pct>=0.7?"Nível elevado.":pct>=0.4?"Nível moderado.":"Nível baixo.";
-      }
-    }
-  }
-  showResult(result);
+    
+    document.getElementById('res-conteudo').innerText = feedback;
 }
 
-function showResult(r){
-  const view=document.getElementById("runnerView");
-  view.innerHTML=`<div class="glass result">
-    <div class="label">Resultado — ${currentTest.name}</div>
-    <div class="score">${r.score}</div>
-    <div style="font-weight:700;margin-bottom:6px">${r.label}</div>
-    <div class="interp">${r.interp}</div>
-    <button class="btn btn-primary" onclick="saveResult(${JSON.stringify(JSON.stringify(r))})">Salvar Resultado</button>
-    <button class="btn btn-ghost" style="margin-top:8px" onclick="backToList()">Voltar à Lista</button>
-  </div>`;
-  saveResult(r);
+function mostrarAvisoPremium() {
+    document.getElementById('wilson-titulo').innerText = "Conteúdo Premium 🔒";
+    document.getElementById('wilson-frase').innerHTML = "Este teste faz parte do pacote avançado. Desbloqueie os 50 testes e a mentoria completa agora!<br><a href='#' class='btn-premium'>Quero ser Premium</a>";
+    document.getElementById('modal-wilson').style.display = 'flex';
 }
 
-function saveResult(r){
-  if(!USER.uid){ toast("Salvando localmente (sem conexão)."); return; }
-  const rec={
-    testId:currentTest.id,
-    testName:currentTest.name,
-    role:USER.role,
-    score:r.score,
-    label:r.label,
-    interp:r.interp,
-    detail:r.detail||null,
-    answers:answers,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  };
-  db.collection("resultados").add(rec)
-    .then(()=>toast("Resultado salvo no Firebase! ✅"))
-    .catch(e=>{ console.error(e); toast("Erro ao salvar: "+e.message); });
+function falarLiw() {
+    const falas = ["Bora evoluir?", "Tô de olho em você!", "O Wilson é bravo, mas ajuda!", "Já bebeu água hoje?", "Foco no teste!"];
+    const balao = document.getElementById('liw-balao');
+    balao.innerText = falas[Math.floor(Math.random() * falas.length)];
+    balao.style.display = 'block';
+    setTimeout(() => balao.style.display = 'none', 3000);
 }
 
-function backToList(){
-  document.getElementById("runnerView").classList.add("hidden");
-  document.getElementById("listView").classList.remove("hidden");
-  renderList();
-}
-
-/* ============ RESULTADOS ============ */
-function showResults(){
-  document.getElementById("listView").classList.add("hidden");
-  document.getElementById("runnerView").classList.add("hidden");
-  document.getElementById("resultsView").classList.remove("hidden");
-  loadResults();
-}
-function loadResults(){
-  const box=document.getElementById("resultsBox");
-  if(!USER.uid){ box.innerHTML="<p style='color:var(--muted);font-size:13px'>Conectando ao Firebase...</p>"; return; }
-  db.collection("resultados").orderBy("createdAt","desc").limit(50).onSnapshot(snap=>{
-    if(snap.empty){ box.innerHTML="<p style='color:var(--muted);font-size:13px'>Nenhum resultado salvo ainda.</p>"; return; }
-    box.innerHTML=`<h3 style='margin-bottom:12px'>Resultados Recentes</h3><div class="grid">`+
-      snap.docs.map(d=>{
-        const r=d.data();
-        const dt=r.createdAt?new Date(r.createdAt.toDate()).toLocaleString("pt-BR"):"—";
-        return `<div class="card glass">
-          <span class="tag">${r.testName||r.testId}</span>
-          <h3>${r.label||""}</h3>
-          <p>${r.interp||""}</p>
-          <p style="font-size:11px;color:var(--muted)">${dt} · ${r.role}</p>
-        </div>`;
-      }).join("")+"</div>";
-  },e=>{ box.innerHTML="<p style='color:var(--err);font-size:13px'>Erro: "+e.message+"</p>"; });
-}
-
-/* ============ VENDA / UPGRADE ============ */
-function askPsych(id){
-  const t=TESTS.find(x=>x.id===id);
-  toast(`Pedido enviado ao seu psicólogo para liberar: ${t.name}. 📨`);
-  if(USER.uid){
-    db.collection("pedidos").add({testId:id,testName:t.name,role:USER.role,uid:USER.uid,status:"pendente",createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-  }
-}
-
-function openPay(id){
-  pendingPayTest=id;
-  const t=TESTS.find(x=>x.id===id);
-  document.getElementById("payTitle").textContent="Desbloquear: "+t.name;
-  document.getElementById("payDesc").textContent="Libere este teste premium agora e aplique com seus pacientes. R$ 19,90 (liberação imediata).";
-  document.getElementById("payModal").classList.add("show");
-}
-document.querySelectorAll(".pay-methods .m").forEach(m=>{
-  m.onclick=()=>{
-    document.querySelectorAll(".pay-methods .m").forEach(x=>x.classList.remove("sel"));
-    m.classList.add("sel");
-    const isPix=m.dataset.m==="pix";
-    document.getElementById("pixArea").classList.toggle("hidden",!isPix);
-    document.getElementById("cardArea").classList.toggle("hidden",isPix);
-  };
-});
-document.getElementById("btnCancelPay").onclick=()=>{ document.getElementById("payModal").classList.remove("show"); };
-document.getElementById("btnConfirmPay").onclick=()=>{
-  if(!pendingPayTest) return;
-  if(!USER.uid){ toast("Conectando... tente novamente."); return; }
-  db.collection("unlocks").doc(USER.uid).set({
-    tests:firebase.firestore.FieldValue.arrayUnion(pendingPayTest),
-    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-  },{merge:true}).then(()=>{
-    USER.unlocked.push(pendingPayTest);
-    document.getElementById("payModal").classList.remove("show");
-    toast("Teste desbloqueado! ✅ Iniciando...");
-    startTest(pendingPayTest);
-    pendingPayTest=null;
-  }).catch(e=>toast("Erro: "+e.message));
-};
-
-function loadUnlocked(){
-  if(!USER.uid) return;
-  db.collection("unlocks").doc(USER.uid).get().then(doc=>{
-    if(doc.exists&&doc.data().tests){ USER.unlocked=doc.data().tests; renderList(); }
-  }).catch(()=>{});
-}
-
-/* ============ TOAST ============ */
-let toastTimer=null;
-function toast(msg){
-  const t=document.getElementById("toast");
-  t.textContent=msg;
-  t.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove("show"),3200);
-}
-
-/* INIT */
-renderList();
+// Iniciar
+window.onload = carregarPainel;
 </script>
 </body>
 </html>
