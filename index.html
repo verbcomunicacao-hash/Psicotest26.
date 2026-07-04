@@ -1,433 +1,399 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Psicotest26 - Gestão e Inteligência Comportamental</title>
-  <meta name="description" content="Psicotest26: 50 Testes Comportamentais e Profissionais, Inteligência Artificial Liw, Dashboard de Evolução Cruzada e Sistema de Upgrade Imediato via PIX/Cartão." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #0b1437;
-      --bg-2: #0d1a44;
-      --neon: #7c3aed;
-      --neon-2: #a855f7;
-      --glass: rgba(255, 255, 255, 0.06);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --text: #eef2ff;
-      --muted: #9aa6d2;
-      --white: #ffffff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psicotest26 — Gestão e Inteligência Comportamental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nasa-dark: #0b1437;
+            --nasa-card: rgba(17, 25, 64, 0.8);
+            --purple-neon: #7c3aed;
+            --purple-glow: #a855f7;
+            --text-main: #ffffff;
+            --text-dim: #a3b1cc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-    html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--nasa-dark);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(124, 58, 237, 0.1) 0%, transparent 40%);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    body {
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: radial-gradient(1200px 600px at 80% -10%, rgba(124, 58, 237, 0.25), transparent 60%),
-                  radial-gradient(900px 500px at -10% 20%, rgba(124, 58, 237, 0.18), transparent 60%),
-                  linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+        /* Glassmorphism Utility */
+        .glass {
+            background: var(--nasa-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
 
-    .container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(11, 20, 55, 0.8);
+            backdrop-filter: blur(10px);
+        }
 
-    /* NAVBAR */
-    header.nav {
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: blur(14px);
-      background: rgba(11, 20, 55, 0.6);
-      border-bottom: 1px solid var(--glass-border);
-    }
-    .nav-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 0;
-    }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-logo {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--neon), var(--neon-2));
-      display: grid; place-items: center; box-shadow: 0 0 18px rgba(124,58,237,0.6);
-    }
-    .brand-name { font-weight: 800; font-size: 18px; letter-spacing: .3px; }
-    .brand-name span { color: var(--neon-2); }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, var(--purple-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
 
-    .nav-actions { display: flex; gap: 10px; align-items: center; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 16px; border-radius: 12px; font-weight: 600; font-size: 14px;
-      text-decoration: none; cursor: pointer; border: 1px solid transparent;
-      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .btn-ghost { color: var(--text); border-color: var(--glass-border); background: var(--glass); }
-    .btn-ghost:hover { transform: translateY(-2px); border-color: var(--neon); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--neon), var(--neon-2));
-      color: #fff; box-shadow: 0 8px 24px rgba(124,58,237,0.45);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(124,58,237,0.6); }
-    .btn-outline { color: var(--neon-2); border-color: var(--neon); background: transparent; }
-    .btn-outline:hover { background: rgba(124,58,237,0.12); }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
 
-    /* HERO */
-    .hero { padding: 70px 0 40px; }
-    .hero-grid {
-      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center;
-    }
-    .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
-      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4);
-      color: var(--neon-2); margin-bottom: 18px;
-    }
-    .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon-2); box-shadow: 0 0 10px var(--neon-2); }
-    h1 {
-      font-size: clamp(30px, 5vw, 52px); line-height: 1.08; font-weight: 900; letter-spacing: -1px;
-    }
-    h1 .grad {
-      background: linear-gradient(135deg, #c4b5fd, #7c3aed 60%, #a855f7);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    .lead { color: var(--muted); font-size: 17px; line-height: 1.6; margin: 18px 0 26px; max-width: 560px; }
-    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-nav {
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
 
-    /* MASCOTE CARD */
-    .mascote-card {
-      position: relative; border-radius: 24px; padding: 28px;
-      background: var(--glass); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
-      text-align: center;
-    }
-    .mascote-card::before {
-      content: ''; position: absolute; inset: -1px; border-radius: 24px; padding: 1px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.6), transparent 60%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
-    }
-    .mascote-svg { width: 100%; max-width: 320px; height: auto; margin: 0 auto; display: block; }
-    .mascote-name { margin-top: 10px; font-weight: 800; color: var(--neon-2); letter-spacing: .5px; }
-    .mascote-tag { color: var(--muted); font-size: 13px; margin-top: 4px; }
+        .btn-panel {
+            background: var(--purple-neon);
+            color: white;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+        }
 
-    /* SECTIONS */
-    section.block { padding: 56px 0; }
-    .section-title { text-align: center; margin-bottom: 40px; }
-    .section-title h2 { font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -.5px; }
-    .section-title p { color: var(--muted); margin-top: 10px; max-width: 640px; margin-left: auto; margin-right: auto; }
+        .btn-admin {
+            border: 1px solid var(--glass-border);
+            color: var(--text-dim);
+        }
 
-    .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    .card {
-      border-radius: 18px; padding: 22px; background: var(--glass); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-    }
-    .card:hover { transform: translateY(-6px); border-color: rgba(124,58,237,0.5); box-shadow: 0 16px 40px rgba(124,58,237,0.25); }
-    .card .icon {
-      width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center;
-      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(168,85,247,0.15));
-      border: 1px solid rgba(124,58,237,0.4); margin-bottom: 14px;
-    }
-    .card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-    .card p { color: var(--muted); font-size: 14px; line-height: 1.55; }
-    .card .badge { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--neon-2); }
+        .btn-nav:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
 
-    /* TESTES LIST */
-    .tests-wrap { border-radius: 20px; padding: 26px; background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(12px); }
-    .tests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 14px; margin-top: 18px; }
-    .test-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px;
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); font-size: 13.5px;
-    }
-    .test-item .num {
-      flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--neon), var(--neon-2)); color: #fff; font-size: 11px; font-weight: 800;
-    }
-    .test-item span { color: var(--text); }
+        /* Hero Section */
+        .hero {
+            padding: 160px 5% 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 80vh;
+        }
 
-    /* CTA FINAL */
-    .cta-final {
-      border-radius: 24px; padding: 44px 28px; text-align: center;
-      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(11,20,55,0.4));
-      border: 1px solid rgba(124,58,237,0.4); backdrop-filter: blur(12px);
-    }
-    .cta-final h2 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; }
-    .cta-final p { color: var(--muted); margin: 12px auto 22px; max-width: 560px; }
-    .cta-final .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
 
-    footer { padding: 30px 0 50px; color: var(--muted); font-size: 13px; text-align: center; border-top: 1px solid var(--glass-border); margin-top: 40px; }
-    footer a { color: var(--neon-2); text-decoration: none; }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
 
-    /* RESPONSIVO */
-    @media (max-width: 980px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .features { grid-template-columns: repeat(2, 1fr); }
-      .tests-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 560px) {
-      .nav-actions .btn { padding: 9px 12px; font-size: 13px; }
-      .features { grid-template-columns: 1fr; }
-      .tests-grid { grid-template-columns: 1fr; }
-      .hero { padding: 40px 0 20px; }
-      .lead { font-size: 15px; }
-      .mascote-card { padding: 20px; }
-    }
-  </style>
+        .hero-content h1 span {
+            color: var(--purple-glow);
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 35px;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Formiga Liw Mascot */
+        .liw-container {
+            width: 350px;
+            height: 350px;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .liw-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.4));
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .grid-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            padding: 40px;
+            transition: 0.4s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--purple-neon);
+            transform: scale(1.02);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--purple-glow);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        /* Test List Section */
+        .test-list {
+            padding: 80px 5%;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .test-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tag {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--purple-glow);
+            font-weight: 600;
+        }
+
+        /* Upgrade Section */
+        .upgrade-box {
+            margin: 80px auto;
+            max-width: 800px;
+            padding: 60px;
+            text-align: center;
+            border: 2px solid var(--purple-neon);
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.2);
+        }
+
+        .payment-icons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            font-size: 2rem;
+            color: var(--text-dim);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding-top: 120px;
+            }
+            .hero-content h1 { font-size: 2.5rem; }
+            .liw-container { width: 250px; height: 250px; margin-bottom: 40px; }
+            .nav-links { display: none; }
+        }
+    </style>
 </head>
 <body>
-  <header class="nav">
-    <div class="container nav-inner">
-      <div class="brand">
-        <div class="brand-logo" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 20.5 7.1 17.2l.9-5.5-4-3.9 5.5-.8L12 2z" fill="#fff"/>
-          </svg>
+
+    <nav>
+        <div class="logo">PSICOTEST26</div>
+        <div class="nav-links">
+            <a href="admin.html" class="btn-nav btn-admin">Área do Admin</a>
+            <a href="painel.html" class="btn-nav btn-panel">Acessar Painel</a>
         </div>
-        <div class="brand-name">Psicotest<span>26</span></div>
-      </div>
-      <nav class="nav-actions">
-        <a href="painel.html" class="btn btn-primary">Acessar Painel</a>
-        <a href="admin.html" class="btn btn-ghost">Área do Admin</a>
-      </nav>
-    </div>
-  </header>
+    </nav>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <span class="pill"><span class="dot"></span> Plataforma Oficial · Psicotest26</span>
-          <h1>Psicotest26 — <span class="grad">Gestão e Inteligência Comportamental</span></h1>
-          <p class="lead">
-            Centralize a aplicação, correção e análise de <strong>50 Testes Comportamentais e Profissionais</strong>
-            com suporte da <strong>Inteligência Artificial Liw</strong>, dashboard de evolução cruzada e
-            upgrades imediatos via PIX ou Cartão.
-          </p>
-          <div class="hero-cta">
-            <a href="painel.html" class="btn btn-primary">Acessar Painel</a>
-            <a href="admin.html" class="btn btn-outline">Área do Admin</a>
-          </div>
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Gestão e <span>Inteligência</span> Comportamental</h1>
+            <p>A plataforma definitiva para análise humana. 50 testes reais integrados com a Inteligência Artificial Liw para mapear o DNA do seu comportamento.</p>
+            <div style="display: flex; gap: 15px;">
+                <a href="painel.html" class="btn-nav btn-panel" style="padding: 15px 35px; font-size: 1.1rem;">Começar Agora</a>
+            </div>
         </div>
+        <div class="hero-visual">
+            <div class="liw-container">
+                <!-- Formiga Liw SVG -->
+                <svg class="liw-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Ant Body -->
+                    <ellipse cx="100" cy="140" rx="35" ry="45" fill="#7c3aed" /> <!-- Abdomen -->
+                    <ellipse cx="100" cy="95" rx="25" ry="25" fill="#7c3aed" /> <!-- Thorax -->
+                    <circle cx="100" cy="60" r="30" fill="#7c3aed" /> <!-- Head -->
+                    
+                    <!-- Shirt -->
+                    <path d="M75 95 Q100 85 125 95 L120 120 L80 120 Z" fill="#5b21b6" />
+                    <text x="100" y="112" font-family="Arial" font-size="10" fill="white" text-anchor="middle" font-weight="bold">Liw</text>
 
-        <div class="mascote-card">
-          <!-- FORMIGA LIW -->
-          <svg class="mascote-svg" viewBox="0 0 320 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Formiga Liw">
-            <defs>
-              <linearGradient id="liwBody" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#9d5cff"/>
-                <stop offset="100%" stop-color="#6d28d9"/>
-              </linearGradient>
-              <linearGradient id="liwShirt" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#8b5cf6"/>
-                <stop offset="100%" stop-color="#6d28d9"/>
-              </linearGradient>
-              <radialGradient id="eyeShine" cx="35%" cy="30%" r="60%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
+                    <!-- Eyes (Big Brown) -->
+                    <circle cx="88" cy="55" r="10" fill="#5d4037" />
+                    <circle cx="112" cy="55" r="10" fill="#5d4037" />
+                    <circle cx="90" cy="52" r="3" fill="white" />
+                    <circle cx="114" cy="52" r="3" fill="white" />
 
-            <!-- antenas -->
-            <g stroke="#7c3aed" stroke-width="4" stroke-linecap="round" fill="none">
-              <path d="M138 70 C120 40, 110 30, 96 22"/>
-              <path d="M182 70 C200 40, 210 30, 224 22"/>
-            </g>
-            <circle cx="94" cy="20" r="7" fill="#a855f7"/>
-            <circle cx="226" cy="20" r="7" fill="#a855f7"/>
-
-            <!-- cabeça -->
-            <ellipse cx="160" cy="110" rx="58" ry="52" fill="url(#liwBody)"/>
-            <ellipse cx="160" cy="118" rx="46" ry="34" fill="#8b5cf6" opacity="0.5"/>
-
-            <!-- olhos grandes castanhos -->
-            <circle cx="138" cy="108" r="20" fill="#fff"/>
-            <circle cx="182" cy="108" r="20" fill="#fff"/>
-            <circle cx="138" cy="110" r="13" fill="#5b3a1f"/>
-            <circle cx="182" cy="110" r="13" fill="#5b3a1f"/>
-            <circle cx="138" cy="110" r="13" fill="url(#eyeShine)"/>
-            <circle cx="182" cy="110" r="13" fill="url(#eyeShine)"/>
-            <circle cx="142" cy="105" r="4" fill="#fff"/>
-            <circle cx="186" cy="105" r="4" fill="#fff"/>
-
-            <!-- sorriso -->
-            <path d="M142 138 Q160 152 178 138" stroke="#3b1d6b" stroke-width="4" fill="none" stroke-linecap="round"/>
-
-            <!-- tórax -->
-            <ellipse cx="160" cy="200" rx="42" ry="40" fill="url(#liwBody)"/>
-
-            <!-- camiseta roxa com nome Liw -->
-            <path d="M118 196 Q160 178 202 196 L202 240 Q160 252 118 240 Z" fill="url(#liwShirt)" stroke="#5b21b6" stroke-width="2"/>
-            <text x="160" y="226" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="800" fill="#ffffff">Liw</text>
-
-            <!-- abdome -->
-            <ellipse cx="160" cy="288" rx="50" ry="52" fill="url(#liwBody)"/>
-            <path d="M160 240 L160 338" stroke="#5b21b6" stroke-width="3" opacity="0.6"/>
-
-            <!-- pernas -->
-            <g stroke="#7c3aed" stroke-width="5" stroke-linecap="round" fill="none">
-              <path d="M120 200 C90 210 80 230 70 250"/>
-              <path d="M120 230 C90 250 80 280 72 300"/>
-              <path d="M200 200 C230 210 240 230 250 250"/>
-              <path d="M200 230 C230 250 240 280 248 300"/>
-            </g>
-
-            <!-- braços -->
-            <g stroke="#7c3aed" stroke-width="5" stroke-linecap="round" fill="none">
-              <path d="M122 190 C100 180 88 168 80 156"/>
-              <path d="M198 190 C220 180 232 168 240 156"/>
-            </g>
-          </svg>
-          <div class="mascote-name">Formiga Liw</div>
-          <div class="mascote-tag">Sua assistente de inteligência comportamental</div>
+                    <!-- Antennae -->
+                    <path d="M85 35 Q70 10 50 20" stroke="#7c3aed" stroke-width="3" fill="none" />
+                    <path d="M115 35 Q130 10 150 20" stroke="#7c3aed" stroke-width="3" fill="none" />
+                    
+                    <!-- Legs -->
+                    <path d="M75 95 L50 110" stroke="#7c3aed" stroke-width="4" />
+                    <path d="M125 95 L150 110" stroke="#7c3aed" stroke-width="4" />
+                    <path d="M70 140 L40 160" stroke="#7c3aed" stroke-width="4" />
+                    <path d="M130 140 L160 160" stroke="#7c3aed" stroke-width="4" />
+                </svg>
+            </div>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <!-- BENEFÍCIOS -->
-    <section class="block">
-      <div class="container">
+    <section class="features">
         <div class="section-title">
-          <h2>Tudo o que a plataforma entrega</h2>
-          <p>Recursos oficiais do Psicotest26, pensados para gestão clínica, análise comportamental e evolução mensurável.</p>
+            <h2>Recursos de Elite</h2>
+            <p style="color: var(--text-dim)">Tecnologia NASA aplicada ao desenvolvimento humano</p>
         </div>
-        <div class="features">
-          <div class="card">
-            <div class="icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v4H4zM4 11h16v4H4zM4 17h10v4H4z" fill="#a855f7"/></svg>
+        <div class="grid-features">
+            <div class="feature-card glass">
+                <i class="fas fa-brain"></i>
+                <h3>50 Testes Reais</h3>
+                <p>De NASA 4D a Herrmann. Uma biblioteca completa de ferramentas validadas para diagnósticos precisos.</p>
             </div>
-            <h3>50 Testes Comportamentais e Profissionais</h3>
-            <p>PNL VAC, Narcisismo, Inteligência Emocional, Ansiedade, Depressão, Estresse, Liderança, Perfil Comportamental e muito mais.</p>
-            <span class="badge">50 instrumentos reais</span>
-          </div>
-          <div class="card">
-            <div class="icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l2 4 4 .6-3 3 .7 4-3.7-2-3.7 2 .7-4-3-3 4-.6z" fill="#a855f7"/></svg>
+            <div class="feature-card glass">
+                <i class="fas fa-microchip"></i>
+                <h3>IA Liw Integrada</h3>
+                <p>Nossa formiga inteligente analisa seus padrões e gera insights profundos que nenhum teste sozinho consegue ver.</p>
             </div>
-            <h3>Inteligência Artificial Liw</h3>
-            <p>Suporte técnico na análise de resultados, geração de relatórios auxiliares e interpretação de padrões comportamentais.</p>
-            <span class="badge">Análise com IA</span>
-          </div>
-          <div class="card">
-            <div class="icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            <div class="feature-card glass">
+                <i class="fas fa-chart-line"></i>
+                <h3>Evolução Cruzada</h3>
+                <p>Dashboard dinâmico que cruza dados de múltiplos testes para criar um mapa 360º da sua personalidade.</p>
             </div>
-            <h3>Dashboard de Evolução Cruzada</h3>
-            <p>Compare a evolução do Paciente versus o Técnico em gráficos claros, com histórico, marcos e indicadores de progresso.</p>
-            <span class="badge">Paciente vs Técnico</span>
-          </div>
-          <div class="card">
-            <div class="icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h18v10H3zM3 11h18" stroke="#a855f7" stroke-width="2" fill="none"/></svg>
-            </div>
-            <h3>Upgrade Imediato via PIX/Cartão</h3>
-            <p>Liberação automática de planos e recursos após pagamento por PIX ou Cartão, sem espera manual.</p>
-            <span class="badge">Ativação automática</span>
-          </div>
         </div>
-      </div>
     </section>
 
-    <!-- LISTA DOS 50 TESTES -->
-    <section class="block">
-      <div class="container">
+    <section class="test-list">
         <div class="section-title">
-          <h2>Os 50 Testes Reais do Psicotest26</h2>
-          <p>Instrumentos comportamentais e profissionais disponíveis na plataforma, com correção automatizada e suporte da IA Liw.</p>
+            <h2>Alguns de nossos Testes</h2>
         </div>
-        <div class="tests-wrap">
-          <div class="tests-grid" id="testsGrid"></div>
+        <div class="test-tags">
+            <span class="tag">NASA 4D</span>
+            <span class="tag">VAK (Visual, Auditivo, Cinestésico)</span>
+            <span class="tag">Escala de Narcisismo</span>
+            <span class="tag">Dominância Cerebral Herrmann</span>
+            <span class="tag">Big Five (OCEAN)</span>
+            <span class="tag">Âncoras de Carreira</span>
+            <span class="tag">Inteligências Múltiplas</span>
+            <span class="tag">DISC Avançado</span>
+            <span class="tag">Eneagrama</span>
+            <span class="tag">Linguagens do Amor</span>
+            <span class="tag">Sabotadores Internos</span>
+            <span class="tag">+40 Testes Profissionais</span>
         </div>
-      </div>
     </section>
 
-    <!-- CTA FINAL -->
-    <section class="block">
-      <div class="container">
-        <div class="cta-final">
-          <h2>Pronto para evoluir com a Formiga Liw?</h2>
-          <p>Acesse o painel para aplicar testes, acompanhar a evolução cruzada e liberar upgrades imediatos via PIX ou Cartão.</p>
-          <div class="btns">
-            <a href="painel.html" class="btn btn-primary">Acessar Painel</a>
-            <a href="admin.html" class="btn btn-outline">Área do Admin</a>
-          </div>
+    <section class="features">
+        <div class="upgrade-box glass">
+            <h2>Desbloqueie o Potencial Máximo</h2>
+            <p style="margin: 20px 0; color: var(--text-dim)">Acesse todos os 50 testes, relatórios em PDF e mentoria da IA Liw agora mesmo.</p>
+            <a href="#" class="btn-nav btn-panel" style="display: inline-block; padding: 15px 40px;">Fazer Upgrade via PIX ou Cartão</a>
+            <div class="payment-icons">
+                <i class="fab fa-pix"></i>
+                <i class="far fa-credit-card"></i>
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <p style="font-size: 0.8rem; margin-top: 15px; color: var(--text-dim)">Acesso imediato após a confirmação.</p>
         </div>
-      </div>
     </section>
-  </main>
 
-  <footer>
-    <div class="container">
-      © <span id="year"></span> Psicotest26 — Gestão e Inteligência Comportamental · Mascote Oficial: <strong style="color:#a855f7">Formiga Liw</strong>
-    </div>
-  </footer>
+    <footer>
+        <p>&copy; 2024 Psicotest26 — Desenvolvido com a Inteligência da Formiga Liw. Todos os direitos reservados.</p>
+    </footer>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    <script>
+        // Smooth reveal on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
 
-    const tests = [
-      "PNL VAC (Visual, Auditivo, Cinestésico)",
-      "Narcisismo (NPI)",
-      "Inteligência Emocional (EQ)",
-      "Ansiedade Geral (GAD-7)",
-      "Depressão (PHQ-9)",
-      "Estresse Percebido (PSS)",
-      "Liderança Situacional",
-      "Perfil Comportamental DISC",
-      "Big Five (OCEAN)",
-      "MBTI - Estilo Psicológico",
-      "Autoestima (Rosenberg)",
-      "Resiliência (CD-RISC)",
-      "Burnout (MBI)",
-      "Estilos de Aprendizagem (Kolb)",
-      "Motivação (MAST)",
-      "Procrastinação (GPS)",
-      "Foco e Atenção (ACT)",
-      "Empatia (IRI)",
-      "Comunicação Assertiva",
-      "Inteligência Social",
-      "Controle de Impulsos",
-      "Regulação Emocional",
-      "Bem-estar Subjetivo",
-      "Satisfação com a Vida (SWLS)",
-      "Otimismo (LOT-R)",
-      "Ansiedade Social (LSAS)",
-      "Fobia Social (SPIN)",
-      "Pânico (PDSS)",
-      "TOC (Y-BOCS)",
-      "TEPT (PCL-5)",
-      "Sono (PSQI)",
-      "Estresse Ocupacional",
-      "Clima Organizacional",
-      "Engajamento no Trabalho",
-      "Tomada de Decisão",
-      "Pensamento Crítico",
-      "Criatividade (Torrance)",
-      "Resolução de Conflitos",
-      "Trabalho em Equipe",
-      "Coaching Comportamental",
-      "Mentoria Profissional",
-      "Carreira e Propósito",
-      "Vulnerabilidade ao Estresse",
-      "Suporte Social (MSPSS)",
-      "Mindfulness (MAAS)",
-      "Hábitos e Comportamento",
-      "Inteligência Financeira Comportamental",
-      "Relacionamento Interpessoal",
-      "Liderança Servidora",
-      "Avaliação 360 Comportamental"
-    ];
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
 
-    const grid = document.getElementById('testsGrid');
-    tests.forEach((t, i) => {
-      const item = document.createElement('div');
-      item.className = 'test-item';
-      item.innerHTML = '<div class="num">' + String(i + 1).padStart(2, '0') + '</div><span>' + t + '</span>';
-      grid.appendChild(item);
-    });
-  </script>
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(30px)";
+            card.style.transition = "all 0.6s ease-out";
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
