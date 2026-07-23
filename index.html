@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Testes Dinâmicos — Liw</title>
+<title>Psicotest26 — Inteligência Comportamental</title>
 <style>
   :root {
     --roxo-neon: #b14bff;
@@ -29,9 +29,87 @@
       radial-gradient(circle at 85% 80%, rgba(106,43,207,0.15), transparent 45%);
   }
   .container { max-width: 900px; margin: 0 auto; padding: 24px 18px 80px; }
+
+  /* ===== LANDING PAGE ===== */
+  #tela-entrada {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    text-align: center;
+  }
+  #tela-entrada .logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--roxo-neon);
+    text-shadow: 0 0 20px rgba(177,75,255,0.5), 0 0 40px rgba(177,75,255,0.2);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  #tela-entrada .subtitulo {
+    color: var(--texto-suave);
+    font-size: 1rem;
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+  }
+  #tela-entrada .mascote {
+    width: 260px;
+    max-width: 70%;
+    height: auto;
+    margin: 0 auto 28px;
+    display: block;
+    filter: drop-shadow(0 0 20px rgba(177,75,255,0.4));
+  }
+  #tela-entrada .botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 380px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  #tela-entrada .btn {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    border-radius: 14px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  #tela-entrada .btn-primario {
+    background: linear-gradient(90deg, var(--roxo-escuro), var(--roxo-neon));
+    color: #fff;
+    box-shadow: 0 0 20px rgba(177,75,255,0.3);
+  }
+  #tela-entrada .btn-primario:hover {
+    box-shadow: 0 0 30px rgba(177,75,255,0.6);
+    transform: translateY(-2px);
+  }
+  #tela-entrada .btn-secundario {
+    background: transparent;
+    color: var(--roxo-claro);
+    border: 1px solid rgba(177,75,255,0.4);
+  }
+  #tela-entrada .btn-secundario:hover {
+    background: rgba(177,75,255,0.1);
+    border-color: var(--roxo-neon);
+  }
+  #tela-entrada .footer {
+    margin-top: 36px;
+    color: #6a5a8a;
+    font-size: 0.82rem;
+  }
+
+  /* ===== HEADER TESTES ===== */
   header {
     text-align: center;
     padding: 30px 16px 20px;
+    display: none;
   }
   header h1 {
     font-size: 2.2rem;
@@ -44,8 +122,9 @@
     margin-top: 8px;
     font-size: 1rem;
   }
-  /* Tela de seleção de testes */
-  #lista-testes { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+
+  /* ===== LISTA DE TESTES ===== */
+  #lista-testes { display: none; flex-direction: column; gap: 16px; margin-top: 24px; }
   .card-teste {
     background: var(--fundo-card);
     border: 1px solid rgba(177,75,255,0.25);
@@ -70,16 +149,8 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(177,75,255,0.2);
   }
-  .card-teste h3 {
-    color: var(--roxo-claro);
-    font-size: 1.25rem;
-    margin-bottom: 6px;
-  }
-  .card-teste p {
-    color: var(--texto-suave);
-    font-size: 0.92rem;
-    line-height: 1.5;
-  }
+  .card-teste h3 { color: var(--roxo-claro); font-size: 1.25rem; margin-bottom: 6px; }
+  .card-teste p { color: var(--texto-suave); font-size: 0.92rem; line-height: 1.5; }
   .card-teste .badge {
     display: inline-block;
     margin-top: 12px;
@@ -89,7 +160,8 @@
     padding: 4px 12px;
     border-radius: 20px;
   }
-  /* Tela do teste */
+
+  /* ===== TELA DO TESTE ===== */
   #tela-teste { display: none; }
   .topo-teste {
     display: flex;
@@ -110,11 +182,7 @@
     transition: all 0.2s;
   }
   .btn-voltar:hover { background: rgba(177,75,255,0.15); border-color: var(--roxo-neon); }
-  .progresso-wrap {
-    flex: 1;
-    min-width: 200px;
-    margin: 0 12px;
-  }
+  .progresso-wrap { flex: 1; min-width: 200px; margin: 0 12px; }
   .barra-progresso {
     height: 10px;
     background: var(--fundo-card);
@@ -129,12 +197,7 @@
     transition: width 0.4s ease;
     box-shadow: 0 0 10px var(--roxo-neon);
   }
-  .contador {
-    text-align: center;
-    color: var(--texto-suave);
-    font-size: 0.85rem;
-    margin-top: 6px;
-  }
+  .contador { text-align: center; color: var(--texto-suave); font-size: 0.85rem; margin-top: 6px; }
   .pergunta-card {
     background: var(--fundo-card);
     border: 1px solid rgba(177,75,255,0.2);
@@ -147,242 +210,112 @@
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .pergunta-numero {
-    color: var(--roxo-neon);
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .pergunta-texto {
-    font-size: 1.18rem;
-    line-height: 1.55;
-    margin: 10px 0 22px;
-    color: var(--texto);
-  }
+  .pergunta-numero { color: var(--roxo-neon); font-size: 0.82rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .pergunta-texto { font-size: 1.18rem; line-height: 1.55; margin: 10px 0 22px; color: var(--texto); }
   .opcao {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: transparent;
-    border: 1px solid rgba(177,75,255,0.25);
-    color: var(--texto);
-    padding: 14px 18px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 0.98rem;
-    transition: all 0.2s;
+    display: block; width: 100%; text-align: left;
+    background: transparent; border: 1px solid rgba(177,75,255,0.25);
+    color: var(--texto); padding: 14px 18px; border-radius: 12px;
+    margin-bottom: 10px; cursor: pointer; font-size: 0.98rem; transition: all 0.2s;
   }
-  .opcao:hover {
-    background: rgba(177,75,255,0.12);
-    border-color: var(--roxo-neon);
-    transform: translateX(4px);
-  }
-  .opcao.selecionada {
-    background: rgba(177,75,255,0.2);
-    border-color: var(--roxo-neon);
-    box-shadow: 0 0 12px rgba(177,75,255,0.3);
-  }
+  .opcao:hover { background: rgba(177,75,255,0.12); border-color: var(--roxo-neon); transform: translateX(4px); }
+  .opcao.selecionada { background: rgba(177,75,255,0.2); border-color: var(--roxo-neon); box-shadow: 0 0 12px rgba(177,75,255,0.3); }
   .btn-proximo {
-    display: block;
-    width: 100%;
+    display: block; width: 100%;
     background: linear-gradient(90deg, var(--roxo-escuro), var(--roxo-neon));
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 12px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
+    color: white; border: none; padding: 15px; border-radius: 12px;
+    font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 8px;
   }
   .btn-proximo:hover { box-shadow: 0 0 20px rgba(177,75,255,0.5); transform: translateY(-1px); }
   .btn-proximo:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-  /* Mascote Liw — FORMIGA (sem orelhas, sem focinho, sem raposa) */
+
+  /* ===== MASCOTE LIW FLUTUANTE ===== */
   .mascote-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
+    position: fixed; bottom: 20px; right: 20px; z-index: 100;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
     pointer-events: none;
   }
   .liw-bubble {
-    background: var(--fundo-card);
-    border: 2px solid var(--roxo-neon);
-    border-radius: 18px 18px 4px 18px;
-    padding: 14px 18px;
-    max-width: 280px;
-    color: var(--texto);
-    font-size: 0.92rem;
-    line-height: 1.45;
+    background: var(--fundo-card); border: 2px solid var(--roxo-neon);
+    border-radius: 18px 18px 4px 18px; padding: 14px 18px; max-width: 280px;
+    color: var(--texto); font-size: 0.92rem; line-height: 1.45;
     box-shadow: 0 0 20px rgba(177,75,255,0.35);
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-    transition: all 0.35s ease;
-    pointer-events: auto;
+    opacity: 0; transform: translateY(10px) scale(0.95);
+    transition: all 0.35s ease; pointer-events: auto;
   }
   .liw-bubble.visivel { opacity: 1; transform: translateY(0) scale(1); }
-  .liw-bubble .liw-titulo {
-    color: var(--roxo-neon);
-    font-weight: 700;
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+  .liw-bubble .liw-titulo { color: var(--roxo-neon); font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
   .liw-avatar {
-    width: 80px;
-    height: 80px;
-    pointer-events: auto;
-    cursor: pointer;
-    transition: transform 0.2s;
-    filter: drop-shadow(0 0 8px rgba(177,75,255,0.5));
+    width: 80px; height: 80px; pointer-events: auto; cursor: pointer;
+    transition: transform 0.2s; filter: drop-shadow(0 0 8px rgba(177,75,255,0.5));
+    border-radius: 50%; object-fit: cover; border: 2px solid var(--roxo-neon);
   }
   .liw-avatar:hover { transform: scale(1.1) rotate(-5deg); }
-  /* Modal de frase motivacional */
+
+  /* ===== MODAL FRASE ===== */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(13,8,23,0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 20px;
+    position: fixed; inset: 0; background: rgba(13,8,23,0.85);
+    display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
   }
   .modal-overlay.visivel { display: flex; animation: fadeIn 0.3s ease; }
   .modal-frase {
-    background: var(--fundo-card);
-    border: 2px solid var(--roxo-neon);
-    border-radius: 22px;
-    padding: 36px 30px;
-    max-width: 480px;
-    text-align: center;
+    background: var(--fundo-card); border: 2px solid var(--roxo-neon);
+    border-radius: 22px; padding: 36px 30px; max-width: 480px; text-align: center;
     box-shadow: 0 0 40px rgba(177,75,255,0.4);
-    position: relative;
   }
-  .modal-frase .liw-grande {
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 16px;
-    display: block;
-    filter: drop-shadow(0 0 12px rgba(177,75,255,0.6));
-  }
-  .modal-frase .frase-titulo {
-    color: var(--roxo-neon);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 12px;
-  }
-  .modal-frase .frase-texto {
-    font-size: 1.25rem;
-    line-height: 1.6;
-    color: var(--texto);
-    margin-bottom: 24px;
-    font-style: italic;
-  }
+  .modal-frase .frase-titulo { color: var(--roxo-neon); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+  .modal-frase .frase-texto { font-size: 1.25rem; line-height: 1.6; color: var(--texto); margin-bottom: 24px; font-style: italic; }
   .modal-frase .btn-continuar {
     background: linear-gradient(90deg, var(--roxo-escuro), var(--roxo-neon));
-    color: white;
-    border: none;
-    padding: 12px 36px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    color: white; border: none; padding: 12px 36px; border-radius: 12px;
+    font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
   }
   .modal-frase .btn-continuar:hover { box-shadow: 0 0 18px rgba(177,75,255,0.6); }
-  /* Devolutiva final */
+
+  /* ===== RESULTADO ===== */
   #tela-resultado { display: none; }
   .resultado-card {
-    background: var(--fundo-card);
-    border: 2px solid var(--roxo-neon);
-    border-radius: 22px;
-    padding: 36px 28px;
-    text-align: center;
+    background: var(--fundo-card); border: 2px solid var(--roxo-neon);
+    border-radius: 22px; padding: 36px 28px; text-align: center;
     box-shadow: 0 0 30px rgba(177,75,255,0.25);
   }
-  .resultado-card h2 {
-    color: var(--roxo-neon);
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-    text-shadow: 0 0 10px rgba(177,75,255,0.4);
-  }
-  .resultado-card .resultado-subtitulo {
-    color: var(--texto-suave);
-    margin-bottom: 24px;
-  }
+  .resultado-card h2 { color: var(--roxo-neon); font-size: 1.8rem; margin-bottom: 8px; text-shadow: 0 0 10px rgba(177,75,255,0.4); }
+  .resultado-card .resultado-subtitulo { color: var(--texto-suave); margin-bottom: 24px; }
   .resultado-card .devolutiva-texto {
-    text-align: left;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: var(--texto);
-    background: rgba(177,75,255,0.06);
-    border-left: 3px solid var(--roxo-neon);
-    padding: 20px 18px;
-    border-radius: 10px;
-    white-space: pre-wrap;
+    text-align: left; font-size: 1.05rem; line-height: 1.7; color: var(--texto);
+    background: rgba(177,75,255,0.06); border-left: 3px solid var(--roxo-neon);
+    padding: 20px 18px; border-radius: 10px; white-space: pre-wrap;
   }
   .resultado-card .devolutiva-texto h1,
   .resultado-card .devolutiva-texto h2,
-  .resultado-card .devolutiva-texto h3 {
-    color: var(--roxo-claro);
-    margin: 14px 0 8px;
-  }
+  .resultado-card .devolutiva-texto h3 { color: var(--roxo-claro); margin: 14px 0 8px; }
   .resultado-card .devolutiva-texto p { margin-bottom: 12px; }
   .resultado-card .devolutiva-texto ul,
   .resultado-card .devolutiva-texto ol { margin: 10px 0 14px 22px; }
   .resultado-card .devolutiva-texto li { margin-bottom: 6px; }
-  .resultado-acoes {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 26px;
-    flex-wrap: wrap;
-  }
+  .resultado-acoes { display: flex; gap: 12px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
   .btn-acao {
-    background: transparent;
-    border: 1px solid var(--roxo-neon);
-    color: var(--roxo-claro);
-    padding: 12px 28px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    transition: all 0.2s;
+    background: transparent; border: 1px solid var(--roxo-neon); color: var(--roxo-claro);
+    padding: 12px 28px; border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s;
   }
   .btn-acao:hover { background: rgba(177,75,255,0.15); box-shadow: 0 0 14px rgba(177,75,255,0.3); }
-  .btn-acao.primario {
-    background: linear-gradient(90deg, var(--roxo-escuro), var(--roxo-neon));
-    color: white;
-    border: none;
-  }
-  /* Erro / loading */
-  .aviso {
-    text-align: center;
-    padding: 40px;
-    color: var(--texto-suave);
-  }
+  .btn-acao.primario { background: linear-gradient(90deg, var(--roxo-escuro), var(--roxo-neon)); color: white; border: none; }
+
+  .aviso { text-align: center; padding: 40px; color: var(--texto-suave); }
   .aviso.erro { color: var(--vermelho-erro); }
-  .spinner {
-    border: 3px solid rgba(177,75,255,0.2);
-    border-top: 3px solid var(--roxo-neon);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 20px auto;
-  }
+  .spinner { border: 3px solid rgba(177,75,255,0.2); border-top: 3px solid var(--roxo-neon); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  .btn-voltar-entrada {
+    background: transparent; border: 1px solid rgba(177,75,255,0.3);
+    color: var(--texto-suave); padding: 10px 20px; border-radius: 10px;
+    cursor: pointer; font-size: 0.9rem; transition: all 0.2s; display: inline-block; margin-bottom: 16px;
+  }
+  .btn-voltar-entrada:hover { background: rgba(177,75,255,0.1); border-color: var(--roxo-neon); color: var(--roxo-claro); }
+
   @media (max-width: 600px) {
+    #tela-entrada .logo { font-size: 1.7rem; }
+    #tela-entrada .mascote { width: 180px; }
     header h1 { font-size: 1.7rem; }
     .pergunta-texto { font-size: 1.05rem; }
     .liw-bubble { max-width: 220px; font-size: 0.85rem; }
@@ -392,22 +325,34 @@
 </style>
 </head>
 <body>
+
 <div class="container">
-  <header>
+  <!-- ===== TELA DE ENTRADA (LANDING PAGE) ===== -->
+  <div id="tela-entrada">
+    <div class="logo">✦ PSICOTEST26 ✦</div>
+    <div class="subtitulo">GESTÃO E INTELIGÊNCIA COMPORTAMENTAL</div>
+    <img src="Generatedimage_1781122537400.png" alt="Liw — Inteligência Artificial" class="mascote">
+    <div class="botoes">
+      <button class="btn btn-primario" onclick="entrarTestes()">Acessar Painel de Testes</button>
+      <a href="admin.html" class="btn btn-secundario">Área do Administrador</a>
+    </div>
+    <div class="footer">© 2024 Psicotest26 — Inteligência Comportamental</div>
+  </div>
+
+  <!-- ===== HEADER TESTES ===== -->
+  <header id="header-testes">
     <h1>✦ Testes Liw ✦</h1>
     <p>Autoconhecimento com humor, carinho e pressão saudável</p>
+    <button class="btn-voltar-entrada" onclick="voltarEntrada()">← Voltar ao início</button>
   </header>
-  <!-- Tela 1: Lista de testes -->
-  <section id="tela-lista">
-    <div id="lista-testes">
-      <div class="aviso">
-        <div class="spinner"></div>
-        <p>Carregando testes...</p>
-      </div>
-    </div>
-  </section>
-  <!-- Tela 2: Execução do teste -->
-  <section id="tela-teste">
+
+  <!-- ===== LISTA DE TESTES ===== -->
+  <div id="lista-testes">
+    <div class="aviso"><div class="spinner"></div><p>Carregando testes...</p></div>
+  </div>
+
+  <!-- ===== TELA DO TESTE ===== -->
+  <div id="tela-teste">
     <div class="topo-teste">
       <button class="btn-voltar" onclick="voltarParaLista()">← Voltar</button>
       <div class="progresso-wrap">
@@ -416,9 +361,10 @@
       </div>
     </div>
     <div id="area-pergunta"></div>
-  </section>
-  <!-- Tela 3: Devolutiva final -->
-  <section id="tela-resultado">
+  </div>
+
+  <!-- ===== RESULTADO ===== -->
+  <div id="tela-resultado">
     <div class="resultado-card">
       <h2 id="resultado-titulo">🎉 Parabéns!</h2>
       <p class="resultado-subtitulo" id="resultado-subtitulo">Você concluiu o teste</p>
@@ -428,74 +374,29 @@
         <button class="btn-acao" onclick="voltarParaLista()">← Outros testes</button>
       </div>
     </div>
-  </section>
+  </div>
 </div>
-<!-- Mascote Liw — SVG da FORMIGA (sem raposa, sem orelhas, sem focinho) -->
+
+<!-- ===== MASCOTE FLUTUANTE ===== -->
 <div class="mascote-container">
   <div class="liw-bubble" id="liw-bubble">
     <div class="liw-titulo">Liw diz:</div>
     <div id="liw-frase">Oi! Eu sou a Liw! 🐜</div>
   </div>
-  <svg class="liw-avatar" id="liw-avatar" viewBox="0 0 100 100" onclick="liwFalaAleatoria()">
-    <!-- Antenas curvas com bolinhas -->
-    <path d="M42 26 Q30 8 18 12" stroke="#b14bff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <circle cx="18" cy="12" r="3" fill="#b14bff"/>
-    <path d="M58 26 Q70 8 82 12" stroke="#b14bff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <circle cx="82" cy="12" r="3" fill="#b14bff"/>
-    <!-- Cabeça redonda -->
-    <circle cx="50" cy="32" r="18" fill="#b14bff"/>
-    <!-- Olhos grandes castanhos com brilho -->
-    <ellipse cx="42" cy="30" rx="6" ry="7" fill="#3d1f00"/>
-    <ellipse cx="58" cy="30" rx="6" ry="7" fill="#3d1f00"/>
-    <circle cx="44" cy="28" r="2.5" fill="#fff"/>
-    <circle cx="60" cy="28" r="2.5" fill="#fff"/>
-    <!-- Sorriso -->
-    <path d="M43 38 Q50 44 57 38" stroke="#3d1f00" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <!-- Tórax (segmento do meio) -->
-    <ellipse cx="50" cy="54" rx="14" ry="8" fill="#b14bff"/>
-    <!-- Abdômen (segmento traseiro da formiga) -->
-    <ellipse cx="50" cy="72" rx="18" ry="12" fill="#9a3dcc"/>
-    <!-- Camiseta no tórax -->
-    <rect x="38" y="48" width="24" height="12" rx="3" fill="#8a2bbf"/>
-    <!-- Texto Liw na camiseta -->
-    <text x="50" y="57" text-anchor="middle" fill="#fff" font-size="5.5" font-weight="bold" font-family="sans-serif">Liw</text>
-    <!-- Braços -->
-    <path d="M36 52 Q24 48 20 40" stroke="#b14bff" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M64 52 Q76 48 80 40" stroke="#b14bff" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <!-- Mãozinhas redondas -->
-    <circle cx="20" cy="40" r="3.5" fill="#b14bff"/>
-    <circle cx="80" cy="40" r="3.5" fill="#b14bff"/>
-  </svg>
+  <img src="Generatedimage_1781122537400.png" class="liw-avatar" id="liw-avatar" onclick="liwFalaAleatoria()" alt="Liw">
 </div>
-<!-- Modal de frase motivacional -->
+
+<!-- ===== MODAL FRASE ===== -->
 <div class="modal-overlay" id="modal-frase">
   <div class="modal-frase">
-    <svg class="liw-grande" viewBox="0 0 100 100">
-      <path d="M42 26 Q30 8 18 12" stroke="#b14bff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <circle cx="18" cy="12" r="3" fill="#b14bff"/>
-      <path d="M58 26 Q70 8 82 12" stroke="#b14bff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <circle cx="82" cy="12" r="3" fill="#b14bff"/>
-      <circle cx="50" cy="32" r="18" fill="#b14bff"/>
-      <ellipse cx="42" cy="30" rx="6" ry="7" fill="#3d1f00"/>
-      <ellipse cx="58" cy="30" rx="6" ry="7" fill="#3d1f00"/>
-      <circle cx="44" cy="28" r="2.5" fill="#fff"/>
-      <circle cx="60" cy="28" r="2.5" fill="#fff"/>
-      <path d="M43 38 Q50 44 57 38" stroke="#3d1f00" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-      <ellipse cx="50" cy="54" rx="14" ry="8" fill="#b14bff"/>
-      <ellipse cx="50" cy="72" rx="18" ry="12" fill="#9a3dcc"/>
-      <rect x="38" y="48" width="24" height="12" rx="3" fill="#8a2bbf"/>
-      <text x="50" y="57" text-anchor="middle" fill="#fff" font-size="5.5" font-weight="bold" font-family="sans-serif">Liw</text>
-      <path d="M36 52 Q24 48 20 40" stroke="#b14bff" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M64 52 Q76 48 80 40" stroke="#b14bff" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <circle cx="20" cy="40" r="3.5" fill="#b14bff"/>
-      <circle cx="80" cy="40" r="3.5" fill="#b14bff"/>
-    </svg>
     <div class="frase-titulo">⚡ Motivação do Liw</div>
     <div class="frase-texto" id="modal-frase-texto"></div>
     <button class="btn-continuar" onclick="fecharModalFrase()">Continuar →</button>
   </div>
 </div>
+
 <script>
+// ===== DADOS =====
 const FRASES_MOTIVACIONAIS_WILSON = [
   "Você já respondeu 7 perguntas! Sabe o que isso significa? Que você é mais persistente do que 90% das pessoas que começam e desistem no segundo clique. Continua! 🔥",
   "Outras 7 perguntas vencidas! Se o autoconhecimento fosse um esporte, você já estaria com a medalha brilhando no peito. Não para agora! 🏅",
@@ -519,9 +420,29 @@ const FRASES_LIW_RAPIDAS = [
   "Mais uma pro seu caminho! ⭐", "Confia no processo! 💎",
   "Você manda bem demais! 😎", "Sem pressa, mas sem pausa! ⏳"
 ];
-let dadosTestes = null, testeAtual = null, indicePergunta = 0, respostas = [];
-let perguntasRespondidas = 0, proximaFraseNo = 7;
 
+let dadosTestes = null, testeAtual = null, indicePergunta = 0, respostas = [];
+let perguntasRespondidas = 0, proximaFraseNo = 7, opcaoSelecionada = null;
+let liwTimeout = null;
+
+// ===== NAVEGAÇÃO ENTRE TELAS =====
+function entrarTestes() {
+  document.getElementById('tela-entrada').style.display = 'none';
+  document.getElementById('header-testes').style.display = 'block';
+  document.getElementById('lista-testes').style.display = 'flex';
+  carregarTestes();
+  liwFala('Bem-vindo! Escolhe um teste aí que eu te acompanho! 🐜');
+}
+function voltarEntrada() {
+  document.getElementById('tela-entrada').style.display = 'flex';
+  document.getElementById('header-testes').style.display = 'none';
+  document.getElementById('lista-testes').style.display = 'none';
+  document.getElementById('tela-teste').style.display = 'none';
+  document.getElementById('tela-resultado').style.display = 'none';
+  testeAtual = null;
+}
+
+// ===== CARREGAR TESTES =====
 async function carregarTestes() {
   try {
     const resp = await fetch('testes.json');
@@ -585,21 +506,19 @@ function renderizarListaTestes() {
       '<p>' + (escapeHtml(t.descricao) || 'Sem descrição disponível.') + '</p>' +
       '<span class="badge">' + numPerguntas + ' pergunta' + (numPerguntas !== 1 ? 's' : '') + '</span></div>';
   }).join('');
-  liwFala('Escolhe um teste aí! Eu te acompanho do começo ao fim. 🐜');
 }
 
+// ===== INICIAR TESTE =====
 function iniciarTeste(indice) {
   const lista = obterListaTestes();
   testeAtual = normalizarTeste(lista[indice], indice);
   indicePergunta = 0; respostas = []; perguntasRespondidas = 0; proximaFraseNo = 7;
-  document.getElementById('tela-lista').style.display = 'none';
+  document.getElementById('lista-testes').style.display = 'none';
   document.getElementById('tela-resultado').style.display = 'none';
   document.getElementById('tela-teste').style.display = 'block';
   renderizarPergunta();
   liwFala('Bora! Responde com sinceridade, tá? Eu tô de olho. 👀');
 }
-
-let opcaoSelecionada = null;
 
 function renderizarPergunta() {
   if (!testeAtual || indicePergunta >= testeAtual.perguntas.length) { finalizarTeste(); return; }
@@ -653,7 +572,7 @@ function finalizarTeste() {
   document.getElementById('tela-resultado').style.display = 'block';
   let devolutiva = testeAtual.devolutiva;
   if (!devolutiva || (typeof devolutiva === 'string' && devolutiva.trim() === '')) {
-    devolutiva = '<p><em>O Wilson ainda não cadastrou a devolutiva para este teste no testes.json.</em></p>';
+    devolutiva = '<p><em>Devolutiva em construção.</em></p>';
   }
   if (typeof devolutiva === 'object') { devolutiva = objetoParaHtml(devolutiva); }
   else if (typeof devolutiva === 'string' && !/<[a-z][\s\S]*>/i.test(devolutiva)) {
@@ -662,7 +581,7 @@ function finalizarTeste() {
   document.getElementById('resultado-titulo').textContent = '🎉 ' + testeAtual.titulo;
   document.getElementById('resultado-subtitulo').textContent = 'Você respondeu ' + testeAtual.perguntas.length + ' perguntas. Aqui está sua devolutiva:';
   document.getElementById('devolutiva-conteudo').innerHTML = devolutiva;
-  liwFala('Concluiu! Lê sua devolutiva com calma. É ouro do Wilson pra você. 💎');
+  liwFala('Concluiu! Lê sua devolutiva com calma. 💎');
 }
 
 function objetoParaHtml(obj) {
@@ -690,12 +609,12 @@ function refazerTeste() {
 function voltarParaLista() {
   document.getElementById('tela-teste').style.display = 'none';
   document.getElementById('tela-resultado').style.display = 'none';
-  document.getElementById('tela-lista').style.display = 'block';
+  document.getElementById('lista-testes').style.display = 'flex';
   testeAtual = null;
   liwFala('De volta à base! Escolhe outro teste quando quiser. 🐜');
 }
 
-let liwTimeout = null;
+// ===== LIW =====
 function liwFala(frase) {
   const bubble = document.getElementById('liw-bubble');
   document.getElementById('liw-frase').textContent = frase;
@@ -710,11 +629,6 @@ function escapeHtml(str) {
   if (str === null || str === undefined) return '';
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  carregarTestes();
-  setTimeout(() => { liwFala('Oi! Eu sou a Liw, sua formiguinha de estimação. Bora se conhecer melhor? 🐜'); }, 1200);
-});
 </script>
 </body>
 </html>
